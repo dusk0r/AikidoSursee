@@ -1,0 +1,73 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Web", "AikidoWebsite\AikidoWebsite.Web.csproj", "{D84443CB-3F4A-42BE-B3ED-B75A93E7A291}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{44C443B4-EFA2-4FEA-B45A-698CBFF57A90}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Web.UnitTests", "AikidoWebsite.UnitTest.Web\AikidoWebsite.Web.UnitTests.csproj", "{CD1C6CC4-EC1B-4C31-8764-55CD6D9B3A9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Common", "AikidoWebsite.Common\AikidoWebsite.Common.csproj", "{95E76766-CC0C-4CEB-8024-F796DAAF60A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Data", "AikidoWebsite.Data\AikidoWebsite.Data.csproj", "{CBABB6FA-9C3F-48F3-9A1F-FDE478CF567C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Data.UnitTests", "AikidoWebsite.Data.UnitTests\AikidoWebsite.Data.UnitTests.csproj", "{A6AC70C7-3B8B-4278-A0FA-B75D97FB323A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Common.UnitTests", "AikidoWebsite.Common.UnitTests\AikidoWebsite.Common.UnitTests.csproj", "{A138C486-F46A-46D9-97B6-AD1575B0D762}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Service", "AikidoWebsite.Service\AikidoWebsite.Service.csproj", "{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Service.UnitTests", "AikidoWebsite.Service.UnitTests\AikidoWebsite.Service.UnitTests.csproj", "{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D84443CB-3F4A-42BE-B3ED-B75A93E7A291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84443CB-3F4A-42BE-B3ED-B75A93E7A291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D84443CB-3F4A-42BE-B3ED-B75A93E7A291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D84443CB-3F4A-42BE-B3ED-B75A93E7A291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD1C6CC4-EC1B-4C31-8764-55CD6D9B3A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1C6CC4-EC1B-4C31-8764-55CD6D9B3A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1C6CC4-EC1B-4C31-8764-55CD6D9B3A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1C6CC4-EC1B-4C31-8764-55CD6D9B3A9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95E76766-CC0C-4CEB-8024-F796DAAF60A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95E76766-CC0C-4CEB-8024-F796DAAF60A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95E76766-CC0C-4CEB-8024-F796DAAF60A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95E76766-CC0C-4CEB-8024-F796DAAF60A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBABB6FA-9C3F-48F3-9A1F-FDE478CF567C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBABB6FA-9C3F-48F3-9A1F-FDE478CF567C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBABB6FA-9C3F-48F3-9A1F-FDE478CF567C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBABB6FA-9C3F-48F3-9A1F-FDE478CF567C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AC70C7-3B8B-4278-A0FA-B75D97FB323A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6AC70C7-3B8B-4278-A0FA-B75D97FB323A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6AC70C7-3B8B-4278-A0FA-B75D97FB323A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6AC70C7-3B8B-4278-A0FA-B75D97FB323A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = ..
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AikidoWebsite.Data.ValueObjects {
+    public enum Gruppe {
+        Benutzer = 1,
+        Admin = 2
+    }
+}

@@ -1,0 +1,26 @@
+﻿@model IList<AikidoWebsite.Web.Models.Entities.Account>
+
+@{
+    ViewBag.Title = "ListUsers";
+}
+
+<h2>ListUsers</h2>
+
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>EMail</th>
+        <th>Group</th>
+    </tr>
+
+    @foreach (var account in Model) {
+        <tr>
+            <td>@account.Id</td>
+            <td>@account.Name</td>
+            <td>@account.EMail</td>
+            <td>@account.Group</td>
+        </tr>
+    }
+
+</table>

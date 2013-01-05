@@ -1,0 +1,15 @@
+﻿@model AikidoWebsite.Data.Entities.Mitteilung
+
+@{
+    ViewBag.Title = "Mitteilung";
+}
+
+<h2>Mitteilung</h2>
+
+<h3>@Model.Titel</h3>
+von @Model.AutorName, @Model.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
+<br /><br />
+@Model.Text
+
+<hr />
+@Model.PublikumString

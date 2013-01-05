@@ -1,0 +1,65 @@
+﻿@model AikidoWebsite.Web.Models.ListMitteilungenModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Neuigkeiten</h2>
+
+<!-- ko foreach: mitteilungen -->
+<div class="well">
+    <span data-bind="text: titel" style="font-weight: bold;"></span>
+    <span class="pull-right">
+        <span class="label" data-bind="text: publikumString"></span>
+        <span data-bind="text: erstelltAmText"></span>
+
+    </span>
+
+    <div data-bind="text: text"></div>
+
+</div>
+<!-- /ko -->
+
+Total Nachrichten: <span data-bind="text: mitteilungenCount"></span>
+
+@section Footer {
+    <script type="text/javascript">
+        var viewModel = new ViewModel();
+
+        function Mitteilung(data) {
+            var self = this;
+
+            self.erstelltAm = moment(data.ErstelltAm).toDate();
+            self.autorName = data.AutorName;
+            self.titel = data.Titel;
+            self.text = data.Text;
+            self.publikumString = data.PublikumString;
+
+            self.erstelltAmText = ko.computed(function () {
+                return moment(self.erstelltAm).fromNow();
+            });
+
+            self.erstelltAmDatum = ko.computed(function () {
+                return moment(self.erstelltAm).format("DD.MM.YYYY HH:mm");
+            });
+
+        }
+
+        function ViewModel() {
+            var self = this;
+
+            self.mitteilungen = ko.observableArray([]);
+            self.start = ko.observable(0);
+            self.mitteilungenCount = ko.observable(0);
+
+            // Load Data
+            var model = JSON.parse('@Html.Raw(Json.Encode(Model))');
+            self.mitteilungen(model.Mitteilungen.map(function (value) { return new Mitteilung(value); }));
+            self.start(model.Start);
+            self.mitteilungenCount(model.MitteilungenCount);
+        }
+
+        ko.applyBindings(viewModel);
+
+    </script>
+
+}
