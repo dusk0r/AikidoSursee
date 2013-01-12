@@ -2,9 +2,9 @@ require 'albacore'
 require 'fileutils'
 
 base_path = File.dirname(__FILE__)
-bin_path = "#{base_path}/bin"
-publish_path = "#{base_path}/publish"
-artifacts_path = "#{base_path}/artifacts"
+bin_path = "#{base_path}/bin/"
+publish_path = "#{base_path}/publish/"
+artifacts_path = "#{base_path}/artifacts/"
 
 # // Funcs ///////////////////////////////////
 
