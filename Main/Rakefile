@@ -5,6 +5,7 @@ base_path = File.dirname(__FILE__)
 bin_path = "#{base_path}/bin/"
 publish_path = "#{base_path}/publish/"
 artifacts_path = "#{base_path}/artifacts/"
+install_path = ENV["INSTALL_PATH"] || "c:/inetpub/"
 
 # // Funcs ///////////////////////////////////
 
@@ -23,6 +24,11 @@ zip :zipartifact do |zip|
 	zip.directories_to_zip publish_path
 	zip.output_file = "AikidoWebsite.zip"
 	zip.output_path = artifacts_path
+end
+
+unzip :install do |unzip|
+	unzip.destination = install_path
+	unzip.file = "#{artifacts_path}/AikidoWebsite.zip"
 end
 
 # // Tasks //////////////////////////////////
@@ -59,4 +65,8 @@ task :artifacts do
  Rake::Task[:zipartifact].invoke
  
  puts "##teamcity[publishArtifacts '#{artifacts_path}/AikidoWebsite.zip']"
+end
+
+task :install do
+
 end

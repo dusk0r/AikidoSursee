@@ -40,13 +40,13 @@ namespace AikidoWebsite.Data.UnitTests.Repositories {
             session.SaveChanges();
         }
 
-        [Test]
-        public void GetLatestMitteilungen_liefert_neuste_Posts() {
-            var posts = Repository.GetLatestMitteilungen().ToList();
+        //[Test]
+        //public void GetLatestMitteilungen_liefert_neuste_Posts() {
+        //    var posts = Repository.GetLatestMitteilungen().ToList();
 
-            posts.Should().HaveCount(2);
-            posts[0].Text.Should().Be("Neuster Post");
-            posts[1].Text.Should().Be("Erster Post");
-        }
+        //    posts.Should().HaveCount(2);
+        //    posts[0].Text.Should().Be("Neuster Post");
+        //    posts[1].Text.Should().Be("Erster Post");
+        //}
     }
 }
