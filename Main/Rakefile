@@ -48,7 +48,7 @@ task :banner do
 end
 
 desc "Build Website"
-task :build => [ :clean, :msbuild, :artifacts ]
+task :build => [ :clean, :msbuild, :less, :artifacts ]
 
 desc "Clean Files"
 task :clean do
@@ -71,4 +71,8 @@ task :install do
 	FileUtils.rm_rf("#{install_path}/*", secure: true)
 	
 	Rake::Task[:installZip].invoke
+end
+
+task :less do
+	sh %{generateCss.cmd}
 end
