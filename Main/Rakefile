@@ -48,7 +48,7 @@ task :banner do
 end
 
 desc "Build Website"
-task :build => [ :clean, :msbuild, :less, :artifacts ]
+task :build => [ :clean, :less, :msbuild, :artifacts ]
 
 desc "Clean Files"
 task :clean do
