@@ -68,6 +68,11 @@
     <Compile Include="PasswordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreateString.cs" />
+    <Compile Include="StringExtensions.cs" />
+    <Compile Include="VCalendar\Calendar.cs" />
+    <Compile Include="VCalendar\CalendarDataException.cs" />
+    <Compile Include="VCalendar\CalendarEvent.cs" />
+    <Compile Include="VCalendar\Organizer.cs" />
     <Compile Include="WindsorExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
