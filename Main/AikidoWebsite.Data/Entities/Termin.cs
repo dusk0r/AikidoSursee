@@ -20,6 +20,7 @@ namespace AikidoWebsite.Data.Entities {
         public string Text { get; set; }
         public string AutorId { get; set; }
         public string AutorName { get; set; }
+        public DateTime ErstellungsDatum { get; set; }
 
         [JsonIgnore]
         public string PublikumString { get { return Publikum.ToString(); } }

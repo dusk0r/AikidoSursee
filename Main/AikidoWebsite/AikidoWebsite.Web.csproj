@@ -131,6 +131,7 @@
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\ICalResult.cs" />
     <Compile Include="Extensions\RssResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

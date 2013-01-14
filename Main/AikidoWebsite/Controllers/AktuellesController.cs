@@ -1,6 +1,8 @@
 ﻿using AikidoWebsite.Common;
+using AikidoWebsite.Common.VCalendar;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Repositories;
+using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Service.Services;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
@@ -56,8 +58,8 @@ namespace AikidoWebsite.Web.Controllers {
 
             var mitteilungen = DocumentSession.Query<Mitteilung>().OrderByDescending(p => p.ErstelltAm);
 
-            if (id.Equals("mitglieder")) {
-                mitteilungen = mitteilungen.Where(m => m.Publikum == Data.ValueObjects.Publikum.Mitglieder);
+            if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Mitglieder);
             }
 
             foreach (var news in mitteilungen.Take(10)) {
@@ -73,6 +75,33 @@ namespace AikidoWebsite.Web.Controllers {
             var mitteilung = DocumentSession.Load<Mitteilung>(docId);
 
             return View(mitteilung);
+        }
+
+        public ActionResult Ical(string id = "alle") {
+            var calendar = new Calendar();
+
+            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= Clock.Now.Day);
+
+            if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                termine = termine.Where(m => m.Publikum == Publikum.Mitglieder);
+            }
+
+            foreach (var termin in termine.Take(10)) {
+                calendar.Events.Add(CreateEvent(termin));
+            }
+
+            return new ICalResult(calendar);
+        }
+
+        private static CalendarEvent CreateEvent(Termin termin) {
+            return new CalendarEvent {
+                UID = termin.Id,
+                Timestamp = termin.ErstellungsDatum,
+                Starttime = termin.StartDatum,
+                Endtime = termin.EndDatum ?? termin.StartDatum.AddHours(1),
+                Organizer = new Organizer(termin.AutorName, "noreplay@aikido-sursee.ch"),
+                Summary = termin.Text
+            };
         }
 
     }
