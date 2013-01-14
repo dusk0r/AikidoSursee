@@ -20,7 +20,8 @@ namespace AikidoWebsite.Common.VCalendar {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("BEGIN:VCALENDAR");
             sb.AppendLine("VERSION:2.0");
-            sb.AppendLine("PRODID:-//AmigoOnline//NONSGML AikidoWebsite//EN");
+            sb.AppendLine("CALSCALE:GREGORIAN");
+            sb.AppendLine("PRODID:-//AmigoOnline//NONSGML AikidoWebsite//DE");
 
             foreach (var calendarEvent in Events) {
                 sb.Append(calendarEvent.ToString());

@@ -17,6 +17,8 @@ namespace AikidoWebsite.Common.VCalendar {
         public Organizer Organizer { get; set; }
         public string Summary { get; set; }
 
+        // public string URL { get; set; }
+
         public bool IsValid {
             get {
                 try {
@@ -61,6 +63,8 @@ namespace AikidoWebsite.Common.VCalendar {
             sb.AppendLine("DTSTART:" + FormatDateTime(Starttime));
             sb.AppendLine("DTEND:" + FormatDateTime(Endtime));
             sb.AppendLine("SUMMARY:" + FormatSummary(Summary));
+            //sb.AppendLine("URL:" + URL);
+            // LOCATION:
             sb.AppendLine("END:VEVENT");
 
             return sb.ToString();
