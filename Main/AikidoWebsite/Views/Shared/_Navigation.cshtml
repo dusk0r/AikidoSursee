@@ -15,3 +15,15 @@
         <li><a href="#">Aikido Velos</a></li>
     </ul>
 </div>
+
+@if (!Request.IsAuthenticated) {
+    <small><a onclick="$('#passwordForm').toggle()">Anmelden</a></small>
+
+    <div class="well" id="passwordForm" style="display: none;">
+        @using (Html.BeginForm("LogOn", "Account", FormMethod.Post)) {
+                            <input class="span12" type="text" placeholder="Email" name="UserName" /><br />
+                            <input class="span12" type="password" placeholder="Password" name="Password" /><br />
+                            <button type="submit" class="btn">Anmelden</button>
+        }
+    </div>
+}

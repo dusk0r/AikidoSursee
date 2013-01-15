@@ -48,10 +48,11 @@ namespace AikidoWebsite.Controllers {
             var termin = new Termin {
                 AutorId = "Benutzer/1",
                 AutorName = "Christoph Enzmann",
-                StartDatum = new DateTime(2012, 12, 25, 14, 12, 00),
-                Titel = "Termin 1",
+                StartDatum = new DateTime(2013, 1, 22, 19, 0, 0),
+                EndDatum = new DateTime(2013, 1, 22, 21, 0, 0),
+                Titel = "Jorma Lyly in Sursee",
                 Publikum = Publikum.Alle,
-                Text = "Ein Termin",
+                Text = "Jorma Lyly in Sursee",
                 ErstellungsDatum = new DateTime(2012, 12, 1, 0, 0, 0)
             };
             DocumentSession.Store(termin);
@@ -59,11 +60,11 @@ namespace AikidoWebsite.Controllers {
             var termin2 = new Termin {
                 AutorId = "Benutzer/1",
                 AutorName = "Christoph Enzmann",
-                StartDatum = new DateTime(2012, 12, 27, 12, 35, 0),
-                EndDatum = new DateTime(2012, 12, 30, 0, 30, 0),
-                Titel = "Termin 2",
-                Publikum = Publikum.Mitglieder,
-                Text = "Ein anderer Termin",
+                StartDatum = new DateTime(2013, 1, 24, 19, 0, 0),
+                EndDatum = new DateTime(2013, 1, 24, 21, 0, 0),
+                Titel = "Jorma Lyly in Sursee",
+                Publikum = Publikum.Alle,
+                Text = "Jorma Lyly in Sursee",
                 ErstellungsDatum = new DateTime(2012, 12, 1, 0, 0, 0)
             };
             DocumentSession.Store(termin2);

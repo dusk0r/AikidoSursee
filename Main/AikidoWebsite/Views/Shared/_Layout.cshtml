@@ -25,12 +25,6 @@
                         <li>@Html.ActionLink("Abmelden", "LogOff", "Account")</li>
                     </ul>
                 </div>
-            } else {
-                using (@Html.BeginForm("LogOn", "Account", FormMethod.Post, new { @class = "navbar-form pull-right" })) {
-                <input class="span2" type="text" placeholder="Email" name="UserName" />
-                <input class="span2" type="password" placeholder="Password" name="Password" />
-                <button type="submit" class="btn">Anmelden</button>
-                }
             }
 
         </div>

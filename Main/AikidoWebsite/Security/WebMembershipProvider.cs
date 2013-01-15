@@ -132,7 +132,8 @@ namespace AikidoWebsite.Web.Security {
                 return false;
             }
 
-            using (var session = DocumentStore.OpenSession()) {
+            // Todo: config
+            using (var session = DocumentStore.OpenSession("aikido")) {
                 Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail.Equals(username)).FirstOrDefault();
 
                 if (benutzer == null) {
