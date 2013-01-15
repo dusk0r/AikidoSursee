@@ -68,6 +68,7 @@ task :artifacts do
 end
 
 task :install do
+	FileUtils.touch("#{install_path}/App_offline.htm", secure: true)
 	FileUtils.rm_rf("#{install_path}/*", secure: true)
 	
 	Rake::Task[:installZip].invoke
