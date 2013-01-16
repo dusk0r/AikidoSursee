@@ -70,6 +70,7 @@ end
 task :install do
 	FileUtils.touch("#{install_path}/App_offline.htm")
 	FileUtils.rm_rf("#{install_path}/*", secure: true)
+	FileUtils.rm("#{install_path}/App_offline.htm")
 	
 	Rake::Task[:installZip].invoke
 end
