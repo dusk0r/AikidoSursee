@@ -31,6 +31,16 @@ unzip :installZip do |unzip|
 	unzip.file = "#{artifacts_path}/AikidoWebsite.zip"
 end
 
+def clear_directory(dir)
+  Dir.foreach(dir) do |f|
+    fullPath = File.join(dir, f)
+	
+    if f == '.' or f == '..' then next
+	else FileUtils.rm_rf(fullPath)
+    end
+  end
+end
+
 # // Tasks //////////////////////////////////
 
 task :default => [ :banner, :build ]
@@ -69,8 +79,8 @@ end
 
 task :install do
 	FileUtils.touch("#{install_path}/App_offline.htm")
-	FileUtils.rm_rf("#{install_path}/*", secure: true)
-	FileUtils.rm("#{install_path}/App_offline.htm")
+	clear_directory("#{install_path}/")
+	#FileUtils.rm("#{install_path}/App_offline.htm")
 	
 	Rake::Task[:installZip].invoke
 end
