@@ -65,7 +65,8 @@ namespace AikidoWebsite.Web {
 
                 if (!session.Query<Benutzer>().Any()) {
                     var passwordHelper = container.Resolve<IPasswordHelper>();
-                    var password = passwordHelper.GeneratePassword(10);
+                    //var password = passwordHelper.GeneratePassword(10);
+                    var password = "1234";
 
                     session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
                     session.SaveChanges();

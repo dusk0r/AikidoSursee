@@ -131,8 +131,10 @@
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ICalResult.cs" />
     <Compile Include="Extensions\RssResult.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -232,6 +234,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\ListUsers.cshtml" />
+    <Content Include="Views\Aktuelles\AddNews.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

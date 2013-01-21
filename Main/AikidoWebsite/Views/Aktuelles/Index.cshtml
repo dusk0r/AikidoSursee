@@ -19,7 +19,44 @@
 </div>
 <!-- /ko -->
 
-Total Nachrichten: <span data-bind="text: mitteilungenCount"></span>
+Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
+
+<br /><br />
+
+@if (User.IsInGroup(Gruppe.Admin)) {
+    <a href="#newMittelungModal" role="button" class="btn" data-toggle="modal">Neue Mitteilung hinzufügen</a>
+}
+
+<div id="newMittelungModal" class="modal hide fade" data-bind="with: newMitteilung">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Mitteilung hinzufügen:</h3>
+    </div>
+    <div class="modal-body form-horizontal">
+        <div class="control-group" data-bind="css: { error: titel().length < 1 }">
+            <label class="control-label">Titel</label>
+            <div class="controls">
+                <input type="text" size="30" class="span10" data-bind="value: titel, valueUpdate:'afterkeydown'" />
+            </div>
+        </div>
+        <div class="control-group" data-bind="css: { error: text().length < 1 }">
+            <label class="control-label">Text</label>
+            <div class="controls">
+                <textarea class="span10" rows="10" data-bind="value: text, valueUpdate:'afterkeydown'"></textarea>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">Publikum</label>
+            <div class="controls">
+                @Html.PublikumDropDown("publikum", "value: publikum")
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+    </div>
+</div>
 
 @section Footer {
     <script type="text/javascript">
@@ -44,12 +81,21 @@ Total Nachrichten: <span data-bind="text: mitteilungenCount"></span>
 
         }
 
+        function NewMittelung() {
+            var self = this;
+
+            self.titel = ko.observable("");
+            self.text = ko.observable("");
+            self.publikum = ko.observable("");
+        }
+
         function ViewModel() {
             var self = this;
 
             self.mitteilungen = ko.observableArray([]);
             self.start = ko.observable(0);
             self.mitteilungenCount = ko.observable(0);
+            self.newMitteilung = ko.observable(new NewMittelung());
 
             // Load Data
             var model = JSON.parse('@Html.Raw(Json.Encode(Model))');

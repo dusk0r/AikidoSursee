@@ -42,6 +42,19 @@ namespace AikidoWebsite.Web.Controllers {
             return View(model);
         }
 
+        //[HttpGet]
+        //[Authorize(Roles=Gruppe.Admin.ToString())]
+        //public ActionResult AddNews() {
+
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //public ActionResult AddNews() {
+
+        //    return View("Index");
+        //}
+
         public ActionResult Termine() {
             var model = new ListTermineModel();
 

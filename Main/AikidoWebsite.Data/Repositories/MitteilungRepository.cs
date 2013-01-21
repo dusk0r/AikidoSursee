@@ -1,6 +1,5 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.Models;
 using AikidoWebsite.Data.Security;
 using AikidoWebsite.Data.ValueObjects;
 using Raven.Client;

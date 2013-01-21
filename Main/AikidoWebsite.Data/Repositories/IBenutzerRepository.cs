@@ -1,5 +1,4 @@
-﻿using AikidoWebsite.Data.Models;
-using AikidoWebsite.Data.Entities;
+﻿using AikidoWebsite.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
