@@ -131,6 +131,7 @@
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\RequireGruppeAttribute.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ICalResult.cs" />
     <Compile Include="Extensions\RssResult.cs" />
@@ -234,7 +235,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\ListUsers.cshtml" />
-    <Content Include="Views\Aktuelles\AddNews.cshtml" />
+    <Content Include="Views\Aktuelles\EditNews.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

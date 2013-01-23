@@ -1,0 +1,66 @@
+﻿@model AikidoWebsite.Web.Models.EditMitteilungModel
+@{
+    ViewBag.Title = "AddNews";
+}
+
+<h2>Mitteilung hinzufügen:</h2>
+
+<!-- ko with: Mitteilung -->
+    <div class="control-group" data-bind="css: { error: Titel().length < 1 }">
+        <label class="control-label">Titel</label>
+        <div class="controls">
+            <input type="text" size="30" class="span10" data-bind="value: Titel, valueUpdate:'afterkeydown'" />
+        </div>
+    </div>
+    <div class="control-group" data-bind="css: { error: Text().length < 1 }">
+        <label class="control-label">Text</label>
+        <div class="controls">
+            <textarea class="span10" rows="10" data-bind="value: Text, valueUpdate:'afterkeydown'"></textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Publikum</label>
+        <div class="controls">
+            @Html.PublikumDropDown("publikum", "value: Publikum")
+        </div>
+    </div>
+<!-- /ko -->
+
+<a href="#" class="btn btn-primary" data-bind="click: save">Save changes</a>
+
+
+@section Footer {
+    <script type="text/javascript">
+        var viewModel = new ViewModel();
+
+        function Mitteilung(data) {
+            var self = this;
+
+            self.Titel = ko.observable(data.titel || "");
+            self.Text = ko.observable(data.text || "");
+            self.Publikum = ko.observable(data.publikum || 1);
+        }
+
+        function Termin() {
+            var self = this;
+
+        }
+
+        function ViewModel() {
+            var self = this;
+
+            self.WithTermin = ko.observable(false);
+            self.Mitteilung = ko.observable(new Mitteilung(@Html.Raw(Json.Encode(Model.Mitteilung))));
+            self.Termin = ko.observable(new Termin(@Html.Raw(Json.Encode(Model.Termin))));
+
+            self.save = function () {
+                $.post("/Aktuelles/EditNews", ko.toJSON(viewModel), function (ret) {
+
+                });
+
+            };
+        }
+
+        ko.applyBindings(viewModel);
+    </script>
+}

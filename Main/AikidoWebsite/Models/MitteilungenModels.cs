@@ -12,4 +12,15 @@ namespace AikidoWebsite.Web.Models {
         public int Start { get; set; }
 
     }
+
+    public class EditMitteilungModel {
+        public bool WithTermin { get; set; }
+        public Mitteilung Mitteilung { get; set; }
+        public Termin Termin { get; set; }
+
+        public EditMitteilungModel() {
+            this.Mitteilung = new Mitteilung();
+            this.Termin = new Termin();
+        }
+    }
 }

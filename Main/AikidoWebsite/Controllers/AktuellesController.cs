@@ -42,18 +42,26 @@ namespace AikidoWebsite.Web.Controllers {
             return View(model);
         }
 
-        //[HttpGet]
-        //[Authorize(Roles=Gruppe.Admin.ToString())]
-        //public ActionResult AddNews() {
+        [RequireGruppe(Gruppe.Admin)]
+        public ActionResult AddNews() {
+            return View("EditNews", new EditMitteilungModel());
+        }
 
-        //    return View();
-        //}
+        [HttpGet]
+        [RequireGruppe(Gruppe.Admin)]
+        public ActionResult EditNews(string id) {
+            var mitteilung = DocumentSession.Load<Mitteilung>(id);
+            var model = new EditMitteilungModel { Mitteilung = mitteilung };
 
-        //[HttpPost]
-        //public ActionResult AddNews() {
+            return View(model);
+        }
 
-        //    return View("Index");
-        //}
+        [HttpPost]
+        public JsonResult EditNews(EditMitteilungModel model) {
+
+            //return View("Index");
+            return Json(true);
+        }
 
         public ActionResult Termine() {
             var model = new ListTermineModel();
