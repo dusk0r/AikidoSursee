@@ -10,7 +10,7 @@ namespace AikidoWebsite.Web.Models {
         public int MitteilungenCount { get; set; }
         public IEnumerable<Mitteilung> Mitteilungen { get; set; }
         public int Start { get; set; }
-
+        public bool IsAdmin { get; set; }
     }
 
     public class EditMitteilungModel {

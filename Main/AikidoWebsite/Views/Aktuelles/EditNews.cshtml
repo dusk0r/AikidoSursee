@@ -36,9 +36,10 @@
         function Mitteilung(data) {
             var self = this;
 
-            self.Titel = ko.observable(data.titel || "");
-            self.Text = ko.observable(data.text || "");
-            self.Publikum = ko.observable(data.publikum || 1);
+            self.Id = ko.observable(data.Id);
+            self.Titel = ko.observable(data.Titel || "");
+            self.Text = ko.observable(data.Text || "");
+            self.Publikum = ko.observable(data.Publikum || 1);
         }
 
         function Termin() {
@@ -54,8 +55,21 @@
             self.Termin = ko.observable(new Termin(@Html.Raw(Json.Encode(Model.Termin))));
 
             self.save = function () {
-                $.post("/Aktuelles/EditNews", ko.toJSON(viewModel), function (ret) {
+                $.ajax("/Aktuelles/EditNews", {
+                    type: "POST",
+                    data: ko.toJSON(viewModel),
+                    contentType: "application/json;charset=utf8",
+                    dataType: "json",
+                    success: function (message, status, jqXHR) {
+                        if (self.Mitteilung().Id() === null) {
+                            window.location = "/Aktuelles/EditNews/" + message.Id.replace("/", "_");
+                        }
 
+                        alert(message.Message);
+                    },
+                    error: function (jqXHR) {
+                        alert("Irgendwas ist schief gegangen");
+                    }
                 });
 
             };

@@ -131,6 +131,7 @@
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\JsonSaveSuccess.cs" />
     <Compile Include="Extensions\RequireGruppeAttribute.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ICalResult.cs" />

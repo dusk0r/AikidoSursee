@@ -8,9 +8,16 @@
 <!-- ko foreach: mitteilungen -->
 <div class="well">
     <span data-bind="text: titel" style="font-weight: bold;"></span>
+    <!-- ko if: $root.isAdmin -->
+        &nbsp;
+        <button class="btn btn-mini" data-bind="click: goToEditUrl">
+         <span class="icon-edit"></span>Edit
+        </button>
+    <!-- /ko -->
     <span class="pull-right">
         <span class="label" data-bind="text: publikumString"></span>
         <span data-bind="text: erstelltAmText"></span>
+
 
     </span>
 
@@ -29,11 +36,12 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
 
 @section Footer {
     <script type="text/javascript">
-        var viewModel = new ViewModel();
+        var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
 
         function Mitteilung(data) {
             var self = this;
 
+            self.id = data.Id;
             self.erstelltAm = moment(data.ErstelltAm).toDate();
             self.autorName = data.AutorName;
             self.titel = data.Titel;
@@ -48,20 +56,20 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
                 return moment(self.erstelltAm).format("DD.MM.YYYY HH:mm");
             });
 
+            self.goToEditUrl = function () {
+                window.location = "/Aktuelles/EditNews/" + self.id.replace("/", "_");
+            };
+
         }
 
-        function ViewModel() {
+        function ViewModel(model) {
             var self = this;
 
-            self.mitteilungen = ko.observableArray([]);
-            self.start = ko.observable(0);
-            self.mitteilungenCount = ko.observable(0);
+            self.mitteilungen = ko.observableArray(model.Mitteilungen.map(function (value) { return new Mitteilung(value); }));
+            self.start = ko.observable(model.Start);
+            self.mitteilungenCount = ko.observable(model.MitteilungenCount);
+            self.isAdmin = model.IsAdmin;
 
-            // Load Data
-            var model = JSON.parse('@Html.Raw(Json.Encode(Model))');
-            self.mitteilungen(model.Mitteilungen.map(function (value) { return new Mitteilung(value); }));
-            self.start(model.Start);
-            self.mitteilungenCount(model.MitteilungenCount);
         }
 
         ko.applyBindings(viewModel);

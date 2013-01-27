@@ -114,6 +114,7 @@
     <Compile Include="Entities\Mitteilung.cs" />
     <Compile Include="Entities\Stundenplan.cs" />
     <Compile Include="Entities\Termin.cs" />
+    <Compile Include="Extensions\IEntityExtensions.cs" />
     <Compile Include="Identities\Identity.cs" />
     <Compile Include="Installer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

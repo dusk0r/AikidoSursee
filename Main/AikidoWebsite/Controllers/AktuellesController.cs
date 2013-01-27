@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AikidoWebsite.Data;
+using AikidoWebsite.Service.Validator;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -23,6 +25,9 @@ namespace AikidoWebsite.Web.Controllers {
 
         [Inject]
         public IDocumentSession DocumentSession { get; set; }
+
+        [Inject]
+        public IValidatorService ValidatorService { get; set; }
 
         [Inject]
         public IClock Clock { get; set; }
@@ -38,6 +43,7 @@ namespace AikidoWebsite.Web.Controllers {
                 .Take(count);
             model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
             model.Start = start;
+            model.IsAdmin = User.IsInGroup(Gruppe.Admin);
 
             return View(model);
         }
@@ -50,17 +56,39 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult EditNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(id);
+            var mitteilung = DocumentSession.Load<Mitteilung>(id.Replace('_', '/'));
             var model = new EditMitteilungModel { Mitteilung = mitteilung };
 
             return View(model);
         }
 
         [HttpPost]
+        [RequireGruppe(Gruppe.Admin)]
         public JsonResult EditNews(EditMitteilungModel model) {
+            var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
-            //return View("Index");
-            return Json(true);
+            Mitteilung mitteilung = model.Mitteilung;
+            if (mitteilung.IsNew()) {
+                mitteilung.AutorId = benutzer.Id;
+                mitteilung.AutorName = benutzer.Name;
+                mitteilung.ErstelltAm = Clock.Now;
+
+                ValidatorService.Validate(mitteilung);
+                DocumentSession.Store(mitteilung);
+                DocumentSession.SaveChanges();
+                return new JsonSaveSuccess(mitteilung.Id, "Mitteilung erstellt");
+            } else {
+                mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
+                mitteilung.AutorId = benutzer.Id;
+                mitteilung.AutorName = benutzer.Name;
+                mitteilung.Titel = model.Mitteilung.Titel;
+                mitteilung.Text = model.Mitteilung.Text;
+                mitteilung.Publikum = model.Mitteilung.Publikum;
+
+                ValidatorService.Validate(mitteilung);
+                DocumentSession.SaveChanges();
+                return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
+            }
         }
 
         public ActionResult Termine() {
