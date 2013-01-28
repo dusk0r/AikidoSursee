@@ -138,8 +138,8 @@ namespace AikidoWebsite.Web.Controllers {
         public ActionResult Ical(string id = "alle") {
             var calendar = new Calendar();
 
-            var startDate = Clock.Now.AddDays(-90).Day;
-            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= startDate);
+            var startDate = Clock.Now.AddDays(-90).Date;
+            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum >= startDate);
 
             if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
                 termine = termine.Where(m => m.Publikum == Publikum.Mitglieder);
