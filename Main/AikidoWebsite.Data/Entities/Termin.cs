@@ -15,9 +15,10 @@ namespace AikidoWebsite.Data.Entities {
         public string Titel { get; set; }
         public DateTime StartDatum { get; set; }
         public DateTime? EndDatum { get; set; }
-        //public string Location { get; set; }
+        public string Ort { get; set; }
         public Publikum Publikum { get; set; }
         public string Text { get; set; }
+        public string URL { get; set; }
         public string AutorId { get; set; }
         public string AutorName { get; set; }
         public DateTime ErstellungsDatum { get; set; }

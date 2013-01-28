@@ -37,8 +37,8 @@
             var self = this;
 
             self.Id = ko.observable(data.Id);
-            self.Titel = ko.observable(data.Titel || "");
-            self.Text = ko.observable(data.Text || "");
+            self.Titel = ko.observable(data.Titel);
+            self.Text = ko.observable(data.Text);
             self.Publikum = ko.observable(data.Publikum || 1);
         }
 

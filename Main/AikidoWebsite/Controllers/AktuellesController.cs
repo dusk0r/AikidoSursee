@@ -91,6 +91,16 @@ namespace AikidoWebsite.Web.Controllers {
             }
         }
 
+        [HttpGet]
+        [RequireGruppe(Gruppe.Admin)]
+        public ActionResult RemoveNews(string id) {
+            var mitteilung = DocumentSession.Load<Mitteilung>(id.Replace('_', '/'));
+
+            DocumentSession.Delete(mitteilung);
+            DocumentSession.SaveChanges();
+            return View("Index");
+        }
+
         public ActionResult Termine() {
             var model = new ListTermineModel();
 
@@ -129,13 +139,14 @@ namespace AikidoWebsite.Web.Controllers {
         public ActionResult Ical(string id = "alle") {
             var calendar = new Calendar();
 
-            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= Clock.Now.AddDays(-90).Day);
+            var startDate = Clock.Now.AddDays(-90).Day;
+            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= startDate);
 
             if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
                 termine = termine.Where(m => m.Publikum == Publikum.Mitglieder);
             }
 
-            foreach (var termin in termine.Take(10)) {
+            foreach (var termin in termine) {
                 calendar.Events.Add(CreateEvent(termin));
             }
 
@@ -149,7 +160,9 @@ namespace AikidoWebsite.Web.Controllers {
                 Starttime = termin.StartDatum,
                 Endtime = termin.EndDatum ?? termin.StartDatum.AddHours(1),
                 Organizer = new Organizer(termin.AutorName, "noreplay@aikido-sursee.ch"),
-                Summary = termin.Text
+                Summary = termin.Text,
+                Location = termin.Ort,
+                URL = termin.URL
             };
         }
 

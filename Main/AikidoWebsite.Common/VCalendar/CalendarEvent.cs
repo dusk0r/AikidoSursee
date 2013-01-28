@@ -15,9 +15,9 @@ namespace AikidoWebsite.Common.VCalendar {
         public DateTime Starttime { get; set; }
         public DateTime Endtime { get; set; }
         public Organizer Organizer { get; set; }
+        public string Location { get; set; }
         public string Summary { get; set; }
-
-        // public string URL { get; set; }
+        public string URL { get; set; }
 
         public bool IsValid {
             get {
@@ -62,9 +62,13 @@ namespace AikidoWebsite.Common.VCalendar {
             sb.AppendLine(Organizer.ToString());
             sb.AppendLine("DTSTART:" + FormatDateTime(Starttime));
             sb.AppendLine("DTEND:" + FormatDateTime(Endtime));
-            sb.AppendLine("SUMMARY:" + FormatSummary(Summary));
-            //sb.AppendLine("URL:" + URL);
-            // LOCATION:
+            sb.AppendLine("SUMMARY:" + FormatText(Summary));
+            if (!String.IsNullOrWhiteSpace(URL)) {
+                sb.AppendLine("URL:" + URL);
+            }
+            if (!String.IsNullOrWhiteSpace(Location)) {
+                sb.AppendLine("LOCATION:" + FormatText(Location));
+            }
             sb.AppendLine("END:VEVENT");
 
             return sb.ToString();
@@ -74,7 +78,7 @@ namespace AikidoWebsite.Common.VCalendar {
             return dateTime.ToUniversalTime().ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
         }
 
-        private static string FormatSummary(string text) {
+        private static string FormatText(string text) {
             return text.RemoveNewline().Limit(Summary_Limit);
         }
     }
