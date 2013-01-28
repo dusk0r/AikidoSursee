@@ -129,7 +129,7 @@ namespace AikidoWebsite.Web.Controllers {
         public ActionResult Ical(string id = "alle") {
             var calendar = new Calendar();
 
-            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= Clock.Now.Day);
+            var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum.Day >= Clock.Now.AddDays(-90).Day);
 
             if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
                 termine = termine.Where(m => m.Publikum == Publikum.Mitglieder);
