@@ -8,8 +8,11 @@
 
 <h3>@Model.Titel</h3>
 von @Model.AutorName, @Model.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
+&nbsp;&nbsp;<span class="label">@Model.PublikumString</span>
 <br /><br />
 @Model.Text
 
 <hr />
-@Model.PublikumString
+
+<a href="/Aktuelles" class="btn btn-small btn-primary">Zürück zu den Mitteilungen</a>
+

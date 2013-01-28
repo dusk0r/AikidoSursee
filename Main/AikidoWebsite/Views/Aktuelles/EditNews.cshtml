@@ -26,7 +26,11 @@
     </div>
 <!-- /ko -->
 
-<a href="#" class="btn btn-primary" data-bind="click: save">Save changes</a>
+<div class="btn-group">
+<a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
+<a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
+    <a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
+</div>
 
 
 @section Footer {
@@ -37,9 +41,13 @@
             var self = this;
 
             self.Id = ko.observable(data.Id);
-            self.Titel = ko.observable(data.Titel);
-            self.Text = ko.observable(data.Text);
+            self.Titel = ko.observable(data.Titel || "");
+            self.Text = ko.observable(data.Text || "");
             self.Publikum = ko.observable(data.Publikum || 1);
+
+            //self.Titel.subscribe(function () { viewModel.isDirty(true); });
+            //self.Text.subscribe(function () { viewModel.isDirty(true); });
+            //self.Publikum.subscribe(function () { alert("bla"); viewModel.isDirty(true); });
         }
 
         function Termin() {
@@ -53,6 +61,7 @@
             self.WithTermin = ko.observable(false);
             self.Mitteilung = ko.observable(new Mitteilung(@Html.Raw(Json.Encode(Model.Mitteilung))));
             self.Termin = ko.observable(new Termin(@Html.Raw(Json.Encode(Model.Termin))));
+            self.isDirty = ko.observable(true);
 
             self.save = function () {
                 $.ajax("/Aktuelles/EditNews", {
@@ -61,17 +70,29 @@
                     contentType: "application/json;charset=utf8",
                     dataType: "json",
                     success: function (message, status, jqXHR) {
-                        if (self.Mitteilung().Id() === null) {
-                            window.location = "/Aktuelles/EditNews/" + message.Id.replace("/", "_");
-                        }
+                        //if (self.Mitteilung().Id() === null) {
+                        //    window.location = "/Aktuelles/EditNews/" + message.Id.replace("/", "_");
+                        //}
 
-                        alert(message.Message);
+                        //alert(message.Message);
+                        window.location = "/Aktuelles";
+
                     },
                     error: function (jqXHR) {
                         alert("Irgendwas ist schief gegangen");
                     }
                 });
 
+            };
+
+            self.discard = function () {
+                window.location = "/Aktuelles";
+            };
+
+            self.remove = function () {
+                if (confirm("Mitteilung löschen?")) {
+                    window.location = "/Aktuelles/RemoveNews/" + self.Mitteilung().Id().replace("/", "_");
+                }
             };
         }
 

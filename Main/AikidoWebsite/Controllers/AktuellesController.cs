@@ -32,20 +32,26 @@ namespace AikidoWebsite.Web.Controllers {
         [Inject]
         public IClock Clock { get; set; }
 
-        public ActionResult Index(int start = 0, int count = 30) {
-            var model = new ListMitteilungenModel();
-            //RavenQueryStatistics statistics = null;
 
-            model.Mitteilungen = DocumentSession.Query<Mitteilung>()
-                //.Statistics(out statistics)
-                .OrderByDescending(p => p.ErstelltAm)
-                .Skip(start)
-                .Take(count);
-            model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
-            model.Start = start;
-            model.IsAdmin = User.IsInGroup(Gruppe.Admin);
+        [HttpGet]
+        public ActionResult Index() {
+            var model = CreateListMittelungenModel();
 
             return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult GetMitteilungen(int start = 0, int perPage = 5) {
+            var model = CreateListMittelungenModel(start, perPage);
+
+            return Json(model);
+        }
+
+        [HttpGet]
+        public ActionResult Mitteilung(string id) {
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
+
+            return View(mitteilung);
         }
 
         [RequireGruppe(Gruppe.Admin)]
@@ -56,7 +62,7 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult EditNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(id.Replace('_', '/'));
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
             var model = new EditMitteilungModel { Mitteilung = mitteilung };
 
             return View(model);
@@ -94,11 +100,11 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult RemoveNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(id.Replace('_', '/'));
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
 
             DocumentSession.Delete(mitteilung);
             DocumentSession.SaveChanges();
-            return View("Index");
+            return Redirect("/Aktuelles");
         }
 
         public ActionResult Termine() {
@@ -129,12 +135,6 @@ namespace AikidoWebsite.Web.Controllers {
             return rss;
         }
 
-        public ActionResult Mitteilung(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(id.Replace('_','/'));
-
-            return View(mitteilung);
-        }
-
         public ActionResult Ical(string id = "alle") {
             var calendar = new Calendar();
 
@@ -150,6 +150,22 @@ namespace AikidoWebsite.Web.Controllers {
             }
 
             return new ICalResult(calendar);
+        }
+
+        private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
+            var model = new ListMitteilungenModel();
+
+            model.Mitteilungen = DocumentSession.Query<Mitteilung>()
+                //.Statistics(out statistics)
+            .OrderByDescending(p => p.ErstelltAm)
+            .Skip(start)
+            .Take(perPage);
+            model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
+            model.Start = start;
+            model.PerPage = perPage;
+            model.IsAdmin = User.IsInGroup(Gruppe.Admin);
+
+            return model;
         }
 
         private static CalendarEvent CreateEvent(Termin termin) {
