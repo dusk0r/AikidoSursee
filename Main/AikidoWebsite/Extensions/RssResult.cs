@@ -12,6 +12,8 @@ namespace AikidoWebsite.Web.Extensions {
         private XDocument rssXml;
         private XElement channel;
 
+        private static readonly XNamespace namespaceAtom = "atom";
+
         public RssResult(string title, string link, string description) {
             rssXml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
@@ -20,7 +22,7 @@ namespace AikidoWebsite.Web.Extensions {
                 new XElement("link", link),
                 new XElement("description", description),
                 new XElement("pubDate", FormatDate(DateTime.Now)),
-                new XElement(XNamespace.Get("atom") + "link", 
+                new XElement(namespaceAtom + "link", 
                     new XAttribute("href", @"http://dallas.example.com/rss.xml"), 
                     new XAttribute("rel", "self"), 
                     new XAttribute("type", "application/rss+xml"))

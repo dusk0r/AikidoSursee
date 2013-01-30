@@ -15,7 +15,6 @@ using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
 using AikidoWebsite.Service.Validator;
-using System.Net.Mail;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -156,7 +155,7 @@ namespace AikidoWebsite.Web.Controllers {
         }
 
         private string CreatEmailWithName(string name, string email) {
-            return new MailAddress(email, name).ToString();
+            return String.Format("{0} ({1})", email, name);
         }
 
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
