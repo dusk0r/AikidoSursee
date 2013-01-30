@@ -17,12 +17,17 @@ namespace AikidoWebsite.Data.Entities {
         public DateTime ErstelltAm { get; set; }
         public string AutorId { get; set; }
         public string AutorName { get; set; }
+        public string AutorEmail { get; set; }
         public string Text { get; set; }
         // Todo, custom converter nötig?
         public Publikum Publikum { get; set; }
 
         [JsonIgnore]
         public string PublikumString { get { return Publikum.ToString(); } }
+
+        public Mitteilung() {
+            AutorEmail = "nobody@amigo-online.ch";
+        }
 
         //############################################################################
         #region Object Overrides

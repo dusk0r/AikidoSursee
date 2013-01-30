@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
 using AikidoWebsite.Service.Validator;
+using System.Net.Mail;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -77,6 +78,7 @@ namespace AikidoWebsite.Web.Controllers {
             if (mitteilung.IsNew()) {
                 mitteilung.AutorId = benutzer.Id;
                 mitteilung.AutorName = benutzer.Name;
+                mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.ErstelltAm = Clock.Now;
 
                 ValidatorService.Validate(mitteilung);
@@ -87,6 +89,7 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
                 mitteilung.AutorId = benutzer.Id;
                 mitteilung.AutorName = benutzer.Name;
+                mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
                 mitteilung.Publikum = model.Mitteilung.Publikum;
@@ -129,7 +132,7 @@ namespace AikidoWebsite.Web.Controllers {
 
             foreach (var news in mitteilungen.Take(10)) {
                 var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
-                rss.AddItem(news.Titel, news.Text, url, news.AutorName, news.Id, news.ErstelltAm);
+                rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(news.AutorName, news.AutorEmail), news.Id, news.ErstelltAm);
             }
 
             return rss;
@@ -150,6 +153,10 @@ namespace AikidoWebsite.Web.Controllers {
             }
 
             return new ICalResult(calendar);
+        }
+
+        private string CreatEmailWithName(string name, string email) {
+            return new MailAddress(email, name).ToString();
         }
 
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {

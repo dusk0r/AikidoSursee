@@ -19,11 +19,16 @@ namespace AikidoWebsite.Web.Extensions {
                 new XElement("title", title),
                 new XElement("link", link),
                 new XElement("description", description),
-                new XElement("pubDate", FormatDate(DateTime.Now))
+                new XElement("pubDate", FormatDate(DateTime.Now)),
+                new XElement(XNamespace.Get("atom") + "link", 
+                    new XAttribute("href", @"http://dallas.example.com/rss.xml"), 
+                    new XAttribute("rel", "self"), 
+                    new XAttribute("type", "application/rss+xml"))
             );
 
             rssXml.Add(new XElement("rss", 
                 new XAttribute("version", "2.0"), 
+                new XAttribute(XNamespace.Xmlns + "atom", @"http://www.w3.org/2005/Atom"),
                 channel)
             );
         }
@@ -49,15 +54,15 @@ namespace AikidoWebsite.Web.Extensions {
         }
 
         public void AddItem(string title, string description, string link, string author, string guid, DateTime date) {
-            var guidElement = new XElement("guid", guid);
-            guidElement.SetAttributeValue("isPermaLink", false);
 
             var item = new XElement("item",
                 new XElement("title", title),
                 new XElement("description", description),
                 new XElement("link", link),
                 new XElement("author", author),
-                guidElement,
+                new XElement("guid",
+                    new XAttribute("isPermaLink", false),
+                    guid),
                 new XElement("pubDate", FormatDate(date))
             );
 
@@ -65,7 +70,10 @@ namespace AikidoWebsite.Web.Extensions {
         }
 
         private string FormatDate(DateTime date) {
-            return date.ToString("ddd, dd MMM yyyy HH:mm:ss K", CultureInfo.InvariantCulture);
+            return date.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                 + " "
+                 + date.ToString("%K", CultureInfo.InvariantCulture).Replace(":","");
+
         }
     }
 }
