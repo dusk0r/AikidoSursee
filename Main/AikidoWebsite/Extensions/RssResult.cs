@@ -49,12 +49,15 @@ namespace AikidoWebsite.Web.Extensions {
         }
 
         public void AddItem(string title, string description, string link, string author, string guid, DateTime date) {
+            var guidElement = new XElement("guid", guid);
+            guidElement.SetAttributeValue("isPermaLink", false);
+
             var item = new XElement("item",
                 new XElement("title", title),
                 new XElement("description", description),
                 new XElement("link", link),
                 new XElement("author", author),
-                new XElement("guid", guid),
+                guidElement,
                 new XElement("pubDate", FormatDate(date))
             );
 
@@ -62,7 +65,7 @@ namespace AikidoWebsite.Web.Extensions {
         }
 
         private string FormatDate(DateTime date) {
-            return date.ToString("ddd, d MMM yyyy HH:mm:ss zzz", CultureInfo.InvariantCulture);
+            return date.ToString("ddd, dd MMM yyyy HH:mm:ss K", CultureInfo.InvariantCulture);
         }
     }
 }

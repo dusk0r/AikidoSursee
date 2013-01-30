@@ -128,8 +128,8 @@ namespace AikidoWebsite.Web.Controllers {
             }
 
             foreach (var news in mitteilungen.Take(10)) {
-                var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", news.Id.Replace('/', '_'));
-                rss.AddItem(news.Titel, news.Text, url, news.AutorName, news.AutorId, news.ErstelltAm);
+                var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
+                rss.AddItem(news.Titel, news.Text, url, news.AutorName, news.Id, news.ErstelltAm);
             }
 
             return rss;
