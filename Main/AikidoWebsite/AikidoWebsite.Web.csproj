@@ -202,6 +202,8 @@
     <None Include="Content\less\bootstrap.less" />
     <None Include="Content\less\alerts.less" />
     <None Include="Content\less\accordion.less" />
+    <Content Include="Scripts\ES5.js" />
+    <Content Include="Scripts\ES5.min.js" />
     <Content Include="Scripts\moment.de.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
