@@ -125,8 +125,8 @@ namespace AikidoWebsite.Web.Controllers {
 
             var mitteilungen = DocumentSession.Query<Mitteilung>().OrderByDescending(p => p.ErstelltAm);
 
-            if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Mitglieder);
+            if (id.Equals(Publikum.Alle.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Alle);
             }
 
             foreach (var news in mitteilungen.Take(10)) {
@@ -143,8 +143,8 @@ namespace AikidoWebsite.Web.Controllers {
             var startDate = Clock.Now.AddDays(-90).Date;
             var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum >= startDate);
 
-            if (id.Equals(Publikum.Mitglieder.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                termine = termine.Where(m => m.Publikum == Publikum.Mitglieder);
+            if (id.Equals(Publikum.Alle.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                termine = termine.Where(m => m.Publikum == Publikum.Alle);
             }
 
             foreach (var termin in termine) {
