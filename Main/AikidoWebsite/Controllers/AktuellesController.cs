@@ -8,6 +8,7 @@ using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Raven.Client;
 using Raven.Client.Linq;
+using Raven.Client.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,12 +162,17 @@ namespace AikidoWebsite.Web.Controllers {
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
             var model = new ListMitteilungenModel();
 
+            RavenQueryStatistics stats;
             model.Mitteilungen = DocumentSession.Query<Mitteilung>()
-                //.Statistics(out statistics)
+            .Customize(a => a.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(2)))
+            .Statistics(out stats)
             .OrderByDescending(p => p.ErstelltAm)
             .Skip(start)
-            .Take(perPage);
-            model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
+            .Take(perPage)
+            .ToList();
+
+            //model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
+            model.MitteilungenCount = stats.TotalResults;
             model.Start = start;
             model.PerPage = perPage;
             model.IsAdmin = User.IsInGroup(Gruppe.Admin);
