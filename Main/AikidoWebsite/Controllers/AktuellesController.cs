@@ -63,8 +63,9 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult EditNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
-            var model = new EditMitteilungModel { Mitteilung = mitteilung };
+            var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(RavenDbHelper.DecodeDocumentId(id));
+            var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds);
+            var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
 
             return View(model);
         }

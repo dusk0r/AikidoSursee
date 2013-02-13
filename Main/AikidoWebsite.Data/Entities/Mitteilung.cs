@@ -21,12 +21,14 @@ namespace AikidoWebsite.Data.Entities {
         public string Text { get; set; }
         // Todo, custom converter nötig?
         public Publikum Publikum { get; set; }
+        public IList<string> TerminIds { get; set; }
 
         [JsonIgnore]
         public string PublikumString { get { return Publikum.ToString(); } }
 
         public Mitteilung() {
-            AutorEmail = "nobody@amigo-online.ch";
+            this.AutorEmail = "nobody@amigo-online.ch";
+            this.TerminIds = new List<string>();
         }
 
         //############################################################################

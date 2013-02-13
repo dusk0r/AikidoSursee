@@ -5,6 +5,14 @@
 
 <h2>Mitteilung hinzufügen:</h2>
 
+<div class="btn-group">
+<a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
+<a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
+    <a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
+</div>
+
+<br /><br />
+
 <!-- ko with: Mitteilung -->
     <div class="control-group" data-bind="css: { error: Titel().length < 1 }">
         <label class="control-label">Titel</label>
@@ -15,7 +23,7 @@
     <div class="control-group" data-bind="css: { error: Text().length < 1 }">
         <label class="control-label">Text</label>
         <div class="controls">
-            <textarea class="span10" rows="10" data-bind="value: Text, valueUpdate:'afterkeydown'"></textarea>
+            <textarea class="span10" rows="5" data-bind="value: Text, valueUpdate:'afterkeydown'"></textarea>
         </div>
     </div>
     <div class="control-group">
@@ -26,42 +34,97 @@
     </div>
 <!-- /ko -->
 
-<div class="btn-group">
-<a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
-<a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
-    <a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
-</div>
+Termine:
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Start</th>
+            <th>Ende</th>
+            <th>Text</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- ko foreach: Termine -->
+        <tr>
+            <td>
+                <input type="text" data-bind="value: Titel" />
+            </td>
+            <td>
+                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />
+            </td>
+            <td>
+                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />
+            </td>
+            <td>
+                <textarea rows="2" data-bind="value: Text"></textarea>
+            </td>
+        </tr>
+        <!-- /ko -->
+
+    </tbody>
+</table>
+
+<a class="btn" data-bind="click: addTermin">Termin hinzufügen</a>
 
 @section Footer {
     <script type="text/javascript">
-        var viewModel = new ViewModel();
+        var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
 
         function Mitteilung(data) {
             var self = this;
 
-            self.Id = ko.observable(data.Id);
+            self.Id = ko.observable(data.Id || null);
             self.Titel = ko.observable(data.Titel || "");
             self.Text = ko.observable(data.Text || "");
             self.Publikum = ko.observable(data.Publikum || 1);
 
-            //self.Titel.subscribe(function () { viewModel.isDirty(true); });
-            //self.Text.subscribe(function () { viewModel.isDirty(true); });
-            //self.Publikum.subscribe(function () { alert("bla"); viewModel.isDirty(true); });
+            self.Titel.subscribe(function () { viewModel.isDirty(true); });
+            self.Text.subscribe(function () { viewModel.isDirty(true); });
+            self.Publikum.subscribe(function () { viewModel.isDirty(true); });
         }
 
-        function Termin() {
+        function Termin(data) {
             var self = this;
 
+            if (!data) {
+                data = { Id: null, Titel: "Neuer Termin" };
+            }
+
+            self.Id = ko.observable(data.Id);
+            self.Titel = ko.observable(data.Titel);
+            self.StartDatum = ko.observable(moment(data.StartDatum).toDate());
+            self.EndDatum = ko.observable(moment(data.EndDatum).toDate());
+            self.Ort = ko.observable(data.Ort);
+            self.Text = ko.observable(data.Text);
+
+            self.startDatumString = ko.computed({
+                read: function () {
+                    return moment(self.StartDatum()).format("DD.MM.YYYY HH:mm");
+                },
+                write: function(value) {
+                    self.StartDatum(moment(value, "DD.MM.YYYY HH:mm").toDate());
+                }
+            });
+
+            self.endDatumString = ko.computed({
+                read: function () {
+                    return moment(self.EndDatum()).format("DD.MM.YYYY HH:mm");
+                },
+                write: function (value) {
+                    self.EndDatum(moment(value, "DD.MM.YYYY HH:mm").toDate());
+                }
+            });
         }
 
-        function ViewModel() {
+        function ViewModel(model) {
             var self = this;
 
             self.WithTermin = ko.observable(false);
-            self.Mitteilung = ko.observable(new Mitteilung(@Html.Raw(Json.Encode(Model.Mitteilung))));
-            self.Termin = ko.observable(new Termin(@Html.Raw(Json.Encode(Model.Termin))));
-            self.isDirty = ko.observable(true);
+            self.Mitteilung = ko.observable(new Mitteilung(model.Mitteilung));
+            self.Termine = ko.observableArray(model.Termine.map(function (termin) { return new Termin(termin); }));
+            self.isDirty = ko.observable(false);
 
             self.save = function () {
                 $.ajax("/Aktuelles/EditNews", {
@@ -94,8 +157,13 @@
                     window.location = "/Aktuelles/RemoveNews/" + self.Mitteilung().Id().replace("/", "_");
                 }
             };
+
+            self.addTermin = function () {
+                self.Termine.push(new Termin());
+            };
         }
 
         ko.applyBindings(viewModel);
+        viewModel.isDirty(false);
     </script>
 }

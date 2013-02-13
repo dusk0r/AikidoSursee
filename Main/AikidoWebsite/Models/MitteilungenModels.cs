@@ -17,11 +17,11 @@ namespace AikidoWebsite.Web.Models {
     public class EditMitteilungModel {
         public bool WithTermin { get; set; }
         public Mitteilung Mitteilung { get; set; }
-        public Termin Termin { get; set; }
+        public IEnumerable<Termin> Termine { get; set; }
 
         public EditMitteilungModel() {
             this.Mitteilung = new Mitteilung();
-            this.Termin = new Termin();
+            this.Termine = new List<Termin>();
         }
     }
 }
