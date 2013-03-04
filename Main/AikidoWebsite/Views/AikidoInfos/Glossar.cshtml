@@ -1,0 +1,106 @@
+﻿@model AikidoWebsite.Web.Models.GlossarModel
+
+@{
+    ViewBag.Title = "Glossar";
+}
+
+<h2>Aikido Glossar</h2>
+
+
+<div class="btn-group" data-bind="visible: IsAdmin">
+<button class="btn" data-bind="click: addEntry">Eintrag hinzufügen</button>
+<button class="btn" data-bind="click: save, css: { disabled: !hasChanges() }">Speichern</button>
+</div>
+
+<br /><br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Begriff</th>
+            <th>Erklärung</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- ko foreach: Entries -->
+        <tr>
+            <td style="width: 200px;">
+                <b data-bind="text: Begriff, visible: !$root.IsAdmin"></b>
+                <input data-bind="value: Begriff, visible: $root.IsAdmin" type="text" placeholder="Titel" style="width: 200px;" />
+            </td>
+            <td>
+                <span data-bind="text: Text, visible: !$root.IsAdmin"></span>
+                <textarea data-bind="value: Text, visible: $root.IsAdmin" style="height: 80px; width: 100%; vertical-align: top; resize: none;"></textarea>
+            </td>
+        </tr>
+        <!-- /ko -->
+    </tbody>
+</table>
+
+
+
+@section Footer {
+    <script type="text/javascript">
+        var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+
+        function Entry(data) {
+            var self = this;
+
+            self.Id = data.Id;
+            self.Begriff = ko.observable(data.Begriff);
+            self.Text = ko.observable(data.Text);
+            self.changed = ko.observable(false);
+
+            self.Begriff.subscribe(function () { self.changed(true); });
+            self.Text.subscribe(function () { self.changed(true); });
+        }
+
+        function ViewModel(model) {
+            var self = this;
+
+            self.IsAdmin = model.IsAdmin;
+            self.Entries = ko.observableArray(model.Entries.map(function (entry) { return new Entry(entry); }));
+
+            self.addEntry = function () {
+                var eintrag = new Entry({ Begriff: "", Text: "" });
+                eintrag.changed(true);
+                self.Entries.push(eintrag);
+            };
+
+            self.hasChanges = ko.computed(function () {
+                return self.Entries().some(function (element) { return element.changed(); });
+            });
+
+
+            self.save = function () {
+                if (!self.hasChanges()) {
+                    return false;
+                }
+
+                $.ajax("/AikidoInfos/Glossar", {
+                    type: "POST",
+                    data: ko.toJSON(self.Entries().filter(function (entry) { return entry.changed(); })),
+                    contentType: "application/json;charset=utf8",
+                    dataType: "json",
+                    success: function (message, status, jqXHR) {
+                        //self.Entries.removeAll();
+                        //self.Entries((message.map(function (entry) { return new Entry(entry); })));
+
+                        //alert(message.Message);
+                        //window.location = "/Aktuelles";
+                        window.location.reload(true);
+
+                    },
+                    error: function (jqXHR) {
+                        alert("Irgendwas ist schief gegangen");
+                    }
+                });
+
+            };
+
+        };
+
+        ko.applyBindings(viewModel);
+
+    </script>
+}

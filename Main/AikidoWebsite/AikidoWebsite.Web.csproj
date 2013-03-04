@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AikidoInfosController.cs" />
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -143,6 +144,7 @@
     </Compile>
     <Compile Include="Installer.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AikidoInfoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
     <Compile Include="Models\StundenplanModels.cs" />
     <Compile Include="Models\TermineModels.cs" />
@@ -240,6 +242,8 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\ListUsers.cshtml" />
     <Content Include="Views\Aktuelles\EditNews.cshtml" />
+    <Content Include="Views\AikidoInfos\Faq.cshtml" />
+    <Content Include="Views\AikidoInfos\Glossar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
