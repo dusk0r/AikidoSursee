@@ -45,7 +45,7 @@ namespace AikidoWebsite.Web.Controllers {
         public ActionResult Glossar() {
             var model = new GlossarModel {
                 IsAdmin = User.IsInGroup(Gruppe.Admin),
-                Entries = DocumentSession.Query<GlossarEintrag>()
+                Entries = DocumentSession.Query<GlossarEintrag>().OrderBy(g => g.Begriff)
             };
             return View(model);
         }
