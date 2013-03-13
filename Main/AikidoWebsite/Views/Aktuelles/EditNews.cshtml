@@ -8,7 +8,7 @@
 <div class="btn-group">
 <a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
 <a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
-    <a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
+<a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
 </div>
 
 <br /><br />
@@ -49,13 +49,29 @@ Termine:
         <!-- ko foreach: Termine -->
         <tr>
             <td>
-                <input type="text" data-bind="value: Titel" />
+                <input type="text" data-bind="value: Titel" placeholder="Neuer Termin" />
             </td>
             <td>
-                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />
+@*                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />*@
+                <div class="well">
+                    <div class="input-append date datetimepicker" data-bind="datetimepicker: StartDatum">
+                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" />
+                        <span class="add-on">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
             </td>
             <td>
-                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />
+@*                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />*@
+                <div class="well">
+                    <div class="input-append date datetimepicker" data-bind="datetimepicker: EndDatum">
+                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" />
+                        <span class="add-on">
+                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                        </span>
+                    </div>
+                </div>
             </td>
             <td>
                 <textarea rows="2" data-bind="value: Text"></textarea>
@@ -89,7 +105,7 @@ Termine:
             var self = this;
 
             if (!data) {
-                data = { Id: null, Titel: "Neuer Termin" };
+                data = { Id: null, Titel: "" };
             }
 
             self.Id = ko.observable(data.Id);
@@ -103,7 +119,8 @@ Termine:
                 read: function () {
                     return moment(self.StartDatum()).format("DD.MM.YYYY HH:mm");
                 },
-                write: function(value) {
+                write: function (value) {
+                    //self.startDatum(moment(value).toDate());
                     self.StartDatum(moment(value, "DD.MM.YYYY HH:mm").toDate());
                 }
             });
@@ -116,6 +133,12 @@ Termine:
                     self.EndDatum(moment(value, "DD.MM.YYYY HH:mm").toDate());
                 }
             });
+
+            self.Titel.subscribe(function () { viewModel.isDirty(true); });
+            self.StartDatum.subscribe(function () { viewModel.isDirty(true); });
+            self.EndDatum.subscribe(function () { viewModel.isDirty(true); });
+            self.Ort.subscribe(function () { viewModel.isDirty(true); });
+            self.Text.subscribe(function () { viewModel.isDirty(true); });
         }
 
         function ViewModel(model) {
@@ -160,10 +183,20 @@ Termine:
 
             self.addTermin = function () {
                 self.Termine.push(new Termin());
+
+                $(".datetimepicker").datetimepicker({
+                    language: 'pt-BR'
+                });
             };
         }
 
         ko.applyBindings(viewModel);
         viewModel.isDirty(false);
+
+        //$(function () {
+        //    $(".datetimepicker").datetimepicker({
+        //        language: 'pt-BR'
+        //    });
+        //});
     </script>
 }

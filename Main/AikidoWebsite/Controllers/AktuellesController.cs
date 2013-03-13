@@ -75,15 +75,19 @@ namespace AikidoWebsite.Web.Controllers {
         public JsonResult EditNews(EditMitteilungModel model) {
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
+            PersistTermine(model.Termine, model.Mitteilung.Publikum, benutzer);
+
             Mitteilung mitteilung = model.Mitteilung;
             if (mitteilung.IsNew()) {
                 mitteilung.AutorId = benutzer.Id;
                 mitteilung.AutorName = benutzer.Name;
                 mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.ErstelltAm = Clock.Now;
+                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToList();
 
                 ValidatorService.Validate(mitteilung);
                 DocumentSession.Store(mitteilung);
+
                 DocumentSession.SaveChanges();
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung erstellt");
             } else {
@@ -94,10 +98,38 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
                 mitteilung.Publikum = model.Mitteilung.Publikum;
+                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToList();
 
                 ValidatorService.Validate(mitteilung);
+                
                 DocumentSession.SaveChanges();
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
+            }
+        }
+
+        public void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
+            foreach (var termin in termine) {
+                termin.Publikum = publikum;
+                if (termin.IsNew()) {
+                    //termin.MitteilungId = mitteilung.Id;
+                    termin.ErstellungsDatum = Clock.Now;
+                    termin.AutorId = benutzer.Id;
+                    termin.AutorName = benutzer.Name;
+                    //termin.URL = ...
+
+                    ValidatorService.Validate(termin);
+                    DocumentSession.Store(termin);
+                } else {
+                    var existingTermin = DocumentSession.Load<Termin>(termin.Id);
+                    existingTermin.Titel = termin.Titel;
+                    existingTermin.Text = termin.Text;
+                    existingTermin.StartDatum = termin.StartDatum;
+                    existingTermin.EndDatum = termin.EndDatum;
+                    existingTermin.Ort = termin.Ort;
+
+                    ValidatorService.Validate(termin);
+                }
+
             }
         }
 

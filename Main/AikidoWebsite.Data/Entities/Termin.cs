@@ -12,6 +12,7 @@ namespace AikidoWebsite.Data.Entities {
     public class Termin : IEntity {
 
         public string Id { get; set; }
+        //public string MitteilungId { get; set; }
         public string Titel { get; set; }
         public DateTime StartDatum { get; set; }
         public DateTime? EndDatum { get; set; }

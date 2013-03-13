@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\images\AikidoLogo.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
@@ -204,7 +205,8 @@
     <None Include="Content\less\bootstrap.less" />
     <None Include="Content\less\alerts.less" />
     <None Include="Content\less\accordion.less" />
-    <Content Include="Scripts\date-polyfill.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\custom-bindings.js" />
     <Content Include="Scripts\ES5.js" />
     <Content Include="Scripts\ES5.min.js" />
     <Content Include="Scripts\moment.de.js" />
