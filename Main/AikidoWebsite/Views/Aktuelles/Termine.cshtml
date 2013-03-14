@@ -9,8 +9,8 @@
     <thead>
         <tr>
             <th></th>
-            <th>Datum</th>
-            <th>Termin</th>
+            <th style="min-width: 160px">Datum</th>
+            <th style="min-width: 320px">Termin</th>
             <th></th>
             
         </tr>
@@ -63,10 +63,15 @@
             self.datumString = ko.computed(function () {
                 
                 if (self.endDatum) {
-                    var dateStr1 = moment(self.startDatum).format("DD.MM.YYYY");
-                    var dateStr2 = moment(self.endDatum).format("DD.MM.YYYY");
+                    if (moment(self.startDatum).isSame(self.endDatum, "day")) {
+                        return moment(self.startDatum).format("DD.MM.YYYY hh:mm") + " bis " + moment(self.endDatum).format("hh:mm");
+                    } else {
+                        return moment(self.startDatum).format("DD.MM.YYYY hh:mm") + " bis " + moment(self.endDatum).format("DD.MM.YYYY hh:mm");
+                    }
+                    //var dateStr1 = moment(self.startDatum).format("DD.MM.YYYY hh:mm");
+                    //var dateStr2 = moment(self.endDatum).format("DD.MM.YYYY hh:mm");
 
-                    return dateStr1 + " - " + dateStr2;
+                    //return dateStr1 + " - " + dateStr2;
                 } else {
                     return moment(self.startDatum).format("DD.MM.YYYY");
                 }

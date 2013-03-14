@@ -158,6 +158,16 @@
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\images\AikidoLogo.png" />
+    <Content Include="Content\images\dojo\dojo1.jpg" />
+    <Content Include="Content\images\dojo\dojo1p.jpg" />
+    <Content Include="Content\images\dojo\dojo2.jpg" />
+    <Content Include="Content\images\dojo\dojo2p.jpg" />
+    <Content Include="Content\images\dojo\dojo3.jpg" />
+    <Content Include="Content\images\dojo\dojo3p.jpg" />
+    <Content Include="Content\images\dojo\dojo4.jpg" />
+    <Content Include="Content\images\dojo\dojo4p.jpg" />
+    <Content Include="Content\images\dojo\dojo5.jpg" />
+    <Content Include="Content\images\dojo\dojo5p.jpg" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Global.asax" />
@@ -247,6 +257,8 @@
     <Content Include="Views\Aktuelles\EditNews.cshtml" />
     <Content Include="Views\AikidoInfos\Faq.cshtml" />
     <Content Include="Views\AikidoInfos\Glossar.cshtml" />
+    <Content Include="Views\AikidoInfos\Techniken.cshtml" />
+    <Content Include="Views\Dojo\Bilder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -14,12 +14,33 @@
 <br /><br />
 
 <!-- ko foreach: Entries -->
-<b data-bind="text: Frage, visible: !$root.IsAdmin"></b>
+@*<b data-bind="text: Frage, visible: !$root.IsAdmin"></b>
 <input data-bind="value: Frage, visible: $root.IsAdmin" type="text" placeholder="Titel" />
 <br />
 <span data-bind="text: Text, visible: !$root.IsAdmin"></span>
 <textarea data-bind="value: Text, visible: $root.IsAdmin" rows="5" cols="15"></textarea>
+<hr />*@
+
+<!-- ko if: $root.IsAdmin -->
+<table>
+    <tr>
+        <td style="vertical-align: top;">
+            <input data-bind="value: Frage" type="text" placeholder="Titel" />
+        </td>
+        <td>
+            <textarea data-bind="value: Text" rows="5" style="min-width: 400px"></textarea>
+        </td>
+    </tr>
+</table>
+<!-- /ko -->
+
+<!-- ko if: !$root.IsAdmin -->
+<b data-bind="text: Frage"></b><br />
+<span data-bind="text: Text"></span>
+<!-- /ko -->
+
 <hr />
+
 <!-- /ko -->
 
 @section Footer {

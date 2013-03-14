@@ -39,9 +39,9 @@ Termine:
 <table class="table">
     <thead>
         <tr>
-            <th>Titel</th>
-            <th>Start</th>
-            <th>Ende</th>
+            <th style="width: 220px">Titel</th>
+            <th style="width: 170px">Start</th>
+            <th style="width: 170px">Ende</th>
             <th>Text</th>
         </tr>
     </thead>
@@ -55,7 +55,7 @@ Termine:
 @*                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />*@
                 <div class="well">
                     <div class="input-append date datetimepicker" data-bind="datetimepicker: StartDatum">
-                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" />
+                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
                         <span class="add-on">
                             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                         </span>
@@ -66,7 +66,7 @@ Termine:
 @*                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />*@
                 <div class="well">
                     <div class="input-append date datetimepicker" data-bind="datetimepicker: EndDatum">
-                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" />
+                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
                         <span class="add-on">
                             <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                         </span>
@@ -74,7 +74,7 @@ Termine:
                 </div>
             </td>
             <td>
-                <textarea rows="2" data-bind="value: Text"></textarea>
+                <textarea rows="2" data-bind="value: Text" style="min-width: 300px"></textarea>
             </td>
         </tr>
         <!-- /ko -->

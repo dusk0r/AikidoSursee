@@ -1,0 +1,34 @@
+﻿@model IEnumerable<string>
+
+@{
+    ViewBag.Title = "Bilder";
+}
+
+<h2>Bilder</h2>
+
+<table>
+    <tr>
+        @foreach (var image in Model) {
+            <td>
+                <a href="javascript: return 0;" onclick="changeImage('@image')">
+                    <img src="/Content/images/dojo/@image.Replace(".jpg","p.jpg")" width="140" height="93" />
+                </a>
+            </td>
+        }
+    </tr>
+    <tr>
+        <td colspan="@Model.Count()">
+            <br />
+            <img id="image" src="/Content/images/dojo/@Model.First()" width="800" height="534" />
+        </td>
+    </tr>
+</table>
+
+@section Footer {
+    <script type="text/javascript">
+        function changeImage(image) {
+            $("#image").attr("src", "/Content/images/dojo/" + image);
+        }
+
+    </script>
+}
