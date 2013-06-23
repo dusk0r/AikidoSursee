@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>@ViewBag.Title</title>
+    <title>Aikido Sursee - @ViewBag.Title</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="@Url.Content("~/Content/bootstrap.css")" type="text/css" />
@@ -13,9 +13,9 @@
     <meta http-equiv="pragma" content="no-cache" />
 </head>
 <body>
-    <div class="navbar">
+    <div class="navbar" style="background: url(@Url.Content("~/Content/images/AikidoHeaderBackground.png")) no-repeat">
         <div class="navbar-inner">
-            <img class="brand" src="../../Content/images/AikidoLogo.png" alt="Aikido Sursee" />
+            <img class="brand" src="@Url.Content("~/Content/images/AikidoHeader.png")" alt="Aikido Sursee" />
 
             @if (Request.IsAuthenticated) {
                 <div class="btn-group pull-right">

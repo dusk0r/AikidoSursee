@@ -11,6 +11,7 @@ using Raven.Client;
 using AikidoWebsite.Data.ValueObjects;
 
 namespace AikidoWebsite.Controllers {
+
     public class HomeController : Controller {
 
         [Inject]
