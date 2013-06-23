@@ -261,6 +261,7 @@
     <Content Include="Views\AikidoInfos\Glossar.cshtml" />
     <Content Include="Views\AikidoInfos\Techniken.cshtml" />
     <Content Include="Views\Dojo\Bilder.cshtml" />
+    <Content Include="Views\Dojo\Personen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

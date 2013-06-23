@@ -38,5 +38,9 @@ namespace AikidoWebsite.Web.Controllers {
             return View(imageList);
         }
 
+        public ActionResult Personen() {
+            return View();
+        }
+
     }
 }
