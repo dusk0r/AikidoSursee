@@ -172,6 +172,26 @@
     <Content Include="Content\images\dojo\dojo5p.jpg" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\lehrer\armin-s.jpg" />
+    <Content Include="Content\images\lehrer\armin.jpg" />
+    <Content Include="Content\images\lehrer\beat-s.jpg" />
+    <Content Include="Content\images\lehrer\beat.jpg" />
+    <Content Include="Content\images\lehrer\georges-s.jpg" />
+    <Content Include="Content\images\lehrer\georges.jpg" />
+    <Content Include="Content\images\lehrer\hanspeter-s.jpg" />
+    <Content Include="Content\images\lehrer\hanspeter.jpg" />
+    <Content Include="Content\images\lehrer\manuela-s.jpg" />
+    <Content Include="Content\images\lehrer\manuela.jpg" />
+    <Content Include="Content\images\lehrer\marcel-s.jpg" />
+    <Content Include="Content\images\lehrer\marcel.jpg" />
+    <Content Include="Content\images\lehrer\markus-s.jpg" />
+    <Content Include="Content\images\lehrer\markus.jpg" />
+    <Content Include="Content\images\lehrer\nick-s.jpg" />
+    <Content Include="Content\images\lehrer\nick.jpg" />
+    <Content Include="Content\images\lehrer\priska-s.jpg" />
+    <Content Include="Content\images\lehrer\priska.jpg" />
+    <Content Include="Content\images\lehrer\toni-s.jpg" />
+    <Content Include="Content\images\lehrer\toni.jpg" />
     <Content Include="Global.asax" />
     <Content Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
