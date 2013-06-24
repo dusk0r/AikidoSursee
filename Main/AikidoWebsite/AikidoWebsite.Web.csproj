@@ -157,6 +157,7 @@
     <None Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\font\fontawesome-webfont.svg" />
     <Content Include="Content\images\AikidoHeader.png" />
     <Content Include="Content\images\AikidoHeaderBackground.png" />
     <Content Include="Content\images\AikidoLogo.png" />
@@ -196,6 +197,19 @@
     <Content Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\font\fontawesome-webfont.eot" />
+    <Content Include="Content\font\fontawesome-webfont.ttf" />
+    <Content Include="Content\font\fontawesome-webfont.woff" />
+    <Content Include="Content\font\FontAwesome.otf" />
+    <Content Include="Content\less\fontAwesome\bootstrap.less" />
+    <Content Include="Content\less\fontAwesome\core.less" />
+    <Content Include="Content\less\fontAwesome\extras.less" />
+    <Content Include="Content\less\fontAwesome\font-awesome-ie7.less" />
+    <Content Include="Content\less\fontAwesome\font-awesome.less" />
+    <Content Include="Content\less\fontAwesome\icons.less" />
+    <Content Include="Content\less\fontAwesome\mixins.less" />
+    <Content Include="Content\less\fontAwesome\path.less" />
+    <Content Include="Content\less\fontAwesome\variables.less" />
     <None Include="Content\less\wells.less" />
     <None Include="Content\less\variables.less" />
     <None Include="Content\less\utilities.less" />
