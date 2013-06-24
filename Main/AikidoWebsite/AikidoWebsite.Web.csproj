@@ -258,6 +258,7 @@
     <Content Include="Scripts\moment.de.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\wysihtml5-0.4.0pre.js" />
     <Content Include="Views\Aktuelles\Index.cshtml" />
     <Content Include="Views\Aktuelles\Termine.cshtml" />
     <Content Include="Views\Dojo\Trainingszeiten.cshtml" />
