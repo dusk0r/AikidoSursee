@@ -252,6 +252,7 @@
     <None Include="Content\less\alerts.less" />
     <None Include="Content\less\accordion.less" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap-wysihtml5.js" />
     <Content Include="Scripts\custom-bindings.js" />
     <Content Include="Scripts\ES5.js" />
     <Content Include="Scripts\ES5.min.js" />
@@ -264,6 +265,7 @@
     <Content Include="Views\Dojo\Trainingszeiten.cshtml" />
     <Content Include="Views\Aktuelles\Mitteilung.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
+    <Content Include="Content\less\wysihtml5.less" />
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
