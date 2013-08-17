@@ -66,5 +66,8 @@ namespace AikidoWebsite.Web.Controllers {
             return View();
         }
 
+        public ActionResult Links() {
+            return View();
+        }
     }
 }

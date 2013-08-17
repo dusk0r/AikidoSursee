@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mail;
 using System.Web.Mvc;
 
 namespace AikidoWebsite.Web.Controllers {
@@ -40,6 +41,33 @@ namespace AikidoWebsite.Web.Controllers {
 
         public ActionResult Personen() {
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult Kontakt() {
+            var model = new KontaktModel();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Kontakt(KontaktModel model) {
+            // Todo, check
+
+            MailMessage mail = new MailMessage();
+
+            //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            //SmtpClient smtpClient = new SmtpClient();
+
+            mail.From = "info@aikido-sursee.ch";
+            mail.To = "chris@amigo-online.ch";
+            mail.Subject = "Anfrage: " + model.Bemerkung.Limit(20);
+            mail.Body = model.FormatText();
+
+
+            //smtpClient.Send(mail);
+
+            return View("KontaktGesendet");
         }
 
     }

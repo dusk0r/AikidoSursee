@@ -1,0 +1,50 @@
+﻿@model AikidoWebsite.Web.Models.KontaktModel
+@{
+    ViewBag.Title = "Kontakt";
+}
+
+<style type="text/css">
+    .kontaktTable td {
+        padding: 5px;
+    }
+    .kontaktTable input {
+        width: 400px;
+    }
+    .kontaktTable textarea {
+        width: 400px;
+        height: 250px;
+    }
+</style>
+
+<h2>Kontakt</h2>
+
+@using (Html.BeginForm("Kontakt", "Dojo", FormMethod.Post)) {
+    <table class="kontaktTable">
+        <tr>
+            <td>
+                Name:
+            </td>
+            <td>@Html.TextBoxFor(x => x.Name)</td>
+        </tr>
+        <tr>
+            <td>
+                E-Mail Adresse:
+            </td>
+            <td>@Html.TextBoxFor(x => x.EMail)
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;">
+                Bemerkung:
+            </td>
+            <td>@Html.TextAreaFor(x => x.Bemerkung)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right;">
+                <input type="submit" value="Abschicken" style="width: auto;" />
+            </td>
+        </tr>
+
+    </table>
+}

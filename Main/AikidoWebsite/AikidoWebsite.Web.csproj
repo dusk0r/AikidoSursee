@@ -75,6 +75,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RavenDB.Client.1.0.992\lib\net40\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha.Web">
+      <HintPath>..\packages\RecaptchaNet.1.2\lib\net40\Recaptcha.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
@@ -145,6 +148,7 @@
     <Compile Include="Installer.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AikidoInfoModels.cs" />
+    <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
     <Compile Include="Models\StundenplanModels.cs" />
     <Compile Include="Models\TermineModels.cs" />
@@ -252,6 +256,7 @@
     <None Include="Content\less\bootstrap.less" />
     <None Include="Content\less\alerts.less" />
     <None Include="Content\less\accordion.less" />
+    <Content Include="RecaptchaNet.ReadMe.txt" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-wysihtml5.js" />
     <Content Include="Scripts\custom-bindings.js" />
@@ -300,6 +305,9 @@
     <Content Include="Views\AikidoInfos\Techniken.cshtml" />
     <Content Include="Views\Dojo\Bilder.cshtml" />
     <Content Include="Views\Dojo\Personen.cshtml" />
+    <Content Include="Views\AikidoInfos\Links.cshtml" />
+    <Content Include="Views\Dojo\Kontakt.cshtml" />
+    <Content Include="Views\Dojo\KontaktGesendet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
