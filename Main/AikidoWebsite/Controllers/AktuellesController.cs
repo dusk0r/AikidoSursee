@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
 using AikidoWebsite.Service.Validator;
+using MarkdownSharp;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -33,6 +34,7 @@ namespace AikidoWebsite.Web.Controllers {
         [Inject]
         public IClock Clock { get; set; }
 
+        private Markdown Markdown = new Markdown();
 
         [HttpGet]
         public ActionResult Index() {
@@ -203,6 +205,11 @@ namespace AikidoWebsite.Web.Controllers {
             .Skip(start)
             .Take(perPage)
             .ToList();
+
+            // Process Markdown
+            foreach (var mitteilung in model.Mitteilungen) {
+                mitteilung.Text = Markdown.Transform(mitteilung.Text);
+            }
 
             //model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
             model.MitteilungenCount = stats.TotalResults;
