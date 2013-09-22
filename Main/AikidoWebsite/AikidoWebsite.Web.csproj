@@ -136,6 +136,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AikidoInfosController.cs" />
     <Compile Include="Controllers\AktuellesController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\JsonSaveSuccess.cs" />

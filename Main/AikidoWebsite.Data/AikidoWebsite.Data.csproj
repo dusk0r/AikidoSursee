@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\GroupSetConverter.cs" />
+    <Compile Include="Entities\Article.cs" />
     <Compile Include="Entities\Benutzer.cs" />
     <Compile Include="Entities\FaqEintrag.cs" />
     <Compile Include="Entities\GlossarEintrag.cs" />
