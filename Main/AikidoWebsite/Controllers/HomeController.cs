@@ -75,6 +75,10 @@ namespace AikidoWebsite.Controllers {
             return RedirectToAction("Index");
         }
 
+        public ActionResult Impresum() {
+            return View();
+        }
+
 
         //public JsonResult AddTestAccounts() {
         //    //var userAccount = new AikidoWebsite.Data.Models.NewAccountModel {

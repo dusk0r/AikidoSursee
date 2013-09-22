@@ -317,10 +317,10 @@
     <Content Include="Views\AikidoInfos\Links.cshtml" />
     <Content Include="Views\Dojo\Kontakt.cshtml" />
     <Content Include="Views\Dojo\KontaktGesendet.cshtml" />
+    <Content Include="Views\Home\Impresum.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
