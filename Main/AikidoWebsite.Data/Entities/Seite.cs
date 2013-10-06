@@ -1,31 +1,29 @@
 ﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.ValueObjects;
+using MarkdownSharp;
 using Newtonsoft.Json;
-using Raven.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace AikidoWebsite.Data.Entities {
-    
-    public class Termin : IEntity {
+    public class Seite : IEntity {
+        private static readonly Markdown MarkdownEncoder = new Markdown(new MarkdownOptions { });
 
         public string Id { get; set; }
-        //public string MitteilungId { get; set; }
-        public string Titel { get; set; }
-        public DateTime StartDatum { get; set; }
-        public DateTime? EndDatum { get; set; }
-        public string Ort { get; set; }
-        public Publikum Publikum { get; set; }
-        public string Text { get; set; }
-        public string URL { get; set; }
-        public string AutorId { get; set; }
-        public string AutorName { get; set; }
+        public string Name { get; set; }
         public DateTime ErstellungsDatum { get; set; }
+        public string Autor { get; set; }
+        public int Revision { get; set; }
+        public ISet<Seite> AlteRevisionen { get; set; }
+        public string Markdown { get; set; }
 
         [JsonIgnore]
-        public string PublikumString { get { return Publikum.ToString(); } }
+        public string Html { get { return MarkdownEncoder.Transform(Markdown); } }
+
+        public Seite() {
+            this.AlteRevisionen = new HashSet<Seite>();
+        }
 
         //############################################################################
         #region Object Overrides
@@ -39,17 +37,20 @@ namespace AikidoWebsite.Data.Entities {
                 return true;
             }
 
-            var other = obj as Termin;
+            var other = obj as Seite;
 
-            return (other == null) ? false : Id.Equals(other.Id);
+            if (other == null) {
+                return false;
+            }
+
+            return (Id == null) ? false : Id.Equals(other.Id) && Revision.Equals(other.Revision);
         }
 
         public override int GetHashCode() {
-            return (Id == null) ? base.GetHashCode() : Id.GetHashCode();
+            return (Id == null) ? base.GetHashCode() : HashCode.FromObjects(Id, Revision);
         }
 
         #endregion
         //############################################################################
-
     }
 }

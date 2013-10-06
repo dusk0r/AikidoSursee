@@ -39,21 +39,21 @@ namespace AikidoWebsite.Data.Entities {
         }
 
         public override bool Equals(object obj) {
-            if (!(obj is Mitteilung)) {
+            if (Object.ReferenceEquals(this, obj)) {
+                return true;
+            }
+
+            var other = obj as Mitteilung;
+
+            if (other == null) {
                 return false;
             }
 
-            var that = (Mitteilung)obj;
-
-            if (this.Id != null) {
-                return this.Id.Equals(that.Id);
-            } else {
-                return Object.ReferenceEquals(this, that);
-            }
+            return (Id == null) ? Id.Equals(other.Id) : false;
         }
 
         public override int GetHashCode() {
-            return (Id == null) ? ((object)this).GetHashCode() : Id.GetHashCode();
+            return (Id == null) ? base.GetHashCode() : Id.GetHashCode();
         }
 
         #endregion

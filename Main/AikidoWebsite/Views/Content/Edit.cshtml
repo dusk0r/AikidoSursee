@@ -1,0 +1,17 @@
+﻿@model AikidoWebsite.Web.Models.SeiteModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit", "Content", FormMethod.Post)) {
+
+<text>Name:</text> @Model.Name<br />
+<text>Revision:</text> @Model.Revision<br />
+<text>Inhalt:</text><br />
+@Html.TextAreaFor(x => x.Markdown)
+
+    @Html.HiddenFor(x => x.Name)
+    <input type="submit" value="speichern" />
+}

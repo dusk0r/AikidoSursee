@@ -154,6 +154,7 @@
     <Compile Include="Models\AikidoInfoModels.cs" />
     <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
+    <Compile Include="Models\SiteModels.cs" />
     <Compile Include="Models\StundenplanModels.cs" />
     <Compile Include="Models\TermineModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -319,6 +320,9 @@
     <Content Include="Views\Dojo\Kontakt.cshtml" />
     <Content Include="Views\Dojo\KontaktGesendet.cshtml" />
     <Content Include="Views\Home\Impresum.cshtml" />
+    <Content Include="Views\Content\Show.cshtml" />
+    <Content Include="Views\Content\ArtikelNichtGefunden.cshtml" />
+    <Content Include="Views\Content\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

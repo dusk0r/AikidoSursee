@@ -41,21 +41,17 @@ namespace AikidoWebsite.Data.Entities {
         }
 
         public override bool Equals(object obj) {
-            if (!(obj is Benutzer)) {
-                return false;
+            if (Object.ReferenceEquals(this, obj)) {
+                return true;
             }
 
-            var that = (Benutzer)obj;
+            var other = obj as Benutzer;
 
-            if (this.Id != null) {
-                return this.Id.Equals(that.Id);
-            } else {
-                return Object.ReferenceEquals(this, that);
-            }
+            return (other == null) ? false : Id.Equals(other.Id);
         }
 
         public override int GetHashCode() {
-            return (Id == null) ? ((object)this).GetHashCode() : Id.GetHashCode();
+            return (Id == null) ? base.GetHashCode() : Id.GetHashCode();
         }
 
         #endregion
