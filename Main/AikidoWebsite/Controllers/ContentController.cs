@@ -55,12 +55,10 @@ namespace AikidoWebsite.Web.Controllers {
 
             if (site == null) {
                 site = new Seite {
-                    Revision = 1,
+                    Revision = 0,
                     Name = model.Name
                 };
             } else {
-                site.Revision += 1;
-
                 // Revisionen aufräumen
                 foreach (var revison in site.AlteRevisionen) {
                     oldRevisions.Add(revison);
@@ -78,6 +76,7 @@ namespace AikidoWebsite.Web.Controllers {
             site.ErstellungsDatum = Clock.Now;
             site.Autor = benutzer.Name;
             site.Markdown = model.Markdown;
+            site.Revision += 1;
 
             DocumentSession.Store(site);
             DocumentSession.SaveChanges();
