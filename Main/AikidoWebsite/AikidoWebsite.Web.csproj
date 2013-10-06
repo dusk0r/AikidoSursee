@@ -166,6 +166,10 @@
     <None Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\font-awesome-ie7.css" />
+    <Content Include="Content\font-awesome-ie7.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\font\fontawesome-webfont.svg" />
     <Content Include="Content\images\AikidoHeader.png" />
     <Content Include="Content\images\AikidoHeaderBackground.png" />
@@ -209,6 +213,8 @@
     <Content Include="Content\images\personen\sonja.jpg" />
     <Content Include="Content\images\personen\toni-s.jpg" />
     <Content Include="Content\images\personen\toni.jpg" />
+    <Content Include="Content\pagedown\Markdown.Editor.Icons.png" />
+    <Content Include="Content\pagedown\pagedown.bootstrap.css" />
     <Content Include="Global.asax" />
     <Content Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -276,6 +282,9 @@
     <Content Include="Scripts\moment.de.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\pagedown\Markdown.Converter.js" />
+    <Content Include="Scripts\pagedown\Markdown.Editor.js" />
+    <Content Include="Scripts\pagedown\Markdown.Sanitizer.js" />
     <Content Include="Scripts\wysihtml5-0.4.0pre.js" />
     <Content Include="Views\Aktuelles\Index.cshtml" />
     <Content Include="Views\Aktuelles\Termine.cshtml" />
