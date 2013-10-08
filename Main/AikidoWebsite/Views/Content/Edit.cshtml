@@ -65,7 +65,8 @@
             var data = { Name: '@Model.Name', Markdown: $("Markdown").value };
             $.post("/Content/Edit", $("#contentForm").serialize())
             .done(function (data) {
-                location.reload(true);
+                location.href = window.location.href.split('?')[0] + "?saved=true";
+                //location.reload(true);
             })
             .fail(function () { });
 

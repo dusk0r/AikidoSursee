@@ -10,6 +10,7 @@ namespace AikidoWebsite.Web.Models {
         public string Name { get; set; }
         public int Revision { get; set; }
         public string Markdown { get; set; }
+        public bool Saved { get; set; }
     }
 
 }

@@ -33,13 +33,14 @@ namespace AikidoWebsite.Web.Controllers {
         }
 
         [RequireGruppe(Gruppe.Admin)]
-        public ActionResult Edit(string id) {
+        public ActionResult Edit(string id, bool saved = false) {
             var article = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == id);
 
             var model = new SeiteModel {
                 Name = id,
                 Revision = (article != null) ? article.Revision : 0,
-                Markdown = (article != null) ? article.Markdown : ""
+                Markdown = (article != null) ? article.Markdown : "",
+                Saved = saved
             };
 
             return View(model);
