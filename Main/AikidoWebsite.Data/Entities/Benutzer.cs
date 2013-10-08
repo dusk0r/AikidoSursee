@@ -69,5 +69,34 @@ namespace AikidoWebsite.Data.Entities {
             IstAktiv = isActive;
         }
 
+        /// <summary>
+        /// Setzt ein neues Passwort
+        /// </summary>
+        /// <param name="password"></param>
+        public void SetPassword(string password) {
+            PasswortHash = BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        /// <summary>
+        /// Überprüft das angegebene Passwort mit dem gespeicherten Hash
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public bool CheckPassword(string password) {
+            if (password == null) {
+                return false;
+            }
+
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+
+            uint diff = (uint)PasswortHash.Length ^ (uint)hashedPassword.Length;
+
+            for (int i = 0; i < PasswortHash.Length && i < hashedPassword.Length; i++) {
+                diff |= (uint)PasswortHash[i] ^ (uint)hashedPassword[i];
+            }
+
+            return diff == 0;
+        }
+
     }
 }
