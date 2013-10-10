@@ -4,14 +4,14 @@
 }
 
 <style type="text/css">
-    .wmd-input {
+    .creole-input {
         width: 800px;
         height: 400px;
         border: 1px solid lightgrey;
         resize: none;
     }
 
-    .wmd-preview {
+    .creole-preview {
         border: 1px dotted red;
         padding: 3px;
     }
@@ -27,9 +27,11 @@
 <span class="btn disabled"><b>Revision:</b> @Model.Revision</span>
 </div>
     
+<br /><br />
+    
 <div class="wmd-panel">
      <div id="wmd-button-bar"></div>   
-     @Html.TextAreaFor(x => x.Markdown, new { @class = "wmd-input", id = "wmd-input" })
+     @Html.TextAreaFor(x => x.Markdown, new { @class = "creole-input", id = "creole-input" })
     </div>
 
     @Html.HiddenFor(x => x.Name)
@@ -38,27 +40,43 @@
 
 <ul class="nav nav-tabs">
 <li class="active"><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
-<li><a href="#markdown" data-toggle="tab">Markdown Hilfe</a></li>
+<li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
+<li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
 </ul>
 
 <div class="tab-content">
 
     <div class="tab-pane active" id="vorschau">
-        <div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+        <div id="creole-preview" class="creole-preview"></div>
     </div>
-    <div class="tab-pane" id="markdown">
+    <div class="tab-pane" id="currentV">
+        @Html.Raw(Model.Html)
+    </div>
+    <div class="tab-pane" id="creole">
         Test
-
     </div>
 </div>
 
 @section Footer {
     <script type="text/javascript">
         $(function () {
-            var converter = new markdownConv.Converter();
-            var editor = new markdownConv.Editor(converter);
+            // Creole Preview aktivieren
+            var input = document.getElementById("creole-input");
+            var preview = document.getElementById("creole-preview");
+            var creole = new Parse.Simple.Creole({
+                forIE: document.all,
+                interwiki: {},
+                linkFormat: ''
+            });
 
-            editor.run();
+            var render = function () {
+                preview.innerHTML = "";
+                creole.parse(preview, input.value);
+            };
+
+            input.onkeyup = function () { render(); }
+
+            render();
         });
 
         function save() {

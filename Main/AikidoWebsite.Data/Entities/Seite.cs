@@ -1,14 +1,14 @@
 ﻿using AikidoWebsite.Common;
-using MarkdownSharp;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Wiki;
 
 namespace AikidoWebsite.Data.Entities {
     public class Seite : IEntity {
-        private static readonly Markdown MarkdownEncoder = new Markdown(new MarkdownOptions { });
+        private static readonly CreoleParser CreoleParser = new CreoleParser();
 
         public string Id { get; set; }
         public string Name { get; set; }
@@ -16,10 +16,10 @@ namespace AikidoWebsite.Data.Entities {
         public string Autor { get; set; }
         public int Revision { get; set; }
         public ISet<Seite> AlteRevisionen { get; set; }
-        public string Markdown { get; set; }
+        public string WikiCreole { get; set; }
 
         [JsonIgnore]
-        public string Html { get { return MarkdownEncoder.Transform(Markdown); } }
+        public string Html { get { return CreoleParser.ToHTML(WikiCreole ?? ""); } }
 
         public Seite() {
             this.AlteRevisionen = new HashSet<Seite>();

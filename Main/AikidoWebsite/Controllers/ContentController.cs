@@ -39,7 +39,8 @@ namespace AikidoWebsite.Web.Controllers {
             var model = new SeiteModel {
                 Name = id,
                 Revision = (article != null) ? article.Revision : 0,
-                Markdown = (article != null) ? article.Markdown : "",
+                Markdown = (article != null) ? article.WikiCreole : "",
+                Html = (article != null) ? article.Html : "",
                 Saved = saved
             };
 
@@ -69,14 +70,14 @@ namespace AikidoWebsite.Web.Controllers {
                     Autor = site.Autor, 
                     ErstellungsDatum = site.ErstellungsDatum, 
                     Revision = site.Revision, 
-                    Markdown = site.Markdown });
+                    WikiCreole = site.WikiCreole });
                 site.AlteRevisionen = oldRevisions;
             }
 
             // Update
             site.ErstellungsDatum = Clock.Now;
             site.Autor = benutzer.Name;
-            site.Markdown = model.Markdown;
+            site.WikiCreole = model.Markdown;
             site.Revision += 1;
 
             DocumentSession.Store(site);

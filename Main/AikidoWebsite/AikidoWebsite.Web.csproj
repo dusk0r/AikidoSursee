@@ -163,7 +163,6 @@
     <Compile Include="Windsor\WindsorControllerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\font-awesome-ie7.css" />
@@ -213,8 +212,6 @@
     <Content Include="Content\images\personen\sonja.jpg" />
     <Content Include="Content\images\personen\toni-s.jpg" />
     <Content Include="Content\images\personen\toni.jpg" />
-    <Content Include="Content\pagedown\Markdown.Editor.Icons.png" />
-    <Content Include="Content\pagedown\pagedown.bootstrap.css" />
     <Content Include="Global.asax" />
     <Content Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -276,6 +273,7 @@
     <Content Include="RecaptchaNet.ReadMe.txt" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-wysihtml5.js" />
+    <Content Include="Scripts\creole.js" />
     <Content Include="Scripts\custom-bindings.js" />
     <Content Include="Scripts\ES5.js" />
     <Content Include="Scripts\ES5.min.js" />
@@ -284,7 +282,6 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\pagedown\Markdown.Converter.js" />
     <Content Include="Scripts\pagedown\Markdown.Editor.js" />
-    <Content Include="Scripts\pagedown\Markdown.Sanitizer.js" />
     <Content Include="Scripts\wysihtml5-0.4.0pre.js" />
     <Content Include="Views\Aktuelles\Index.cshtml" />
     <Content Include="Views\Aktuelles\Termine.cshtml" />
