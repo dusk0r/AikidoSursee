@@ -29,16 +29,16 @@
 
 <!-- ko with: Mitteilung -->
     <div class="control-group" data-bind="css: { error: Titel().length < 1 }">
-        <label class="control-label">Titel</label>
+        <label class="control-label"><h4>Titel</h4></label>
         <div class="controls">
             <input type="text" size="30" class="span10" data-bind="value: Titel, valueUpdate:'afterkeydown'" />
         </div>
     </div>
     <div class="control-group" data-bind="css: { error: Text().length < 1 }">
-        <label class="control-label">Text</label>
+        <label class="control-label"><h4>Text</h4></label>
 
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#text" data-toggle="tab">Text</a></li>
+            <li class="active"><a href="#text" data-toggle="tab">Bearbeiten</a></li>
             <li><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
             <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
             <li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
@@ -66,17 +66,16 @@
 
         <br />
 
-
     </div>
     <div class="control-group">
-        <label class="control-label">Publikum</label>
+        <label class="control-label"><h4>Publikum</h4></label>
         <div class="controls">
             @Html.PublikumDropDown("publikum", "value: Publikum")
         </div>
     </div>
 <!-- /ko -->
 
-Termine:
+<h4>Termine</h4>
 
 <table class="table">
     <thead>

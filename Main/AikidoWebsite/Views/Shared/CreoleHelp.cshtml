@@ -2,8 +2,13 @@
     .creoleHelp > tbody > tr:nth-child(even) {
         background-color: #F3F3F3;
     }
-        .creoleHelp > tbody > tr > td {
+
+    .creoleHelp > tbody > tr > td {
         padding-right: 35px;
+    }
+
+    .creoleHelp > thead > tr > th {
+        text-align: left;
     }
 </style>
 
@@ -20,15 +25,15 @@
     </thead>
     <tbody>
         <tr>
-            <td>Fett</td>
-            <td>**Text**</td>
-            <td><b>Text</b></td>
-        </tr>
-
-        <tr>
             <td>Kursiv</td>
             <td>//Text//</td>
             <td><em>Text</em></td>
+        </tr>
+
+        <tr>
+            <td>Fett</td>
+            <td>**Text**</td>
+            <td><b>Text</b></td>
         </tr>
 
         <tr>
@@ -150,7 +155,8 @@
 
         <tr>
             <td>Tabelle</td>
-            <td style="font-family: monospace; white-space: pre;">|=Überschrift1 |=Überschrift2    |<br />|Inhalt 1      | Inhalt 2        |</td>
+            <td style="font-family: monospace; white-space: pre;">|=Überschrift1 |=Überschrift2    |<br />
+                |Inhalt 1      | Inhalt 2        |</td>
             <td>
                 <table>
                     <tr>
