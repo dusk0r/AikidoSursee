@@ -6,7 +6,7 @@ using System.Text;
 namespace AikidoWebsite.Data.ValueObjects {
 
     public enum Publikum {
-        Mitglieder = 1,
-        Alle = 2
+        Sursee = 1,
+        Extern = 2
     }
 }

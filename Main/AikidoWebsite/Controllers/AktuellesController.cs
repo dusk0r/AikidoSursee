@@ -16,7 +16,6 @@ using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
 using AikidoWebsite.Service.Validator;
-using MarkdownSharp;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -33,8 +32,6 @@ namespace AikidoWebsite.Web.Controllers {
 
         [Inject]
         public IClock Clock { get; set; }
-
-        private Markdown Markdown = new Markdown();
 
         [HttpGet]
         public ActionResult Index() {
@@ -161,8 +158,11 @@ namespace AikidoWebsite.Web.Controllers {
 
             var mitteilungen = DocumentSession.Query<Mitteilung>().OrderByDescending(p => p.ErstelltAm);
 
-            if (id.Equals(Publikum.Alle.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Alle);
+            if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Extern);
+            }
+            if (id.Equals(Publikum.Sursee.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Sursee);
             }
 
             foreach (var news in mitteilungen.Take(10)) {
@@ -179,8 +179,11 @@ namespace AikidoWebsite.Web.Controllers {
             var startDate = Clock.Now.AddDays(-90).Date;
             var termine = DocumentSession.Query<Termin>().Where(p => p.StartDatum >= startDate);
 
-            if (id.Equals(Publikum.Alle.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                termine = termine.Where(m => m.Publikum == Publikum.Alle);
+            if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                termine = termine.Where(m => m.Publikum == Publikum.Extern);
+            }
+            if (id.Equals(Publikum.Sursee.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                termine = termine.Where(m => m.Publikum == Publikum.Sursee);
             }
 
             foreach (var termin in termine) {
@@ -205,11 +208,6 @@ namespace AikidoWebsite.Web.Controllers {
             .Skip(start)
             .Take(perPage)
             .ToList();
-
-            // Process Markdown
-            foreach (var mitteilung in model.Mitteilungen) {
-                mitteilung.Text = Markdown.Transform(mitteilung.Text);
-            }
 
             //model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
             model.MitteilungenCount = stats.TotalResults;

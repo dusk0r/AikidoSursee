@@ -7,10 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Wiki;
 
 namespace AikidoWebsite.Data.Entities {
 
     public class Mitteilung : IEntity {
+        private static readonly CreoleParser CreoleParser = new CreoleParser();
 
         public string Id { get; set; }
         public string Titel { get; set; }
@@ -22,6 +24,9 @@ namespace AikidoWebsite.Data.Entities {
         // Todo, custom converter nötig?
         public Publikum Publikum { get; set; }
         public IList<string> TerminIds { get; set; }
+
+        [JsonIgnore]
+        public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
 
         [JsonIgnore]
         public string PublikumString { get { return Publikum.ToString(); } }

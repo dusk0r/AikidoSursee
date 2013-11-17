@@ -32,8 +32,8 @@ namespace AikidoWebsite.Service.Services {
         }
 
         public void CreateTestPosts() {
-            MitteilungenService.CreateMitteilung("Titel 1", "Text 123 abc def xzy", Data.ValueObjects.Publikum.Alle);
-            MitteilungenService.CreateMitteilung("Titel 2", "fsdfsdg fg fgsf dfsdf sdfsd fsdf ", Data.ValueObjects.Publikum.Mitglieder);
+            MitteilungenService.CreateMitteilung("Titel 1", "Text 123 abc def xzy", Data.ValueObjects.Publikum.Extern);
+            MitteilungenService.CreateMitteilung("Titel 2", "fsdfsdg fg fgsf dfsdf sdfsd fsdf ", Data.ValueObjects.Publikum.Sursee);
         }
 
         public void CreateTestEvents() {

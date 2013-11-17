@@ -3,6 +3,20 @@
     ViewBag.Title = "AddNews";
 }
 
+<style type="text/css">
+    .creole-input {
+        width: 800px;
+        height: 400px;
+        border: 1px solid lightgrey;
+        resize: none;
+    }
+
+    .creole-preview {
+        border: 1px dotted red;
+        padding: 3px;
+    }
+</style>
+
 <h2>Mitteilung hinzufügen:</h2>
 
 <div class="btn-group">
@@ -22,9 +36,37 @@
     </div>
     <div class="control-group" data-bind="css: { error: Text().length < 1 }">
         <label class="control-label">Text</label>
-        <div class="controls">
-            <textarea class="span10" rows="5" data-bind="value: Text, valueUpdate:'afterkeydown'"></textarea>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#text" data-toggle="tab">Text</a></li>
+            <li><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
+            <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
+            <li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="text">
+                <div class="controls">
+                    <textarea class="span10" rows="5" id="creole-input" data-bind="value: Text, valueUpdate: 'afterkeydown'"></textarea>
+                </div>
+            </div>
+            <div class="tab-pane" id="vorschau">
+                <div id="creole-preview" class="creole-preview"></div>
+            </div>
+            <div class="tab-pane" id="currentV">
+                <div class="creole-preview">
+                    @Html.Raw(Model.Mitteilung.Html)
+                </div>
+            </div>
+            <div class="tab-pane" id="creole">
+                Test
+            </div>
         </div>
+
+
+        <br />
+
+
     </div>
     <div class="control-group">
         <label class="control-label">Publikum</label>
@@ -193,10 +235,24 @@ Termine:
         ko.applyBindings(viewModel);
         viewModel.isDirty(false);
 
-        //$(function () {
-        //    $(".datetimepicker").datetimepicker({
-        //        language: 'pt-BR'
-        //    });
-        //});
+        $(function () {
+            // Creole Preview aktivieren
+            var input = document.getElementById("creole-input");
+            var preview = document.getElementById("creole-preview");
+            var creole = new Parse.Simple.Creole({
+                forIE: document.all,
+                interwiki: {},
+                linkFormat: ''
+            });
+
+            var render = function () {
+                preview.innerHTML = "";
+                creole.parse(preview, input.value);
+            };
+
+            input.onkeyup = function () { render(); }
+
+            render();
+        });
     </script>
 }

@@ -23,7 +23,7 @@
 
     </span>
 
-    <div data-bind="html: text"></div>
+    <div data-bind="html: html"></div>
 
 </div>
 <hr />
@@ -52,7 +52,7 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
             self.erstelltAm = moment(data.ErstelltAm).toDate();
             self.autorName = data.AutorName;
             self.titel = data.Titel;
-            self.text = data.Text;
+            self.html = data.Html;
             self.publikumString = data.PublikumString;
 
             self.erstelltAmText = ko.computed(function () {

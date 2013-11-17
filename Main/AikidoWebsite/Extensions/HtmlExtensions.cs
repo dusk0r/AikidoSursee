@@ -20,7 +20,7 @@ namespace AikidoWebsite.Web.Extensions {
         public static MvcHtmlString PublikumDropDown(this HtmlHelper htmlHelper, string name, string dataBind = null) {
             var seletItemValues = Enum.GetValues(typeof(Publikum))
                                 .Cast<Publikum>()
-                                .Select(e => new SelectListItem { Text = e.ToString(), Value = (Convert.ToInt32(e)).ToString(), Selected = e.Equals(Publikum.Alle) });
+                                .Select(e => new SelectListItem { Text = e.ToString(), Value = (Convert.ToInt32(e)).ToString(), Selected = e.Equals(Publikum.Extern) });
 
             object htmlAttributes = null;
             if (dataBind != null) {
