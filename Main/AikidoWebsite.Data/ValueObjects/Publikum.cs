@@ -6,7 +6,17 @@ using System.Text;
 namespace AikidoWebsite.Data.ValueObjects {
 
     public enum Publikum {
+        /// <summary>
+        /// Was im Dojo Sursee stattfindet
+        /// </summary>
         Sursee = 1,
-        Extern = 2
+        /// <summary>
+        /// Was ausserhalb stattfindet
+        /// </summary>
+        Extern = 2,
+        /// <summary>
+        /// Was nur Mitglieder des Dojo Sursee betrifft
+        /// </summary>
+        Mitglieder = 3
     }
 }

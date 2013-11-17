@@ -18,7 +18,7 @@
         </button>
     <!-- /ko -->
     <span class="pull-right">
-        <span data-bind="text: erstelltAmText"></span>
+        <span data-bind="text: erstelltAmText, attr: { title: erstelltAmDatum }" data-toggle="tooltip"></span>
         <span class="label" data-bind="text: publikumString"></span>
 
     </span>
@@ -124,6 +124,10 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
         }
 
         ko.applyBindings(viewModel);
+
+        $(document).ready(function () {
+            $("[data-toggle='tooltip']").tooltip();
+        });
 
     </script>
 

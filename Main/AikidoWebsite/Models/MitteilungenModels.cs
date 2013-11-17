@@ -24,4 +24,9 @@ namespace AikidoWebsite.Web.Models {
             this.Termine = new List<Termin>();
         }
     }
+
+    public class DateiModel {
+        public string Bezeichnung { get; set; }
+        public Guid Id { get; set; }
+    }
 }
