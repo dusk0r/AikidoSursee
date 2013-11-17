@@ -1,0 +1,169 @@
+﻿<style>
+    .creoleHelp > tbody > tr:nth-child(even) {
+        background-color: #F3F3F3;
+    }
+        .creoleHelp > tbody > tr > td {
+        padding-right: 35px;
+    }
+</style>
+
+<table class="creoleHelp">
+    <thead>
+        <tr>
+            <th>Formatierung
+            </th>
+            <th>Anwendung
+            </th>
+            <th>Ergebnis
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Fett</td>
+            <td>**Text**</td>
+            <td><b>Text</b></td>
+        </tr>
+
+        <tr>
+            <td>Kursiv</td>
+            <td>//Text//</td>
+            <td><em>Text</em></td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 1</td>
+            <td>== Text =</td>
+            <td>
+                <h1>Text</h1>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 2</td>
+            <td>== Text ==</td>
+            <td>
+                <h2>Text</h2>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 3</td>
+            <td>=== Text ===</td>
+            <td>
+                <h3>Text</h3>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 4</td>
+            <td>==== Text ====</td>
+            <td>
+                <h4>Text</h4>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 5</td>
+            <td>===== Text =====</td>
+            <td>
+                <h5>Text</h5>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Überschrift 6</td>
+            <td>====== Text ======</td>
+            <td>
+                <h6>Text</h6>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Link auf Adresse</td>
+            <td>[[http://www.xyz.com|Text]]</td>
+            <td><a href="http://www.xyz.com">Text</a></td>
+        </tr>
+
+        <tr>
+            <td>Absatz</td>
+            <td>Text1<br />
+                <br />
+                Text2</td>
+            <td>
+                <p>Text</p>
+                <p>Text2</p>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Zeilenumbruch</td>
+            <td>Eins\\Zwei</td>
+            <td>Eins<br />
+                Zwei</td>
+        </tr>
+
+        <tr>
+            <td>Liste ohne Nummerierung</td>
+            <td>* Eins<br />
+                ** Eins.Eins<br />
+                * Zwei</td>
+            <td>
+                <ul>
+                    <li>Eins</li>
+                    <ul>
+                        <li>Eins.Eins</li>
+                    </ul>
+                    <li>Zwei</li>
+                </ul>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Liste min Nummerierung</td>
+            <td># Eins<br />
+                ## Eins.Eins<br />
+                # Zwei</td>
+            <td>
+                <ol>
+                    <li>Eins</li>
+                    <ol>
+                        <li>Eins.Eins</li>
+                    </ol>
+                    <li>Zwei</li>
+                </ol>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Horizontale Linie</td>
+            <td>----</td>
+            <td>
+                <hr />
+            </td>
+        </tr>
+
+        @*        <tr>
+            <td>Bild</td>
+            <td>{{Bild.png}}</td>
+        </tr>*@
+
+        <tr>
+            <td>Tabelle</td>
+            <td style="font-family: monospace; white-space: pre;">|=Überschrift1 |=Überschrift2    |<br />|Inhalt 1      | Inhalt 2        |</td>
+            <td>
+                <table>
+                    <tr>
+                        <th>Überschrift1</th>
+                        <th>Überschrift2</th>
+                    </tr>
+                    <tr>
+                        <td>Inhalt 1</td>
+                        <td>Inhalt 2</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

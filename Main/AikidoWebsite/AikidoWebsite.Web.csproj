@@ -326,6 +326,7 @@
     <Content Include="Views\Content\Show.cshtml" />
     <Content Include="Views\Content\ArtikelNichtGefunden.cshtml" />
     <Content Include="Views\Content\Edit.cshtml" />
+    <Content Include="Views\Shared\CreoleHelp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
