@@ -63,7 +63,6 @@
             </div>
         </div>
 
-
         <br />
 
     </div>
@@ -75,7 +74,51 @@
     </div>
 <!-- /ko -->
 
+<div data-bind="visible: $root.Mitteilung().Id() != null">
+    <h4>Dateien</h4>
+
+    <span data-bind="visible: $root.Dateien().length <= 0">
+        <i>Keine Dateien</i>
+    </span>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Bezeichnung</th>
+                <th>Datei Name</th>
+                <th>Grösse</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- ko foreach: Dateien -->
+            <tr>
+                <td></td>
+                <td>
+                    <a href="#" data-bind="text: Bezeichnung, attr: { href: link }"></a>
+                </td>
+                <td>
+                    <span data-bind="text: DateiName"></span>
+                </td>
+                <td>
+                    <span data-bind="text: sizeText"></span>
+                </td>
+            </tr>
+
+            <!-- /ko -->
+        </tbody>
+    </table>
+
+    @using (Html.BeginForm("UploadFile", "Aktuelles", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        <input type="file" name="file" />
+        <input type="text" name="bezeichnung" />
+        <input type="submit" value="hinzufügen" />
+        <input type="hidden" name="mitteilungsId" value="@Model.Mitteilung.Id" />
+    }
+</div>
+
 <h4>Termine</h4>
+
 
 <table class="table">
     <thead>
@@ -128,6 +171,30 @@
 @section Footer {
     <script type="text/javascript">
         var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+
+        function Datei(data) {
+            var self = this;
+
+            self.Id = data.Id;
+            self.Bezeichnung = data.Bezeichnung || "unbenannt";
+            self.DateiName = data.DateiName;
+            self.Size = data.Size;
+
+            self.link = ko.computed(function () { return "/Content/File/" + self.Id });
+            self.sizeText = getSizeString();
+
+            function getSizeString() {
+                if (self.Size < 1024) {
+                    return self.Size + " Byte";
+                } else if (self.Size < (1024 * 1024)) {
+                    var kilo = self.Size / 1024;
+                    return Math.round(kilo * 10) / 10 + " kiB";
+                } else {
+                    var mega = self.Size / 1024 * 1024;
+                    return Math.round(mega * 10) / 10 + " MiB";
+                }
+            }
+        }
 
         function Mitteilung(data) {
             var self = this;
@@ -188,6 +255,7 @@
             self.WithTermin = ko.observable(false);
             self.Mitteilung = ko.observable(new Mitteilung(model.Mitteilung));
             self.Termine = ko.observableArray(model.Termine.map(function (termin) { return new Termin(termin); }));
+            self.Dateien = ko.observableArray(model.Dateien.map(function (datei) { return new Datei(datei); }));
             self.isDirty = ko.observable(false);
 
             self.save = function () {

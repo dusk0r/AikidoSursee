@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
 using AikidoWebsite.Service.Validator;
+using Raven.Json.Linq;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -66,6 +67,18 @@ namespace AikidoWebsite.Web.Controllers {
             var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds);
             var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
 
+            // Dateien
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            model.Dateien = mitteilung.DateiIds.Select(g => {
+                var attachment = dbCommands.GetAttachment(g);
+                return new DateiModel { 
+                    Id = g, 
+                    Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(), 
+                    DateiName = attachment.Metadata["DateiName"].ToString(),
+                    Size = attachment.Size
+                };
+            }).ToList();
+
             return View(model);
         }
 
@@ -82,7 +95,7 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung.AutorName = benutzer.Name;
                 mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.ErstelltAm = Clock.Now;
-                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToList();
+                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
                 ValidatorService.Validate(mitteilung);
                 DocumentSession.Store(mitteilung);
@@ -97,13 +110,33 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
                 mitteilung.Publikum = model.Mitteilung.Publikum;
-                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToList();
+                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
                 ValidatorService.Validate(mitteilung);
                 
                 DocumentSession.SaveChanges();
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
             }
+        }
+
+        [HttpPost]
+        [RequireGruppe(Gruppe.Admin)]
+        public ActionResult UploadFile(HttpPostedFileBase file, string bezeichnung, string mitteilungsId) {
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            
+            var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
+            var key = Guid.NewGuid().ToString();
+            var metadata = new RavenJObject();
+
+            metadata["Bezeichnung"] = bezeichnung;
+            metadata["DateiName"] = file.FileName;
+            metadata["ContentType"] = file.ContentType;
+            dbCommands.PutAttachment(key, null, file.InputStream, metadata);
+
+            mitteilung.DateiIds.Add(key);
+            DocumentSession.SaveChanges();
+
+            return RedirectToAction("EditNews", new { id = RavenDbHelper.EncodeDocumentId(mitteilungsId) });
         }
 
         public void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {

@@ -86,5 +86,21 @@ namespace AikidoWebsite.Web.Controllers {
             return Json(site.Id);
         }
 
+        [HttpGet]
+        public ActionResult File(string id) {
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+
+            var attachment = dbCommands.GetAttachment(id);
+
+            if (attachment == null) {
+                return new HttpStatusCodeResult((int)System.Net.HttpStatusCode.NotFound);
+
+            } else {
+                var contentType = attachment.Metadata["ContentType"].ToString();
+
+                return File(attachment.Data(), contentType);
+            }
+        }
+
     }
 }

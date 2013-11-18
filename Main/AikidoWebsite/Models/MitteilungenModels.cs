@@ -18,15 +18,20 @@ namespace AikidoWebsite.Web.Models {
         public bool WithTermin { get; set; }
         public Mitteilung Mitteilung { get; set; }
         public IEnumerable<Termin> Termine { get; set; }
+        public IEnumerable<DateiModel> Dateien { get; set; }
 
         public EditMitteilungModel() {
             this.Mitteilung = new Mitteilung();
             this.Termine = new List<Termin>();
+            this.Dateien = new List<DateiModel>();
         }
     }
 
     public class DateiModel {
+        public string DateiName { get; set; }
         public string Bezeichnung { get; set; }
-        public Guid Id { get; set; }
+        public string Id { get; set; }
+        public string ContentType { get; set; }
+        public int Size { get; set; }
     }
 }

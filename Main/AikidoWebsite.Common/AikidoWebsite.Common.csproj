@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Check.cs" />
     <Compile Include="Clock.cs" />
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="HashCode.cs" />
     <Compile Include="PasswordHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

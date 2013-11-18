@@ -23,7 +23,8 @@ namespace AikidoWebsite.Data.Entities {
         public string Text { get; set; }
         // Todo, custom converter nötig?
         public Publikum Publikum { get; set; }
-        public IList<string> TerminIds { get; set; }
+        public ISet<string> TerminIds { get; set; }
+        public ISet<string> DateiIds { get; set; }
 
         [JsonIgnore]
         public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
@@ -33,7 +34,8 @@ namespace AikidoWebsite.Data.Entities {
 
         public Mitteilung() {
             this.AutorEmail = "nobody@amigo-online.ch";
-            this.TerminIds = new List<string>();
+            this.TerminIds = new HashSet<string>();
+            this.DateiIds = new HashSet<string>();
         }
 
         //############################################################################
