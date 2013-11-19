@@ -226,6 +226,7 @@
     <Content Include="Content\less\fontAwesome\mixins.less" />
     <Content Include="Content\less\fontAwesome\path.less" />
     <Content Include="Content\less\fontAwesome\variables.less" />
+    <Content Include="Content\less\custom.less" />
     <None Include="Content\less\wells.less" />
     <None Include="Content\less\variables.less" />
     <None Include="Content\less\utilities.less" />
@@ -285,7 +286,6 @@
     <Content Include="Views\Dojo\Trainingszeiten.cshtml" />
     <Content Include="Views\Aktuelles\Mitteilung.cshtml" />
     <Content Include="Views\Shared\_Navigation.cshtml" />
-    <Content Include="Content\less\wysihtml5.less" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\less.min.js" />

@@ -4,7 +4,9 @@
     ViewBag.Title = "View";
 }
 
+<div class="renderContent">
 @Html.Raw(Model.Html)
+</div>
 
 
 @if (User.IsInGroup(Gruppe.Admin)) {
