@@ -31,7 +31,7 @@
     
 <div class="wmd-panel">
      <div id="wmd-button-bar"></div>   
-     @Html.TextAreaFor(x => x.Markdown, new { @class = "creole-input", id = "creole-input" })
+     @Html.TextAreaFor(x => x.Markdown, new { @class = "creole-input", id = "creole-input", wrap = "off" })
     </div>
 
     @Html.HiddenFor(x => x.Name)

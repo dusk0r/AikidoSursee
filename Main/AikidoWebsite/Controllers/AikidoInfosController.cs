@@ -62,12 +62,5 @@ namespace AikidoWebsite.Web.Controllers {
             return Json(true);
         }
 
-        public ActionResult Techniken() {
-            return View();
-        }
-
-        public ActionResult Links() {
-            return View();
-        }
     }
 }
