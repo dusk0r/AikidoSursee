@@ -88,6 +88,7 @@
                 <th>Bezeichnung</th>
                 <th>Datei Name</th>
                 <th>Grösse</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -102,6 +103,9 @@
                 </td>
                 <td>
                     <span data-bind="text: sizeText"></span>
+                </td>
+                <td>
+                    <a href="#" title="Löschen" class="icon-trash" data-bind="attr: { href: removeLink($root.Mitteilung) }"></a>
                 </td>
             </tr>
 
@@ -176,11 +180,12 @@
             var self = this;
 
             self.Id = data.Id;
-            self.Bezeichnung = data.Bezeichnung || "unbenannt";
+            self.Bezeichnung = ko.observable(data.Bezeichnung || "unbenannt");
             self.DateiName = data.DateiName;
             self.Size = data.Size;
 
             self.link = ko.computed(function () { return "/Content/File/" + self.Id });
+            self.removeLink = function (mitteilung) { return "/Aktuelles/DeleteFile?mitteilungsId=" + mitteilung().Id().replace("/","_") + "&fileId=" + self.Id; };
             self.sizeText = getSizeString();
 
             function getSizeString() {

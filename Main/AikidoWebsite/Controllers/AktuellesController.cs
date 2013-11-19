@@ -139,6 +139,23 @@ namespace AikidoWebsite.Web.Controllers {
             return RedirectToAction("EditNews", new { id = RavenDbHelper.EncodeDocumentId(mitteilungsId) });
         }
 
+        [HttpGet]
+        [RequireGruppe(Gruppe.Admin)]
+        public ActionResult DeleteFile(string mitteilungsId, string fileId) {
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(mitteilungsId));
+
+            if (mitteilung != null) {
+                mitteilung.DateiIds.Remove(fileId);
+                DocumentSession.SaveChanges();
+            }
+
+            dbCommands.DeleteAttachment(fileId, null);
+
+            return RedirectToAction("EditNews", new { id = mitteilungsId });
+        }
+
         public void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
             foreach (var termin in termine) {
                 termin.Publikum = publikum;
