@@ -51,8 +51,9 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         public ActionResult Mitteilung(string id) {
             var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
+            var model = new ViewMitteilungModel { Mitteilung = mitteilung, Dateien = CreateDateiModels(mitteilung.DateiIds) };
 
-            return View(mitteilung);
+            return View(model);
         }
 
         [RequireGruppe(Gruppe.Admin)]
@@ -68,16 +69,7 @@ namespace AikidoWebsite.Web.Controllers {
             var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
 
             // Dateien
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
-            model.Dateien = mitteilung.DateiIds.Select(g => {
-                var attachment = dbCommands.GetAttachment(g);
-                return new DateiModel { 
-                    Id = g, 
-                    Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(), 
-                    DateiName = attachment.Metadata["DateiName"].ToString(),
-                    Size = attachment.Size
-                };
-            }).ToList();
+            model.Dateien = CreateDateiModels(mitteilung.DateiIds);
 
             return View(model);
         }
@@ -156,7 +148,7 @@ namespace AikidoWebsite.Web.Controllers {
             return RedirectToAction("EditNews", new { id = mitteilungsId });
         }
 
-        public void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
+        private void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
             foreach (var termin in termine) {
                 termin.Publikum = publikum;
                 if (termin.IsNew()) {
@@ -241,6 +233,20 @@ namespace AikidoWebsite.Web.Controllers {
             }
 
             return new ICalResult(calendar);
+        }
+
+        private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+
+            return dateiKeys.Select(g => {
+                var attachment = dbCommands.GetAttachment(g);
+                return new DateiModel {
+                    Id = g,
+                    Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(),
+                    DateiName = attachment.Metadata["DateiName"].ToString(),
+                    Size = attachment.Size
+                };
+            }).ToList();
         }
 
         private string CreatEmailWithName(string name, string email) {

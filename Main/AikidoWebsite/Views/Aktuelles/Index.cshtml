@@ -7,14 +7,21 @@
 
 <!-- ko foreach: mitteilungen -->
 <div class="well">
-    <span data-bind="text: titel" style="font-weight: bold;"></span>
+    <a href="#" data-bind="attr: { href: show }">
+        <span data-bind="text: titel" style="font-weight: bold;"></span>
+    </a>
+
+    <!-- ko if: hasFiles -->
+        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien"> </i>
+    <!-- /ko -->
+
     <!-- ko if: $root.isAdmin -->
         &nbsp;
         <button class="btn btn-mini" data-bind="click: edit">
-            <span class="icon-edit"></span>Bearbeiten
+            <span class="icon-edit"> </span>Bearbeiten
         </button>
         <button class="btn btn-mini" data-bind="click: remove">
-            <span class="icon-remove"></span>Löschen
+            <span class="icon-remove"> </span>Löschen
         </button>
     <!-- /ko -->
     <span class="pull-right">
@@ -54,6 +61,7 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
             self.titel = data.Titel;
             self.html = data.Html;
             self.publikumString = data.PublikumString;
+            self.hasFiles = data.DateiIds.length > 0;
 
             self.erstelltAmText = ko.computed(function () {
                 return moment(self.erstelltAm).fromNow();
@@ -61,6 +69,10 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
 
             self.erstelltAmDatum = ko.computed(function () {
                 return moment(self.erstelltAm).format("DD.MM.YYYY HH:mm");
+            });
+
+            self.show = ko.computed(function() {
+                return "/Aktuelles/Mitteilung/" + self.id.replace("/", "_");
             });
 
             self.edit = function () {

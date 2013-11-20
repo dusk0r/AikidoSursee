@@ -14,6 +14,16 @@ namespace AikidoWebsite.Web.Models {
         public bool IsAdmin { get; set; }
     }
 
+    public class ViewMitteilungModel {
+        public Mitteilung Mitteilung { get; set; }
+        public IEnumerable<DateiModel> Dateien { get; set; }
+
+        public ViewMitteilungModel() {
+
+            this.Dateien = new List<DateiModel>();
+        }
+    }
+
     public class EditMitteilungModel {
         public bool WithTermin { get; set; }
         public Mitteilung Mitteilung { get; set; }

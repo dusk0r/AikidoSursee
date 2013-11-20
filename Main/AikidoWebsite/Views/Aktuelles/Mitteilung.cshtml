@@ -1,4 +1,4 @@
-﻿@model AikidoWebsite.Data.Entities.Mitteilung
+﻿@model AikidoWebsite.Web.Models.ViewMitteilungModel
 
 @{
     ViewBag.Title = "Mitteilung";
@@ -6,13 +6,24 @@
 
 <h2>Mitteilung</h2>
 
-<h3>@Model.Titel</h3>
-von @Model.AutorName, @Model.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
-&nbsp;&nbsp;<span class="label">@Model.PublikumString</span>
+<h3>@Model.Mitteilung.Titel</h3>
+von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
+&nbsp;&nbsp;<span class="label">@Model.Mitteilung.PublikumString</span>
 <br /><br />
-@Model.Text
+@Model.Mitteilung.Text
 
 <hr />
 
-<a href="/Aktuelles" class="btn btn-small btn-primary">Zürück zu den Mitteilungen</a>
+<h5>Dateien</h5>
+<ul>
+@foreach (var datei in Model.Dateien) {
+    <li><a href="/Content/File/@datei.Id" title="@datei.DateiName">@datei.Bezeichnung</a></li>
+}
+</ul>
+
+<hr />
+
+
+
+<a href="javascript: window.history.back();" class="btn btn-small btn-primary">Zürück zu den Mitteilungen</a>
 
