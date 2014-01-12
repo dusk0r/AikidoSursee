@@ -281,7 +281,7 @@ namespace AikidoWebsite.Web.Controllers {
                 Starttime = termin.StartDatum,
                 Endtime = termin.EndDatum ?? termin.StartDatum.AddHours(1),
                 Organizer = new Organizer(termin.AutorName, "noreplay@aikido-sursee.ch"),
-                Summary = termin.Text,
+                Summary = termin.Text ?? termin.Titel,
                 Location = termin.Ort,
                 URL = termin.URL
             };
