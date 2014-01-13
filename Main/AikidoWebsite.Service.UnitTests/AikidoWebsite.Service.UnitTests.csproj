@@ -60,7 +60,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ServiceTestBase.cs" />
-    <Compile Include="Services\UserManagementServiceTests.cs" />
     <Compile Include="Validator\Validators\BenutzerValidatorsTests.cs" />
     <Compile Include="Validator\ValidatorTestsBase.cs" />
   </ItemGroup>

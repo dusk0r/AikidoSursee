@@ -50,11 +50,6 @@
   <ItemGroup>
     <Compile Include="Installer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IService.cs" />
-    <Compile Include="Services\MitteilungenService.cs" />
-    <Compile Include="Services\TerminService.cs" />
-    <Compile Include="Services\TestDataService.cs" />
-    <Compile Include="Services\UserManagementService.cs" />
     <Compile Include="Validator\AbstractValidator.cs" />
     <Compile Include="Validator\IValidator.cs" />
     <Compile Include="Validator\ValidatorError.cs" />
@@ -72,7 +67,9 @@
       <Name>AikidoWebsite.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Data;
-using AikidoWebsite.Data.Repositories;
 using AikidoWebsite.Data.Security;
 using AikidoWebsite.Models;
 using AikidoWebsite.Service;

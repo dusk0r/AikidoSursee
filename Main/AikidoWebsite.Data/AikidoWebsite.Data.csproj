@@ -124,14 +124,6 @@
     <Compile Include="Identities\Identity.cs" />
     <Compile Include="Installer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\BenutzerRepository.cs" />
-    <Compile Include="Repositories\BaseRepository.cs" />
-    <Compile Include="Repositories\IMitteilungRepository.cs" />
-    <Compile Include="Repositories\ITerminRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\IBenutzerRepository.cs" />
-    <Compile Include="Repositories\MitteilungRepository.cs" />
-    <Compile Include="Repositories\TerminRepository.cs" />
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="Security\UserIdentity.cs" />
     <Compile Include="ValueObjects\Publikum.cs" />

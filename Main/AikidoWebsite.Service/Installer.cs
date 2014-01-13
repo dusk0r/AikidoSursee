@@ -1,5 +1,4 @@
-﻿using AikidoWebsite.Service.Services;
-using AikidoWebsite.Service.Validator;
+﻿using AikidoWebsite.Service.Validator;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
@@ -26,13 +25,13 @@ namespace AikidoWebsite.Service {
                         .LifestyleTransient()
              );
 
-            // Services
-            container.Register(
-                AllTypes.FromThisAssembly()
-                        .BasedOn(typeof(IService))
-                        .WithServiceAllInterfaces()
-                        .LifestyleTransient()
-             );
+            //// Services
+            //container.Register(
+            //    AllTypes.FromThisAssembly()
+            //            .BasedOn(typeof(IService))
+            //            .WithServiceAllInterfaces()
+            //            .LifestyleTransient()
+            // );
         }
     }
 }

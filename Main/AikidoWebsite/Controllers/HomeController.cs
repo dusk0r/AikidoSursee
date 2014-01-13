@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AikidoWebsite.Data.Repositories;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Service.Services;
 using Raven.Client;
 using AikidoWebsite.Data.ValueObjects;
 
@@ -14,36 +12,28 @@ namespace AikidoWebsite.Controllers {
 
     public class HomeController : Controller {
 
-        [Inject]
-        public IUserManagementService UserManagementService { get; set; }
-
-        [Inject]
-        public IBenutzerRepository AccountRepository { get; set; }
 
         [Inject]
         public IDocumentSession DocumentSession { get; set; }
-
-        [Inject]
-        public ITestDataService TestDataService { get; set; }
 
         public ActionResult Index() {
 
             return RedirectToAction("Index", "Aktuelles");
         }
 
-        public ActionResult CreateUser() {
-            TestDataService.CreateTestUser();
-            DocumentSession.SaveChanges();
+        //public ActionResult CreateUser() {
+        //    TestDataService.CreateTestUser();
+        //    DocumentSession.SaveChanges();
 
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
 
-        public ActionResult CreatePosts() {
-            TestDataService.CreateTestPosts();
-            DocumentSession.SaveChanges();
+        //public ActionResult CreatePosts() {
+        //    TestDataService.CreateTestPosts();
+        //    DocumentSession.SaveChanges();
 
-            return RedirectToAction("Index");
-        }
+        //    return RedirectToAction("Index");
+        //}
 
         public ActionResult CreateTermine() {
             var termin = new Termin {

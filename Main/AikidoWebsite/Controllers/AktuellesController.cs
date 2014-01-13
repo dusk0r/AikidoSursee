@@ -1,9 +1,7 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.Repositories;
 using AikidoWebsite.Data.ValueObjects;
-using AikidoWebsite.Service.Services;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Raven.Client;
@@ -21,9 +19,6 @@ using Raven.Json.Linq;
 namespace AikidoWebsite.Web.Controllers {
 
     public class AktuellesController : Controller {
-
-        [Inject]
-        public IMitteilungenService MitteilungenService { get; set; }
 
         [Inject]
         public IDocumentSession DocumentSession { get; set; }

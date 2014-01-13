@@ -1,5 +1,4 @@
 ﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.Repositories;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Data.Entities;
 using System;
@@ -7,13 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using Raven.Client;
 
 namespace AikidoWebsite.Data.Security {
 
     public class UserIdentity : IUserIdentity {
 
         [Inject]
-        public IBenutzerRepository BenutzerRepository { get; set; }
+        public IDocumentSession Session { get; set; }
 
         public Benutzer Benutzer {
             get {
@@ -22,7 +22,7 @@ namespace AikidoWebsite.Data.Security {
                 }
 
                 var email = Thread.CurrentPrincipal.Identity.Name;
-                return BenutzerRepository.FindByEmail(email);
+                return Session.Query<Benutzer>().FirstOrDefault(b => b.EMail == email);
             }
         }
 
