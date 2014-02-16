@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using AikidoWebsite.Web.Models;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Data.ValueObjects;
+using Raven.Client.Linq;
+using Raven.Json.Linq;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -102,5 +104,62 @@ namespace AikidoWebsite.Web.Controllers {
             }
         }
 
+        [RequireGruppe(Gruppe.Admin)]
+        [HttpGet]
+        public ActionResult Files() {
+            // Todo: Paging
+            RavenQueryStatistics stats = null;
+            var files = DocumentSession.Query<Datei>()
+                .Statistics(out stats)
+                .ToList();
+
+            var model = new StoredDateiModel {
+                TotalCount = stats.TotalResults,
+                Start = 0,
+                Count = files.Count,
+                Dateien = files.Select(x => new StoredDateiEintragModel {
+                    Id = x.Id,
+                    MimeType = x.MimeType,
+                    AttachmentId = x.AttachmentId,
+                    Name = x.Name,
+                    Beschreibung = x.Beschreibung,
+                    Bytes = x.Bytes
+                })
+            };
+
+            return View(model);
+        }
+
+        [RequireGruppe(Gruppe.Admin)]
+        [HttpPost]
+        public ActionResult Files(FileUploadModel model) {
+            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+
+            if (model.File != null) {
+                var key = Guid.NewGuid().ToString();
+
+                // Entity Speichern
+                var datei = new Datei {
+                    Name = model.File.FileName,
+                    Beschreibung = model.Beschreibung,
+                    MimeType = model.File.ContentType,
+                    Bytes = model.File.ContentLength,
+                    AttachmentId = key
+                };
+
+                DocumentSession.Store(datei);
+
+                var metadata = new RavenJObject();
+                metadata["OriginalDateiName"] = model.File.FileName;
+                metadata["ContentType"] = model.File.ContentType;
+                dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
+
+                DocumentSession.SaveChanges();
+
+                return RedirectToAction("Files");
+            }
+
+            return Json(null);
+        }
     }
 }

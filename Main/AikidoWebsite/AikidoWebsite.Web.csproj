@@ -155,6 +155,7 @@
     <Compile Include="Installer.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AikidoInfoModels.cs" />
+    <Compile Include="Models\DateiModels.cs" />
     <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
     <Compile Include="Models\SiteModels.cs" />
@@ -329,6 +330,7 @@
     <Content Include="Views\Content\Edit.cshtml" />
     <Content Include="Views\Shared\CreoleHelp.cshtml" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Views\Content\Files.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

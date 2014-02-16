@@ -1,0 +1,104 @@
+﻿@model AikidoWebsite.Web.Models.StoredDateiModel
+
+@{
+    ViewBag.Title = "Dateien";
+}
+
+<h2>Gespeicherte Dateien:</h2>
+
+@*<div class="btn-group">
+    <a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
+    <a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
+</div>*@
+
+<table class="table">
+    <tr>
+        <th>@*Typ*@</th>
+        <th>Name</th>
+        <th>Grösse</th>
+        <th>Beschreibung</th>
+        <th>@*Link*@</th>
+        <th>@*Löschen*@</th>
+    </tr>
+    <!-- ko foreach: Dateien -->
+    <tr>
+        <td></td>
+        <td data-bind="text: Name"></td>
+        <td data-bind="text: humanSize"></td>
+        <td data-bind="text: Beschreibung"></td>
+        <td><a href="#" target="_blank" data-bind="attr: {href: url}"><i class="icon icon-mini icon-file-alt"></i> Öffnen</a></td>
+        <td><i class="icon icon-mini icon-remove"></i>&nbsp;Löschen</td>
+    </tr>
+    <!-- /ko -->
+</table>
+
+<hr />
+
+<h4>Neue Datei hinzufügen:</h4>
+<form action="/Content/Files" method="post" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>Beschreibung:&nbsp;</td>
+            <td>
+                <input type="text" name="Beschreibung" />
+            </td>
+        </tr>
+        <tr>
+            <td>Datei:&nbsp;</td>
+            <td>
+                <input type="file" name="File" />
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="hinzufügen" />
+            </td>
+        </tr>
+    </table>
+</form>
+
+@section Footer {
+<script type="text/javascript">
+    var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+
+    function StoredDateiEintrag(data) {
+        var self = this;
+
+        self.Id = data.Id;
+        self.AttachmentId = data.AttachmentId;
+        self.MimeType = data.MimeType;
+        self.Name = data.Name;
+        self.Beschreibung = data.Beschreibung;
+        self.Bytes = data.Bytes;
+
+        self.url = ko.computed(function() {
+            return "/Content/File/" + self.AttachmentId;
+        });
+
+        self.remove = function() {
+
+        };
+
+        self.humanSize = ko.computed(function () {
+            if (self.Bytes < 1024) {
+                return self.Bytes + "kB";
+            }
+            if (self.Bytes < @(1024 * 1024)) {
+                return (self.Bytes / 1024) | 0 + "MB";
+            }
+            return (self.Bytes / 1024 / 1024) | 0 + "GB";
+        });
+
+    }
+
+    function ViewModel(model) {
+        var self = this;
+
+        self.TotalCount = model.TotalCount;
+        self.Dateien = ko.observableArray(model.Dateien.map(function (datei) { return new StoredDateiEintrag(datei); }));
+    }
+
+    ko.applyBindings(viewModel);
+</script>
+}
