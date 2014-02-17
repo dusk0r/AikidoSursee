@@ -19,7 +19,13 @@
         <li><a href="/Content/Show/velos">Aikido Velos</a></li>
         @*<li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>*@
         <li><a href="/Content/Show/kontakt">Kontakt</a></li>
+
+        @if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
+            <li class="nav-header">Website</li>
+            <li><a href="/Content/Files">Dateien</a></li>
+        }
     </ul>
+
 </div>
 
 <small>@Html.ActionLink("Impresum", "Impresum", "Home")</small><br />

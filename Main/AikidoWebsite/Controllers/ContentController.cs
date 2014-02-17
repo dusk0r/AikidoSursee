@@ -106,6 +106,7 @@ namespace AikidoWebsite.Web.Controllers {
 
         [RequireGruppe(Gruppe.Admin)]
         [HttpGet]
+        [OutputCache(Duration=0)]
         public ActionResult Files() {
             // Todo: Paging
             RavenQueryStatistics stats = null;

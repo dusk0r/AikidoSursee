@@ -17,6 +17,7 @@
         <th>Name</th>
         <th>Grösse</th>
         <th>Beschreibung</th>
+        <th>Url</th>
         <th>@*Link*@</th>
         <th>@*Löschen*@</th>
     </tr>
@@ -26,6 +27,7 @@
         <td data-bind="text: Name"></td>
         <td data-bind="text: humanSize"></td>
         <td data-bind="text: Beschreibung"></td>
+        <td data-bind="text: url"></td>
         <td><a href="#" target="_blank" data-bind="attr: {href: url}"><i class="icon icon-mini icon-file-alt"></i> Öffnen</a></td>
         <td><i class="icon icon-mini icon-remove"></i>&nbsp;Löschen</td>
     </tr>
@@ -58,6 +60,19 @@
     </table>
 </form>
 
+@helper GetBaseUrl(Uri url) { 
+    var sb = new System.Text.StringBuilder();
+    sb.Append(url.Scheme);
+    sb.Append("://");
+    sb.Append(url.Host);
+    if (url.Port != 80 && url.Port != 443) {
+        sb.Append(":");
+        sb.Append(url.Port);
+    }
+    
+    @sb.ToString();
+}
+
 @section Footer {
 <script type="text/javascript">
     var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
@@ -73,7 +88,7 @@
         self.Bytes = data.Bytes;
 
         self.url = ko.computed(function() {
-            return "/Content/File/" + self.AttachmentId;
+            return "@GetBaseUrl(Request.Url)" + "/Content/File/" + self.AttachmentId;
         });
 
         self.remove = function() {
