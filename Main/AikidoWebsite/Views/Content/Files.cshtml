@@ -97,12 +97,12 @@
 
         self.humanSize = ko.computed(function () {
             if (self.Bytes < 1024) {
-                return self.Bytes + "kB";
+                return self.Bytes + " B";
             }
             if (self.Bytes < @(1024 * 1024)) {
-                return (self.Bytes / 1024) | 0 + "MB";
+                return ((self.Bytes / 1024) | 0) + " kB";
             }
-            return (self.Bytes / 1024 / 1024) | 0 + "GB";
+            return ((self.Bytes / 1024 / 1024) | 0) + " MB";
         });
 
     }
