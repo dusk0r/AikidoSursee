@@ -113,8 +113,18 @@ namespace AikidoWebsite.Web.Controllers {
             
             var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
             var key = Guid.NewGuid().ToString();
-            var metadata = new RavenJObject();
 
+            // Entity Speichern
+            var datei = new Datei {
+                Name = file.FileName,
+                Beschreibung = bezeichnung,
+                MimeType = file.ContentType,
+                Bytes = file.ContentLength,
+                AttachmentId = key
+            };
+            DocumentSession.Store(datei);
+
+            var metadata = new RavenJObject();
             metadata["Bezeichnung"] = bezeichnung;
             metadata["DateiName"] = file.FileName;
             metadata["ContentType"] = file.ContentType;
