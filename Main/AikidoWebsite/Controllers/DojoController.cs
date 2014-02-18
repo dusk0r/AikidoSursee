@@ -16,21 +16,7 @@ namespace AikidoWebsite.Web.Controllers {
         [Inject]
         public IDocumentSession DocumentSession { get; set; }
 
-        public ActionResult Trainingszeiten() {
-            var plan = DocumentSession.Query<Stundenplan>().FirstOrDefault() ?? new Stundenplan();
-            var model = new StundenplanModel {
-                Editable = false,
-                Plan = plan
-            };
-
-            model.Plan.Montag.Morgen.Titel = "Test";
-            model.Plan.Montag.Morgen.Bezeichnung = "abc xyz";
-            model.Plan.Montag.Morgen.Startzeit = DateTime.Now;
-            model.Plan.Montag.Morgen.Endzeit = DateTime.Now.AddHours(1);
-
-            return View(model);
-        }
-
+        [HttpGet]
         public ActionResult Bilder() {
             var imageList = Directory.GetFiles(Server.MapPath("~/Content/images/dojo"))
                 .Select(s => Path.GetFileName(s))
@@ -39,7 +25,13 @@ namespace AikidoWebsite.Web.Controllers {
             return View(imageList);
         }
 
+        [HttpGet]
         public ActionResult Personen() {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Standort() {
             return View();
         }
 

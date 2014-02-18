@@ -137,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AikidoInfosController.cs" />
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
@@ -159,7 +158,6 @@
     <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
     <Compile Include="Models\SiteModels.cs" />
-    <Compile Include="Models\StundenplanModels.cs" />
     <Compile Include="Models\TermineModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\WebRoleProvider.cs" />
@@ -316,12 +314,8 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\ListUsers.cshtml" />
     <Content Include="Views\Aktuelles\EditNews.cshtml" />
-    <Content Include="Views\AikidoInfos\Faq.cshtml" />
-    <Content Include="Views\AikidoInfos\Glossar.cshtml" />
-    <Content Include="Views\AikidoInfos\Techniken.cshtml" />
     <Content Include="Views\Dojo\Bilder.cshtml" />
     <Content Include="Views\Dojo\Personen.cshtml" />
-    <Content Include="Views\AikidoInfos\Links.cshtml" />
     <Content Include="Views\Dojo\Kontakt.cshtml" />
     <Content Include="Views\Dojo\KontaktGesendet.cshtml" />
     <Content Include="Views\Home\Impresum.cshtml" />
@@ -331,6 +325,7 @@
     <Content Include="Views\Shared\CreoleHelp.cshtml" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\Content\Files.cshtml" />
+    <Content Include="Views\Dojo\Standort.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
