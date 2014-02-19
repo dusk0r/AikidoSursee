@@ -39,17 +39,40 @@
 
         map = new google.maps.Map(document.getElementById("google-map"), myOptions);
 
+        // Luzern
+        var markerLuzern = new google.maps.Marker({
+            position: new google.maps.LatLng(47.044545, 8.314891),
+            map: map
+        });
+        var infowindowLuzern = new google.maps.InfoWindow({
+            content: '<b>Dojo</b><br>Aikido Luzern<br><a href="http://www.aikido-luzern.ch/" taget="_blank">Homepage</a>'
+        });
+        infowindowLuzern.open(map, markerLuzern);
 
-        var marker = new google.maps.Marker({
+        // Schüpfheim
+        var markerSchüpfheim = new google.maps.Marker({
+            position: new google.maps.LatLng(46.95099, 8.01587),
+            map: map
+        });
+        var infowindowSchüpfheim = new google.maps.InfoWindow({
+            content: '<b>Dojo</b><br>Aikido Schüpfheim<br><a href="https://www.facebook.com/AikidoSchupfheim" taget="_blank">Facebook</a>'
+        });
+        infowindowSchüpfheim.open(map, markerSchüpfheim);
+
+        // Sursee
+        var markerSursee = new google.maps.Marker({
             position: new google.maps.LatLng(47.18478, 8.106638),
             map: map
         });
-
-        var infowindow = new google.maps.InfoWindow({
+        var infowindowSursee = new google.maps.InfoWindow({
             content: '<b>Dojo</b><br>Aikido Sursee<br><a href="https://maps.google.com/maps?q=Allmendstrasse+11,+Sursee,+Schweiz&hl=de&sll=47.184773,8.106623&sspn=0.003299,0.006968&t=h&hnear=Allmendstrasse+11,+6210+Sursee,+Luzern,+Schweiz&z=17" taget="_blank">Karte</a>'
         });
+        infowindowSursee.open(map, markerSursee);
 
-        infowindow.open(map, marker);
+        google.maps.event.addListenerOnce(map, 'idle', function () {
+            // nach laden neu zentrieren
+            map.setCenter(markerSursee.getPosition());
+        });
     }
 
     google.maps.event.addDomListener(window, 'load', initMap);
