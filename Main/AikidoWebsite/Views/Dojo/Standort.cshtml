@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Seite
+@{
     ViewBag.Title = "Weg zum Dojo";
 }
 
@@ -13,7 +14,15 @@
     }
 </style>
 
-<h2>Weg zum Dojo</h2>
+<div class="renderContent">
+    @Html.Raw(Model.Html)
+</div>
+
+@if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
+    <i><a href="/Content/Edit/standort">Text bearbeiten</a></i>
+}
+
+<br /><br />
 
 <div id="google-map" style="min-height: 550px; width: 100%; max-width: 1000px;"></div>
 

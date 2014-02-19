@@ -32,7 +32,13 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpGet]
         public ActionResult Standort() {
-            return View();
+            var article = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == "standort");
+
+            if (article == null) {
+                article = new Seite { WikiCreole = "" };
+            }
+
+            return View(article);
         }
 
         [HttpGet]
