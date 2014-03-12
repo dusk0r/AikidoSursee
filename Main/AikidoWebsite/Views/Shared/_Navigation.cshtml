@@ -18,7 +18,7 @@
         <li>@Html.ActionLink("Weg zum Dojo", "Standort", "Dojo")</a></li>
         <li><a href="/Content/Show/velos">Aikido Velos</a></li>
         @*<li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>*@
-        <li><a href="/Content/Show/kontakt">Kontakt</a></li>
+        <li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>
 
         @if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
             <li class="nav-header">Website</li>
