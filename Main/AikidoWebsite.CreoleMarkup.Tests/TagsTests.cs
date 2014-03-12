@@ -10,19 +10,19 @@ using AikidoWebsite.CreoleMarkup.Tags;
 namespace AikidoWebsite.CreoleMarkup.Tests {
     public class TagsTests {
 
-        [TestCase("//italics//", "<i>italics</i>", TestName="italics")]
-        public void SimpleTags(string source, string result) {
-            var parser = new CreoleParser();
+        //[TestCase("//italics//", "<i>italics</i>", TestName="italics")]
+        //public void SimpleTags(string source, string result) {
+        //    var parser = new CreoleParser();
 
-            parser.ToHTML(source).Should().Be(result);
-        }
+        //    parser.ToHTML(source).Should().Be(result);
+        //}
 
 
-        [Test]
-        public void Test() {
-            var italic = new ItalicTag(new TextTag() { Text = "Test" });
+        //[Test]
+        //public void Test() {
+        //    var italic = new ItalicTag(new TextTag() { Text = "Test" });
 
-            var test = italic.ToString();
-        }
+        //    var test = italic.ToString();
+        //}
     }
 }
