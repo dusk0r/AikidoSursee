@@ -1,8 +1,10 @@
 ﻿# encoding: utf-8
 gem 'albacore'
+gem 'rubyzip', '<1.0.0'
 require 'albacore'
 require 'fileutils'
 require 'nokogiri'
+require 'zip/zip'
 
 base_path = File.dirname(__FILE__)
 bin_path = "#{base_path}/bin/"
@@ -28,11 +30,6 @@ zip :zipartifact do |zip|
 	zip.directories_to_zip publish_path
 	zip.output_file = "AikidoWebsite.zip"
 	zip.output_path = artifacts_path
-end
-
-unzip :installZip do |unzip|
-	unzip.destination = install_path
-	unzip.file = "#{artifacts_path}/AikidoWebsite.zip"
 end
 
 def clear_directory(dir)
@@ -82,15 +79,28 @@ task :artifacts do
 end
 
 task :install do
-	FileUtils.touch("#{install_path}/App_offline.htm")
-	clear_directory("#{install_path}/")
-	#FileUtils.rm("#{install_path}/App_offline.htm")
+	app_offline_file = File.join(install_path, 'App_offline.htm')
+
+	clear_directory File.join(install_path, '/')
+	FileUtils.touch app_offline_file
 	
-	Rake::Task[:installZip].invoke
+	Zip::File.open(File.join(artifacts_path, 'AikidoWebsite.zip')) do |zip_file|
+		zip_file.each do |entry|
+		 path = File.join(install_path, entry.name)
+		 puts "Extracting #{entry.name} to #{path}"
+		 
+		 FileUtils.mkdir_p(File.dirname(path))
+		 zip_file.extract(entry, path)
+		end
+	end
+
+	FileUtils.rm app_offline_file
 end
 
 task :patchConnectionString do
 	file = File.join(install_path, "Web.config")
+	
+	puts "Patching #{file} Connection String: #{connection_string}"
 
 	xml = File.open(file, 'r:UTF-8') { |f| f.read }
 	xml_doc = Nokogiri::XML(xml)

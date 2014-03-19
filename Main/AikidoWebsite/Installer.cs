@@ -63,7 +63,6 @@ namespace AikidoWebsite.Web {
 
             //    logger.Debug("DB Setup OK");
             //}
-
         }
 
         private static IDocumentStore CreateDocumentStore() {
