@@ -24,26 +24,15 @@ namespace AikidoWebsite.Web {
         public void Install(IWindsorContainer container, IConfigurationStore store) {
 
             // Store
-            // Todo: Configuration
-            var documentStore = new DocumentStore { 
-                Url = "http://localhost:8080/",
-            };
-            documentStore.Initialize();
-            // Todo: Configuration
-            documentStore.DatabaseCommands.EnsureDatabaseExists("aikido");
-
+            var documentStore = CreateDocumentStore();
             container.Register(Component.For<IDocumentStore>().Instance(documentStore).LifeStyle.Singleton);
-            // Todo: Configuration
-            container.Register(Component.For<IDocumentSession>().UsingFactoryMethod(() => documentStore.OpenSession("aikido")).LifeStyle.PerWebRequest);
+            container.Register(Component.For<IDocumentSession>().UsingFactoryMethod(() => documentStore.OpenSession()).LifeStyle.PerWebRequest);
 
             // Logging
             container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
 
             // Clock
             container.Register(Component.For<IClock>().Instance(new Clock()).LifeStyle.Singleton);
-
-            //// Identity
-            //container.Register(Component.For<IUserIdentity>().Instance(new UserIdentity()).LifeStyle.Singleton);
 
             // Password Helper
             container.Register(Component.For<IPasswordHelper>().Instance(new PasswordHelper()).LifestyleSingleton());
@@ -58,38 +47,43 @@ namespace AikidoWebsite.Web {
             // Container
             container.Register(Component.For<IWindsorContainer>().Instance(container).LifestyleSingleton());
 
-            // Ensure Initial Data
-            // Todo: Configuration
-            using (var session = documentStore.OpenSession("aikido")) {
-                var logger = container.Resolve<ILogger>();
+            //// Ensure Initial Data
+            //using (var session = documentStore.OpenSession("aikido")) {
+            //    var logger = container.Resolve<ILogger>();
 
-                if (!session.Query<Benutzer>().Any()) {
-                    var passwordHelper = container.Resolve<IPasswordHelper>();
-                    //var password = passwordHelper.GeneratePassword(10);
-                    var password = "1234";
+            //    if (!session.Query<Benutzer>().Any()) {
+            //        var passwordHelper = container.Resolve<IPasswordHelper>();
+            //        var password = passwordHelper.GeneratePassword(10);
 
-                    session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
-                    session.SaveChanges();
+            //        session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
+            //        session.SaveChanges();
 
-                    logger.FatalFormat("Create new Admin-User with password {0}", password);
-                }
+            //        logger.FatalFormat("Create new Admin-User with password {0}", password);
+            //    }
 
-                logger.Debug("DB Setup OK");
-            }
+            //    logger.Debug("DB Setup OK");
+            //}
 
         }
 
-        private static Benutzer CreateAdminBenutzer(string passwordHash) {
-            var benutzer = new Benutzer {
-                Name = "Admin",
-                EMail = "admin@amigo-online.ch",
-                IstAktiv = true,
-                PasswortHash = passwordHash,
-            };
-            benutzer.Gruppen.Add(Gruppe.Benutzer);
-            benutzer.Gruppen.Add(Gruppe.Admin);
+        private static IDocumentStore CreateDocumentStore() {
+            var documentStore = new DocumentStore { ConnectionStringName = "RavenDB" };
+            documentStore.Initialize();
 
-            return benutzer;
+            return documentStore;
         }
+
+        //private static Benutzer CreateAdminBenutzer(string passwordHash) {
+        //    var benutzer = new Benutzer {
+        //        Name = "Admin",
+        //        EMail = "admin@amigo-online.ch",
+        //        IstAktiv = true,
+        //        PasswortHash = passwordHash,
+        //    };
+        //    benutzer.Gruppen.Add(Gruppe.Benutzer);
+        //    benutzer.Gruppen.Add(Gruppe.Admin);
+
+        //    return benutzer;
+        //}
     }
 }

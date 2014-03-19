@@ -1,12 +1,15 @@
+﻿# encoding: utf-8
 gem 'albacore'
 require 'albacore'
 require 'fileutils'
+require 'nokogiri'
 
 base_path = File.dirname(__FILE__)
 bin_path = "#{base_path}/bin/"
 publish_path = "#{base_path}/publish/"
 artifacts_path = "#{base_path}/artifacts/"
 install_path = ENV["INSTALL_PATH"] || "C:/inetpub/wwwroot"
+connection_string = ENV["CONNECTION_STRING"] || "Url=http://localhost:8080;Database=aikido-test;"
 
 # // Funcs ///////////////////////////////////
 
@@ -84,6 +87,16 @@ task :install do
 	#FileUtils.rm("#{install_path}/App_offline.htm")
 	
 	Rake::Task[:installZip].invoke
+end
+
+task :patchConnectionString do
+	file = File.join(install_path, "Web.config")
+
+	xml = File.open(file, 'r:UTF-8') { |f| f.read }
+	xml_doc = Nokogiri::XML(xml)
+	connectionStringElement = xml_doc.search("//connectionStrings/add[@name='RavenDB']")
+	connectionStringElement.attribute('connectionString').value = connection_string
+	File.open(file, 'w:UTF-8') { |f| f.write(xml_doc.to_xml) }
 end
 
 task :less do
