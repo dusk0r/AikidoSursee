@@ -23,13 +23,16 @@ namespace AikidoWebsite.Web {
 
         public void Install(IWindsorContainer container, IConfigurationStore store) {
 
+            // Logging
+            container.AddFacility<LoggingFacility>(f => f.UseLog4Net().WithAppConfig());
+            var logger = container.Resolve<ILogger>();
+
             // Store
-            var documentStore = CreateDocumentStore();
+            var documentStore = new DocumentStore { ConnectionStringName = "RavenDB" };
+            documentStore.Initialize();
             container.Register(Component.For<IDocumentStore>().Instance(documentStore).LifeStyle.Singleton);
             container.Register(Component.For<IDocumentSession>().UsingFactoryMethod(() => documentStore.OpenSession()).LifeStyle.PerWebRequest);
-
-            // Logging
-            container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
+            logger.InfoFormat("Using Url {0} and Database {1}", documentStore.Url, documentStore.DefaultDatabase);
 
             // Clock
             container.Register(Component.For<IClock>().Instance(new Clock()).LifeStyle.Singleton);
@@ -63,13 +66,6 @@ namespace AikidoWebsite.Web {
 
             //    logger.Debug("DB Setup OK");
             //}
-        }
-
-        private static IDocumentStore CreateDocumentStore() {
-            var documentStore = new DocumentStore { ConnectionStringName = "RavenDB" };
-            documentStore.Initialize();
-
-            return documentStore;
         }
 
         //private static Benutzer CreateAdminBenutzer(string passwordHash) {

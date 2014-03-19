@@ -1,5 +1,6 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
+using Castle.Core.Logging;
 using Raven.Client;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace AikidoWebsite.Web.Security {
 
         [Inject]
         public IPasswordHelper PasswordHelper { get; set; }
+
+        [Inject]
+        public ILogger Logger { get; set; }
 
         public override string ApplicationName {
             get {
@@ -133,16 +137,20 @@ namespace AikidoWebsite.Web.Security {
 
             // Todo: config
             using (var session = DocumentStore.OpenSession("aikido")) {
-                Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail.Equals(username)).FirstOrDefault();
+                // Todo, single or default
+                Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail == username).FirstOrDefault();
 
                 if (benutzer == null) {
+                    Logger.InfoFormat("Benutzer {0} existiert nicht", username);
                     return false;
                 }
 
                 if (!benutzer.IstAktiv) {
+                    Logger.InfoFormat("Benutzer {0} ist nicht aktiv", username);
                     return false;
                 }
 
+                Logger.InfoFormat("Benutzer {0} Passwort ist {1}", username, benutzer.CheckPassword(password));
                 return PasswordHelper.VerifyPassword(password, benutzer.PasswortHash);
             }
         }
