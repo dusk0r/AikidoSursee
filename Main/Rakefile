@@ -84,7 +84,7 @@ task :install do
 	clear_directory File.join(install_path, '/')
 	FileUtils.touch app_offline_file
 	
-	Zip::File.open(File.join(artifacts_path, 'AikidoWebsite.zip')) do |zip_file|
+	Zip::ZipFile.open(File.join(artifacts_path, 'AikidoWebsite.zip')) do |zip_file|
 		zip_file.each do |entry|
 		 path = File.join(install_path, entry.name)
 		 puts "Extracting #{entry.name} to #{path}"
