@@ -51,7 +51,7 @@ namespace AikidoWebsite.Web {
             container.Register(Component.For<IWindsorContainer>().Instance(container).LifestyleSingleton());
 
             // Ensure Initial Data
-            using (var session = documentStore.OpenSession() {
+            using (var session = documentStore.OpenSession()) {
 
                 if (!session.Query<Benutzer>().Any()) {
                     var passwordHelper = container.Resolve<IPasswordHelper>();
