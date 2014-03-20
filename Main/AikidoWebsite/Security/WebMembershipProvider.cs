@@ -136,7 +136,7 @@ namespace AikidoWebsite.Web.Security {
             }
 
             // Todo: config
-            using (var session = DocumentStore.OpenSession("aikido")) {
+            using (var session = DocumentStore.OpenSession()) {
                 // Todo, single or default
                 Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail == username).FirstOrDefault();
 

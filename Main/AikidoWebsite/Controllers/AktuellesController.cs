@@ -109,7 +109,7 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpPost]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult UploadFile(HttpPostedFileBase file, string bezeichnung, string mitteilungsId) {
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
             
             var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
             var key = Guid.NewGuid().ToString();
@@ -139,7 +139,7 @@ namespace AikidoWebsite.Web.Controllers {
         [HttpGet]
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult DeleteFile(string mitteilungsId, string fileId) {
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(mitteilungsId));
 
@@ -241,7 +241,7 @@ namespace AikidoWebsite.Web.Controllers {
         }
 
         private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             return dateiKeys.Select(g => {
                 var attachment = dbCommands.GetAttachment(g);

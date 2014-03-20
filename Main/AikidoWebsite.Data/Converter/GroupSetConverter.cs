@@ -1,6 +1,6 @@
 ﻿using AikidoWebsite.Data.ValueObjects;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using Raven.Imports.Newtonsoft.Json;
+using Raven.Imports.Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;

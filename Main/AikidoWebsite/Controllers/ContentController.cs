@@ -90,7 +90,7 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpGet]
         public ActionResult File(string id) {
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             var attachment = dbCommands.GetAttachment(id);
 
@@ -134,7 +134,7 @@ namespace AikidoWebsite.Web.Controllers {
         [RequireGruppe(Gruppe.Admin)]
         [HttpPost]
         public ActionResult Files(FileUploadModel model) {
-            var dbCommands = DocumentSession.Advanced.DatabaseCommands;
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             if (model.File != null) {
                 var key = Guid.NewGuid().ToString();
