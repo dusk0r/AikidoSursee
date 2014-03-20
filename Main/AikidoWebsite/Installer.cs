@@ -50,35 +50,35 @@ namespace AikidoWebsite.Web {
             // Container
             container.Register(Component.For<IWindsorContainer>().Instance(container).LifestyleSingleton());
 
-            //// Ensure Initial Data
-            //using (var session = documentStore.OpenSession("aikido")) {
-            //    var logger = container.Resolve<ILogger>();
+            // Ensure Initial Data
+            using (var session = documentStore.OpenSession("aikido")) {
 
-            //    if (!session.Query<Benutzer>().Any()) {
-            //        var passwordHelper = container.Resolve<IPasswordHelper>();
-            //        var password = passwordHelper.GeneratePassword(10);
+                if (!session.Query<Benutzer>().Any()) {
+                    var passwordHelper = container.Resolve<IPasswordHelper>();
+                    //var password = passwordHelper.GeneratePassword(10);
+                    var password = "1234";
 
-            //        session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
-            //        session.SaveChanges();
+                    session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
+                    session.SaveChanges();
 
-            //        logger.FatalFormat("Create new Admin-User with password {0}", password);
-            //    }
+                    logger.FatalFormat("Create new Admin-User with password {0}", password);
+                }
 
-            //    logger.Debug("DB Setup OK");
-            //}
+                logger.Debug("DB Setup OK");
+            }
         }
 
-        //private static Benutzer CreateAdminBenutzer(string passwordHash) {
-        //    var benutzer = new Benutzer {
-        //        Name = "Admin",
-        //        EMail = "admin@amigo-online.ch",
-        //        IstAktiv = true,
-        //        PasswortHash = passwordHash,
-        //    };
-        //    benutzer.Gruppen.Add(Gruppe.Benutzer);
-        //    benutzer.Gruppen.Add(Gruppe.Admin);
+        private static Benutzer CreateAdminBenutzer(string passwordHash) {
+            var benutzer = new Benutzer {
+                Name = "Admin",
+                EMail = "admin@amigo-online.ch",
+                IstAktiv = true,
+                PasswortHash = passwordHash,
+            };
+            benutzer.Gruppen.Add(Gruppe.Benutzer);
+            benutzer.Gruppen.Add(Gruppe.Admin);
 
-        //    return benutzer;
-        //}
+            return benutzer;
+        }
     }
 }
