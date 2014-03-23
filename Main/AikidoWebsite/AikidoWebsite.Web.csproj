@@ -308,7 +308,6 @@
     <Content Include="Views\Dojo\Personen.cshtml" />
     <Content Include="Views\Dojo\Kontakt.cshtml" />
     <Content Include="Views\Dojo\KontaktGesendet.cshtml" />
-    <Content Include="Views\Home\Impresum.cshtml" />
     <Content Include="Views\Content\Show.cshtml" />
     <Content Include="Views\Content\ArtikelNichtGefunden.cshtml" />
     <Content Include="Views\Content\Edit.cshtml" />
@@ -319,6 +318,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
