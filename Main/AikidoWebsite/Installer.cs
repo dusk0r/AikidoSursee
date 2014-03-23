@@ -51,21 +51,21 @@ namespace AikidoWebsite.Web {
             container.Register(Component.For<IWindsorContainer>().Instance(container).LifestyleSingleton());
 
             // Ensure Initial Data
-            using (var session = documentStore.OpenSession()) {
+            //using (var session = documentStore.OpenSession()) {
 
-                if (!session.Query<Benutzer>().Any()) {
-                    var passwordHelper = container.Resolve<IPasswordHelper>();
-                    //var password = passwordHelper.GeneratePassword(10);
-                    var password = "1234";
+            //    if (!session.Query<Benutzer>().Any()) {
+            //        var passwordHelper = container.Resolve<IPasswordHelper>();
+            //        //var password = passwordHelper.GeneratePassword(10);
+            //        var password = "1234";
 
-                    session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
-                    session.SaveChanges();
+            //        session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
+            //        session.SaveChanges();
 
-                    logger.FatalFormat("Create new Admin-User with password {0}", password);
-                }
+            //        logger.FatalFormat("Create new Admin-User with password {0}", password);
+            //    }
 
-                logger.Debug("DB Setup OK");
-            }
+            //    logger.Debug("DB Setup OK");
+            //}
         }
 
         private static Benutzer CreateAdminBenutzer(string passwordHash) {
