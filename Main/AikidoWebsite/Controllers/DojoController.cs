@@ -53,7 +53,8 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpPost]
         public ActionResult Kontakt(KontaktModel model) {
-            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            // Todo, Keys und Adresse in Config File auslagern
+            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper("6LdHg_ASAAAAAEmzaiVNBGjMaYW8G--qwF6kwS-v");
 
             if (String.IsNullOrEmpty(recaptchaHelper.Response)) {
                 ModelState.AddModelError("capta", "Bitte geben Sie den Bestätigungscode an");
@@ -70,7 +71,7 @@ namespace AikidoWebsite.Web.Controllers {
             MailMessage mail = new MailMessage();
             mail.BodyEncoding = Encoding.UTF8;
             mail.From = new MailAddress("info@aikido-sursee.ch");
-            mail.To.Add(new MailAddress("chris@amigo-online.ch"));
+            mail.To.Add(new MailAddress("info@aikido-sursee.ch"));
             mail.Subject = String.Format("Anfrage von {0}: {1}", model.Name.Limit(10), model.Bemerkung.Limit(20));
             mail.Body = model.FormatText();
 
