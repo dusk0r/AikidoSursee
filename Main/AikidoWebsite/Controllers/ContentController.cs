@@ -23,7 +23,9 @@ namespace AikidoWebsite.Web.Controllers {
         public IDocumentSession DocumentSession { get; set; }
 
         public ActionResult Show(string id) {
-            var article = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == id);
+            var article = DocumentSession.Query<Seite>()
+                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                .SingleOrDefault(a => a.Name == id);
 
             if (article != null) {
                 return View(article);
@@ -36,7 +38,9 @@ namespace AikidoWebsite.Web.Controllers {
 
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult Edit(string id, bool saved = false) {
-            var article = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == id);
+            var article = DocumentSession.Query<Seite>()
+                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                .SingleOrDefault(a => a.Name == id);
 
             var model = new SeiteModel {
                 Name = id,
@@ -52,7 +56,7 @@ namespace AikidoWebsite.Web.Controllers {
         [RequireGruppe(Gruppe.Admin)]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
-            var site = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == model.Name);
+            var site = DocumentSession.Query<Seite>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).SingleOrDefault(a => a.Name == model.Name);
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
             var oldRevisions = new HashSet<Seite>();
@@ -111,6 +115,7 @@ namespace AikidoWebsite.Web.Controllers {
             // Todo: Paging
             RavenQueryStatistics stats = null;
             var files = DocumentSession.Query<Datei>()
+                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
                 .Statistics(out stats)
                 .ToList();
 
