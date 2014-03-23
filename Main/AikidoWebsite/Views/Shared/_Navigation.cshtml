@@ -17,7 +17,6 @@
         <li>@Html.ActionLink("Lehrer", "Personen", "Dojo")</li>
         <li>@Html.ActionLink("Weg zum Dojo", "Standort", "Dojo")</a></li>
         <li><a href="/Content/Show/velos">Aikido Velos</a></li>
-        @*<li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>*@
         <li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>
 
         @if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
@@ -28,7 +27,7 @@
 
 </div>
 
-<small>@Html.ActionLink("Impresum", "Impresum", "Home")</small><br />
+<small><a href="/Content/Show/impresum">Impresum</a></small><br />
 
 @if (!Request.IsAuthenticated) {
     <small><a onclick="$('#passwordForm').toggle()">Anmelden</a></small>

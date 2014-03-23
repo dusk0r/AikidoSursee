@@ -99,8 +99,6 @@
     <Compile Include="Entities\Datei.cs" />
     <Compile Include="Entities\Seite.cs" />
     <Compile Include="Entities\Benutzer.cs" />
-    <Compile Include="Entities\FaqEintrag.cs" />
-    <Compile Include="Entities\GlossarEintrag.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\Mitteilung.cs" />
     <Compile Include="Entities\Termin.cs" />
