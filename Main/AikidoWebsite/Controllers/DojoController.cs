@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
 using System.Web;
-using System.Web.Mail;
 using System.Web.Mvc;
+using Recaptcha.Web;
+using Recaptcha.Web.Mvc;
 
 namespace AikidoWebsite.Web.Controllers {
     public class DojoController : Controller {
@@ -50,20 +53,29 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpPost]
         public ActionResult Kontakt(KontaktModel model) {
-            // Todo, check
+            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+
+            if (String.IsNullOrEmpty(recaptchaHelper.Response)) {
+                ModelState.AddModelError("capta", "Bitte geben Sie den Bestätigungscode an");
+            }
+            var recaptaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            if (recaptaResult != RecaptchaVerificationResult.Success) {
+                ModelState.AddModelError("capta", "Falscher Code");
+            }
+
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
 
             MailMessage mail = new MailMessage();
-
-            //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-            //SmtpClient smtpClient = new SmtpClient();
-
-            mail.From = "info@aikido-sursee.ch";
-            mail.To = "chris@amigo-online.ch";
-            mail.Subject = "Anfrage: " + model.Bemerkung.Limit(20);
+            mail.BodyEncoding = Encoding.UTF8;
+            mail.From = new MailAddress("info@aikido-sursee.ch");
+            mail.To.Add(new MailAddress("chris@amigo-online.ch"));
+            mail.Subject = String.Format("Anfrage von {0}: {1}", model.Name.Limit(10), model.Bemerkung.Limit(20));
             mail.Body = model.FormatText();
 
-
-            //smtpClient.Send(mail);
+            SmtpClient smtpClient = new SmtpClient("localhost");
+            smtpClient.Send(mail);
 
             return View("KontaktGesendet");
         }
