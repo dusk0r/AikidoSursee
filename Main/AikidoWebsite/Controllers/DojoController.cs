@@ -72,13 +72,17 @@ namespace AikidoWebsite.Web.Controllers {
             mail.BodyEncoding = Encoding.UTF8;
             mail.From = new MailAddress("info@aikido-sursee.ch");
             mail.To.Add(new MailAddress("info@aikido-sursee.ch"));
-            mail.Subject = String.Format("Anfrage von {0}: {1}", model.Name.Limit(10), model.Bemerkung.Limit(20));
+            mail.Subject = String.Format("Anfrage von {0}: {1}", FilterSubjectChars(model.Name).Limit(10), FilterSubjectChars(model.Bemerkung).Limit(20));
             mail.Body = model.FormatText();
 
             SmtpClient smtpClient = new SmtpClient("localhost");
             smtpClient.Send(mail);
 
             return View("KontaktGesendet");
+        }
+
+        private static string FilterSubjectChars(string str) {
+            return String.Join("", str.Where(c => Char.IsLetterOrDigit(c) || c == ' '));
         }
 
     }
