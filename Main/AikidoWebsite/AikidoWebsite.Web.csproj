@@ -183,6 +183,7 @@
     <Compile Include="Controllers\AktuellesController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\DojoController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\JsonSaveSuccess.cs" />
     <Compile Include="Extensions\RavenDbHelper.cs" />
@@ -365,6 +366,10 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\Content\Files.cshtml" />
     <Content Include="Views\Dojo\Standort.cshtml" />
+    <Content Include="Views\Shared\_LayoutError.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\Unauthorized.cshtml" />
+    <Content Include="Views\Error\ServerError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
