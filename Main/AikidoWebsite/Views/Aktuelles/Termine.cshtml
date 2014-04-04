@@ -49,9 +49,9 @@
                 
                 if (self.endDatum) {
                     if (moment(self.startDatum).isSame(self.endDatum, "day")) {
-                        return moment(self.startDatum).format("DD.MM.YYYY hh:mm") + " bis " + moment(self.endDatum).format("hh:mm");
+                        return moment(self.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(self.endDatum).format("HH:mm");
                     } else {
-                        return moment(self.startDatum).format("DD.MM.YYYY hh:mm") + " bis " + moment(self.endDatum).format("DD.MM.YYYY hh:mm");
+                        return moment(self.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(self.endDatum).format("DD.MM.YYYY HH:mm");
                     }
                     //var dateStr1 = moment(self.startDatum).format("DD.MM.YYYY hh:mm");
                     //var dateStr2 = moment(self.endDatum).format("DD.MM.YYYY hh:mm");
