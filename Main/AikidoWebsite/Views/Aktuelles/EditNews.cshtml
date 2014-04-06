@@ -175,6 +175,7 @@
 @section Footer {
     <script type="text/javascript">
         var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+        @*var viewModel = new ViewModel(@Html.Raw(JsonExtensions.Serialize(Model)));*@
 
         function Datei(data) {
             var self = this;

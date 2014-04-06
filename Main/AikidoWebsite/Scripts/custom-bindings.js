@@ -1,13 +1,13 @@
 ﻿ko.bindingHandlers.datetimepicker = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
         $(element).datetimepicker({
-            language: 'pt-BR'
+            language: 'de'
         });
 
         ko.utils.registerEventHandler(element, "changeDate", function (event) {
             var value = valueAccessor();
             if (ko.isObservable(value)) {
-                value(event.date);
+                value(event.localDate);
             }
         });
     },
@@ -18,7 +18,7 @@
             var value = ko.utils.unwrapObservable(valueAccessor());
             //alert("change: " + value);
             //picker.setLocalDate(value);
-            picker.setDate(value);
+            picker.setLocalDate(value);
         }
     }
 };

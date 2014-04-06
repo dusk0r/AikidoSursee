@@ -1,4 +1,5 @@
 ﻿using AikidoWebsite.Common;
+using Raven.Imports.Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace AikidoWebsite.Data.Entities {
         public string AttachmentId { get; set; }
         public string MimeType { get; set; }
         public int Bytes { get; set; }
+
+        [JsonIgnore]
+        public bool IsImage { get { return MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase); } }
 
         //############################################################################
         #region Object Overrides

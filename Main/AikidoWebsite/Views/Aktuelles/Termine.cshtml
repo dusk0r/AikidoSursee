@@ -70,6 +70,7 @@
 
             // Load Data
             var model = JSON.parse('@Html.Raw(Json.Encode(Model))');
+            @*var model = JSON.parse('@Html.Raw(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))');*@
             self.termine(model.Termine.map(function (termin) { return new Termin(termin); }));
 
         }
