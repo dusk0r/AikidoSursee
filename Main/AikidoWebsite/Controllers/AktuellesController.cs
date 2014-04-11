@@ -200,6 +200,7 @@ namespace AikidoWebsite.Web.Controllers {
             return View(model);
         }
 
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
         public ActionResult RSS(string id = "alle") {
             var rss = new RssResult("Aikido Sursee", "http://www.aikido-sursee.ch/", "Aikido Sursee");
 
@@ -220,6 +221,7 @@ namespace AikidoWebsite.Web.Controllers {
             return rss;
         }
 
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "*")]
         public ActionResult Ical(string id = "alle") {
             var calendar = new Calendar();
 
