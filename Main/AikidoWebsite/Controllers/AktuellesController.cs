@@ -206,12 +206,12 @@ namespace AikidoWebsite.Web.Controllers {
 
             var mitteilungen = DocumentSession.Query<Mitteilung>().OrderByDescending(p => p.ErstelltAm);
 
-            //if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
-            //    mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Extern);
-            //}
-            //if (id.Equals(Publikum.Sursee.ToString(), StringComparison.OrdinalIgnoreCase)) {
-            //    mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Sursee);
-            //}
+            if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Extern);
+            }
+            if (id.Equals(Publikum.Sursee.ToString(), StringComparison.OrdinalIgnoreCase)) {
+                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Sursee);
+            }
 
             foreach (var news in mitteilungen.Take(10)) {
                 var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
