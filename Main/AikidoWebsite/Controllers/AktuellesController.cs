@@ -215,7 +215,7 @@ namespace AikidoWebsite.Web.Controllers {
 
             foreach (var news in mitteilungen.Take(10)) {
                 var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
-                rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(news.AutorName, news.AutorEmail), news.Id, news.ErstelltAm);
+                rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(news.AutorName, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
             }
 
             return rss;
@@ -287,7 +287,7 @@ namespace AikidoWebsite.Web.Controllers {
                 Timestamp = termin.ErstellungsDatum,
                 Starttime = termin.StartDatum,
                 Endtime = termin.EndDatum ?? termin.StartDatum.AddHours(1),
-                Organizer = new Organizer(termin.AutorName, "noreplay@aikido-sursee.ch"),
+                Organizer = new Organizer(termin.AutorName, "info@aikido-sursee.ch"),
                 Summary = termin.Text ?? termin.Titel,
                 Location = termin.Ort,
                 URL = termin.URL
