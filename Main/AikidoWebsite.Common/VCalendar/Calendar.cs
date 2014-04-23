@@ -23,7 +23,7 @@ namespace AikidoWebsite.Common.VCalendar {
             sb.AppendLine("CALSCALE:GREGORIAN");
             sb.AppendLine("PRODID:-//AmigoOnline//NONSGML AikidoWebsite//DE");
 
-            foreach (var calendarEvent in Events) {
+            foreach (var calendarEvent in Events.Where(e => e.Summary != null)) {
                 sb.Append(calendarEvent.ToString());
             }
 
