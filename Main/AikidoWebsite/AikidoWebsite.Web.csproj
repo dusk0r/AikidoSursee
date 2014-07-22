@@ -342,6 +342,12 @@
     <Content Include="Content\less\navs.min.css">
       <DependentUpon>navs.less</DependentUpon>
     </Content>
+    <Content Include="Content\less\pager.css">
+      <DependentUpon>pager.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\pager.min.css">
+      <DependentUpon>pager.less</DependentUpon>
+    </Content>
     <Content Include="Content\less\responsive-navbar.css">
       <DependentUpon>responsive-navbar.less</DependentUpon>
     </Content>
