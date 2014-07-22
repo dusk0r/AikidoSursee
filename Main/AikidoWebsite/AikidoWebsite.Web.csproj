@@ -264,6 +264,90 @@
     <Content Include="Content\images\personen\toni.jpg" />
     <Content Include="Content\images\personen\veradaria-s.jpg" />
     <Content Include="Content\images\personen\veradaria.jpg" />
+    <Content Include="Content\less\accordion.css">
+      <DependentUpon>accordion.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\accordion.min.css">
+      <DependentUpon>accordion.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\alerts.css">
+      <DependentUpon>alerts.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\alerts.min.css">
+      <DependentUpon>alerts.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\breadcrumbs.css">
+      <DependentUpon>breadcrumbs.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\breadcrumbs.min.css">
+      <DependentUpon>breadcrumbs.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\button-groups.css">
+      <DependentUpon>button-groups.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\button-groups.min.css">
+      <DependentUpon>button-groups.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\buttons.css">
+      <DependentUpon>buttons.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\buttons.min.css">
+      <DependentUpon>buttons.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\carousel.css">
+      <DependentUpon>carousel.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\carousel.min.css">
+      <DependentUpon>carousel.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\code.css">
+      <DependentUpon>code.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\code.min.css">
+      <DependentUpon>code.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\dropdowns.css">
+      <DependentUpon>dropdowns.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\dropdowns.min.css">
+      <DependentUpon>dropdowns.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\fontAwesome\core.css">
+      <DependentUpon>core.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\fontAwesome\core.min.css">
+      <DependentUpon>core.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\forms.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\forms.min.css">
+      <DependentUpon>forms.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\labels-badges.css">
+      <DependentUpon>labels-badges.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\labels-badges.min.css">
+      <DependentUpon>labels-badges.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\modals.css">
+      <DependentUpon>modals.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\modals.min.css">
+      <DependentUpon>modals.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\navs.css">
+      <DependentUpon>navs.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\navs.min.css">
+      <DependentUpon>navs.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\responsive-navbar.css">
+      <DependentUpon>responsive-navbar.less</DependentUpon>
+    </Content>
+    <Content Include="Content\less\responsive-navbar.min.css">
+      <DependentUpon>responsive-navbar.less</DependentUpon>
+    </Content>
     <Content Include="Global.asax" />
     <Content Include="Raven.Studio.xap">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

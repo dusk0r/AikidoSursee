@@ -50,6 +50,10 @@ namespace AikidoWebsite.Web.Controllers {
                 Saved = saved
             };
 
+            ViewData["Files"] = DocumentSession.Query<Datei>()
+                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                .ToList();
+
             return View(model);
         }
 
