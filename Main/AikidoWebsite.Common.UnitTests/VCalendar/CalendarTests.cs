@@ -26,7 +26,7 @@ namespace AikidoWebsite.Common.UnitTests.VCalendar {
             calendar.IsValid.Should().BeTrue();
 
             var ical = calendar.ToString();
-            ical.Should().NotBeNull().And.NotBeBlank();
+            ical.Should().NotBeNull().And.NotBeNullOrWhiteSpace();
             ical.Should().StartWith("BEGIN:VCALENDAR");
             ical.Should().EndWith("END:VCALENDAR" + Environment.NewLine);
             ical.Should().Contain("Peter Gut");

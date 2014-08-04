@@ -21,20 +21,20 @@ namespace AikidoWebsite.Common.UnitTests {
         [Test]
         public void CreatePassword_liefert_Passwort_mit_8_Stellen() {
 
-            PasswordHelper.GeneratePassword(8).Should().NotBeBlank().And.HaveLength(8);
+            PasswordHelper.GeneratePassword(8).Should().NotBeNullOrWhiteSpace().And.HaveLength(8);
         }
 
         [Test]
         public void CreatePassword_liefert_Passwort_mit_12_Stellen() {
 
-            PasswordHelper.GeneratePassword(12).Should().NotBeBlank().And.HaveLength(12);
+            PasswordHelper.GeneratePassword(12).Should().NotBeNullOrWhiteSpace().And.HaveLength(12);
         }
 
         [Test]
         public void HashAndSaltString_liefert_Hash() {
             var str = "Is' was, Doc?";
 
-            PasswordHelper.CreateHashAndSalt(str).Should().NotBeBlank().And.HaveLength(60);
+            PasswordHelper.CreateHashAndSalt(str).Should().NotBeNullOrWhiteSpace().And.HaveLength(60);
         }
 
         [Test]
