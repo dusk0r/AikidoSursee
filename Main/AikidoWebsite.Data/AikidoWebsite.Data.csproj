@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="Converter\GroupSetConverter.cs" />
     <Compile Include="Entities\Datei.cs" />
+    <Compile Include="Entities\Hinweis.cs" />
     <Compile Include="Entities\Seite.cs" />
     <Compile Include="Entities\Benutzer.cs" />
     <Compile Include="Entities\IEntity.cs" />

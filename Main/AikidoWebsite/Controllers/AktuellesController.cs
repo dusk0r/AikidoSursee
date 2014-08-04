@@ -51,6 +51,15 @@ namespace AikidoWebsite.Web.Controllers {
             return View(model);
         }
 
+        [HttpGet]
+        public JsonResult Hinweis() {
+            var hinweis = DocumentSession.Load<Hinweis>("default");
+            var metadata = DocumentSession.Advanced.GetMetadataFor(hinweis);
+            var etag = metadata.Value<Guid>("@etag");
+
+            return Json(new { Hinweis = hinweis.Html, Tag = etag.ToString() });
+        }
+
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult AddNews() {
             return View("EditNews", new EditMitteilungModel());
