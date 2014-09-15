@@ -55,8 +55,21 @@ namespace AikidoWebsite.Web {
 
                 session.Store(new Hinweis { Id = "default" });
 
+                var passwordHelper = container.Resolve<IPasswordHelper>();
+
+                var benutzer = new Benutzer[]{
+                    CreateAdminBenutzer("Armin Müller", "am@arminsoft.ch", passwordHelper.CreateHashAndSalt("3GZKtRlHgd")),
+                    CreateAdminBenutzer("Georges Zahno", "georges.zahno@sunrise.ch", passwordHelper.CreateHashAndSalt("NQJGmOBmFy")),
+                    CreateAdminBenutzer("Marcel Schriber", "m_schriber@bluewin.ch", passwordHelper.CreateHashAndSalt("mgijdFiVr4")),
+                    CreateAdminBenutzer("Priska Gut", "priska@gut.ch", passwordHelper.CreateHashAndSalt("jCyq7mUYZ7")),
+                };
+
+                foreach (var b in benutzer) {
+                    session.Store(b);
+                }
+
             //    if (!session.Query<Benutzer>().Any()) {
-            //        var passwordHelper = container.Resolve<IPasswordHelper>();
+            //        
             //        //var password = passwordHelper.GeneratePassword(10);
             //        var password = "1234";
 
@@ -70,10 +83,10 @@ namespace AikidoWebsite.Web {
             }
         }
 
-        private static Benutzer CreateAdminBenutzer(string passwordHash) {
+        private static Benutzer CreateAdminBenutzer(string name, string email, string passwordHash) {
             var benutzer = new Benutzer {
-                Name = "Admin",
-                EMail = "admin@amigo-online.ch",
+                Name = name,
+                EMail = email,
                 IstAktiv = true,
                 PasswortHash = passwordHash,
             };
