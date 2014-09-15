@@ -53,20 +53,20 @@ namespace AikidoWebsite.Web {
             // Ensure Initial Data
             using (var session = documentStore.OpenSession()) {
 
-                session.Store(new Hinweis { Id = "default" });
+                //session.Store(new Hinweis { Id = "default" });
 
-                var passwordHelper = container.Resolve<IPasswordHelper>();
+                //var passwordHelper = container.Resolve<IPasswordHelper>();
 
-                var benutzer = new Benutzer[]{
-                    CreateAdminBenutzer("Armin Müller", "am@arminsoft.ch", passwordHelper.CreateHashAndSalt("3GZKtRlHgd")),
-                    CreateAdminBenutzer("Georges Zahno", "georges.zahno@sunrise.ch", passwordHelper.CreateHashAndSalt("NQJGmOBmFy")),
-                    CreateAdminBenutzer("Marcel Schriber", "m_schriber@bluewin.ch", passwordHelper.CreateHashAndSalt("mgijdFiVr4")),
-                    CreateAdminBenutzer("Priska Gut", "priska@gut.ch", passwordHelper.CreateHashAndSalt("jCyq7mUYZ7")),
-                };
+                //var benutzer = new Benutzer[]{
+                //    CreateAdminBenutzer("Armin Müller", "am@arminsoft.ch", passwordHelper.CreateHashAndSalt("3GZKtRlHgd")),
+                //    CreateAdminBenutzer("Georges Zahno", "georges.zahno@sunrise.ch", passwordHelper.CreateHashAndSalt("NQJGmOBmFy")),
+                //    CreateAdminBenutzer("Marcel Schriber", "m_schriber@bluewin.ch", passwordHelper.CreateHashAndSalt("mgijdFiVr4")),
+                //    CreateAdminBenutzer("Priska Gut", "priska@gut.ch", passwordHelper.CreateHashAndSalt("jCyq7mUYZ7")),
+                //};
 
-                foreach (var b in benutzer) {
-                    session.Store(b);
-                }
+                //foreach (var b in benutzer) {
+                //    session.Store(b);
+                //}
 
             //    if (!session.Query<Benutzer>().Any()) {
             //        
@@ -74,7 +74,7 @@ namespace AikidoWebsite.Web {
             //        var password = "1234";
 
             //        session.Store(CreateAdminBenutzer(passwordHelper.CreateHashAndSalt(password)));
-                    session.SaveChanges();
+            //        session.SaveChanges();
 
             //        logger.FatalFormat("Create new Admin-User with password {0}", password);
             //    }
