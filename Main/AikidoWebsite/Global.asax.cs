@@ -2,7 +2,6 @@
 using AikidoWebsite.Data;
 using AikidoWebsite.Data.Security;
 using AikidoWebsite.Models;
-using AikidoWebsite.Service;
 using AikidoWebsite.Web.Security;
 using AikidoWebsite.Web.Windsor;
 using Castle.Facilities.Logging;
@@ -57,7 +56,6 @@ namespace AikidoWebsite.Web {
 
             container.Install(
                 new WebInstaller(),
-                new ServiceInstaller(),
                 new DataInstaller()
             );
 

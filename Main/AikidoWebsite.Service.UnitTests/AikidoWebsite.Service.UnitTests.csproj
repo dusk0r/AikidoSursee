@@ -85,10 +85,6 @@
       <Project>{cbabb6fa-9c3f-48f3-9a1f-fde478cf567c}</Project>
       <Name>AikidoWebsite.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AikidoWebsite.Service\AikidoWebsite.Service.csproj">
-      <Project>{6ea6fc3a-4a7a-47a5-89b7-f2ff0db7202c}</Project>
-      <Name>AikidoWebsite.Service</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,8 +13,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using AikidoWebsite.Data;
-using AikidoWebsite.Service.Validator;
 using Raven.Json.Linq;
+using Raven.Client.Linq;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -22,9 +22,6 @@ namespace AikidoWebsite.Web.Controllers {
 
         [Inject]
         public IDocumentSession DocumentSession { get; set; }
-
-        [Inject]
-        public IValidatorService ValidatorService { get; set; }
 
         [Inject]
         public IClock Clock { get; set; }
@@ -85,15 +82,13 @@ namespace AikidoWebsite.Web.Controllers {
 
             PersistTermine(model.Termine, model.Mitteilung.Publikum, benutzer);
 
+            // TODO, Validate ...
             Mitteilung mitteilung = model.Mitteilung;
             if (mitteilung.IsNew()) {
                 mitteilung.AutorId = benutzer.Id;
-                mitteilung.AutorName = benutzer.Name;
-                mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.ErstelltAm = Clock.Now;
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
-                ValidatorService.Validate(mitteilung);
                 DocumentSession.Store(mitteilung);
 
                 DocumentSession.SaveChanges();
@@ -101,18 +96,15 @@ namespace AikidoWebsite.Web.Controllers {
             } else {
                 mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
                 mitteilung.AutorId = benutzer.Id;
-                mitteilung.AutorName = benutzer.Name;
-                mitteilung.AutorEmail = benutzer.EMail;
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
                 mitteilung.Publikum = model.Mitteilung.Publikum;
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
-
-                ValidatorService.Validate(mitteilung);
                 
                 DocumentSession.SaveChanges();
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
             }
+
         }
 
         [HttpPost]
@@ -165,6 +157,8 @@ namespace AikidoWebsite.Web.Controllers {
         private void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
             foreach (var termin in termine) {
                 termin.Publikum = publikum;
+
+                // TODO, Validate ...
                 if (termin.IsNew()) {
                     //termin.MitteilungId = mitteilung.Id;
                     termin.ErstellungsDatum = Clock.Now;
@@ -172,7 +166,6 @@ namespace AikidoWebsite.Web.Controllers {
                     termin.AutorName = benutzer.Name;
                     //termin.URL = ...
 
-                    ValidatorService.Validate(termin);
                     DocumentSession.Store(termin);
                 } else {
                     var existingTermin = DocumentSession.Load<Termin>(termin.Id);
@@ -182,7 +175,6 @@ namespace AikidoWebsite.Web.Controllers {
                     existingTermin.EndDatum = termin.EndDatum;
                     existingTermin.Ort = termin.Ort;
 
-                    ValidatorService.Validate(termin);
                 }
 
             }
@@ -213,7 +205,11 @@ namespace AikidoWebsite.Web.Controllers {
         public ActionResult RSS(string id = "alle") {
             var rss = new RssResult("Aikido Sursee", "http://www.aikido-sursee.ch/", "Aikido Sursee");
 
-            var mitteilungen = DocumentSession.Query<Mitteilung>().OrderByDescending(p => p.ErstelltAm);
+            // Todo, 10 kofigurierbar machen
+            var mitteilungen = DocumentSession.Query<Mitteilung>()
+                .Include(m => m.AutorId)
+                .OrderByDescending(p => p.ErstelltAm)
+                .Take(10);
 
             if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
                 mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Extern);
@@ -222,9 +218,11 @@ namespace AikidoWebsite.Web.Controllers {
             //    mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Sursee);
             //}
 
-            foreach (var news in mitteilungen.Take(10)) {
+            foreach (var news in mitteilungen) {
+                var autor = DocumentSession.Load<Benutzer>(news.AutorId);
+
                 var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
-                rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(news.AutorName, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
+                rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(autor.Name, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
             }
 
             return rss;

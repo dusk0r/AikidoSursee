@@ -17,8 +17,8 @@ namespace AikidoWebsite.Data.Entities {
         public string Titel { get; set; }
         public DateTime ErstelltAm { get; set; }
         public string AutorId { get; set; }
-        public string AutorName { get; set; }
-        public string AutorEmail { get; set; }
+        //public string AutorName { get; set; }
+        //public string AutorEmail { get; set; }
         public string Text { get; set; }
         // Todo, custom converter nötig?
         public Publikum Publikum { get; set; }
@@ -32,7 +32,6 @@ namespace AikidoWebsite.Data.Entities {
         public string PublikumString { get { return Publikum.ToString(); } }
 
         public Mitteilung() {
-            this.AutorEmail = "nobody@amigo-online.ch";
             this.TerminIds = new HashSet<string>();
             this.DateiIds = new HashSet<string>();
         }

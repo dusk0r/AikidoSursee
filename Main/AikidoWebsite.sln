@@ -21,10 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Data.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Common.UnitTests", "AikidoWebsite.Common.UnitTests\AikidoWebsite.Common.UnitTests.csproj", "{A138C486-F46A-46D9-97B6-AD1575B0D762}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Service", "AikidoWebsite.Service\AikidoWebsite.Service.csproj", "{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.Service.UnitTests", "AikidoWebsite.Service.UnitTests\AikidoWebsite.Service.UnitTests.csproj", "{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.CreoleMarkup", "AikidoWebsite.CreoleMarkup\AikidoWebsite.CreoleMarkup.csproj", "{0057EB58-65D8-4CC5-A509-FDD105AA2F43}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AikidoWebsite.CreoleMarkup.Tests", "AikidoWebsite.CreoleMarkup.Tests\AikidoWebsite.CreoleMarkup.Tests.csproj", "{E1367768-3222-4552-A410-B02258718B78}"
@@ -59,14 +55,6 @@ Global
 		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A138C486-F46A-46D9-97B6-AD1575B0D762}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EA6FC3A-4A7A-47A5-89B7-F2FF0DB7202C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F94A2042-8C9C-4B9B-B87B-CAE2FF42BAA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0057EB58-65D8-4CC5-A509-FDD105AA2F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0057EB58-65D8-4CC5-A509-FDD105AA2F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0057EB58-65D8-4CC5-A509-FDD105AA2F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
