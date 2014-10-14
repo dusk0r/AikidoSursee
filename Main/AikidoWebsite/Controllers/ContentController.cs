@@ -11,6 +11,7 @@ using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Data.ValueObjects;
 using Raven.Client.Linq;
 using Raven.Json.Linq;
+using AikidoWebsite.Data.Index;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -23,9 +24,8 @@ namespace AikidoWebsite.Web.Controllers {
         public IDocumentSession DocumentSession { get; set; }
 
         public ActionResult Show(string id) {
-            var article = DocumentSession.Query<Seite>()
-                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
-                .SingleOrDefault(a => a.Name == id);
+            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
+                .FirstOrDefault(a => a.Name == id);
 
             if (article != null) {
                 return View(article);
@@ -38,9 +38,8 @@ namespace AikidoWebsite.Web.Controllers {
 
         [RequireGruppe(Gruppe.Admin)]
         public ActionResult Edit(string id, bool saved = false) {
-            var article = DocumentSession.Query<Seite>()
-                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
-                .SingleOrDefault(a => a.Name == id);
+            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
+                .FirstOrDefault(a => a.Name == id);
 
             var model = new SeiteModel {
                 Name = id,
@@ -60,8 +59,10 @@ namespace AikidoWebsite.Web.Controllers {
         [RequireGruppe(Gruppe.Admin)]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
-            var site = DocumentSession.Query<Seite>().Customize(x => x.WaitForNonStaleResultsAsOfNow()).SingleOrDefault(a => a.Name == model.Name);
-            var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
+            var site = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
+                .FirstOrDefault(a => a.Name == model.Name);
+            var benutzer = DocumentSession.Query<Benutzer>()
+                .First(b => b.EMail ==User.Identity.Name);
 
             var oldRevisions = new HashSet<Seite>();
 
@@ -72,16 +73,7 @@ namespace AikidoWebsite.Web.Controllers {
                 };
             } else {
                 // Revisionen aufräumen
-                foreach (var revison in site.AlteRevisionen) {
-                    oldRevisions.Add(revison);
-                }
-                oldRevisions.Add(new Seite { 
-                    Name = site.Name,
-                    Autor = site.Autor, 
-                    ErstellungsDatum = site.ErstellungsDatum, 
-                    Revision = site.Revision, 
-                    WikiCreole = site.WikiCreole });
-                site.AlteRevisionen = oldRevisions;
+                DocumentSession.Store(site.Copy(), site.Id + "/revision/" + site.Revision);
             }
 
             // Update
@@ -92,6 +84,10 @@ namespace AikidoWebsite.Web.Controllers {
 
             DocumentSession.Store(site);
             DocumentSession.SaveChanges();
+            DocumentSession.Query<AktuelleSeiteIndex>()
+                .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                .Take(0)
+                .ToArray();
 
             return Json(site.Id);
         }

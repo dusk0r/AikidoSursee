@@ -15,6 +15,7 @@ namespace AikidoWebsite.Data.Entities {
         public DateTime ErstellungsDatum { get; set; }
         public string Autor { get; set; }
         public int Revision { get; set; }
+        [Obsolete("Wird entfernt")]
         public ISet<Seite> AlteRevisionen { get; set; }
         public string WikiCreole { get; set; }
 
@@ -23,6 +24,17 @@ namespace AikidoWebsite.Data.Entities {
 
         public Seite() {
             this.AlteRevisionen = new HashSet<Seite>();
+        }
+
+        public Seite Copy() {
+            return new Seite {
+                Id = Id,
+                Name = Name,
+                ErstellungsDatum = ErstellungsDatum,
+                Autor = Autor,
+                Revision = Revision,
+                WikiCreole = WikiCreole
+            };
         }
 
         //############################################################################
