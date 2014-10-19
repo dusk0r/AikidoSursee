@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
+using AikidoWebsite.Data.Index;
 
 namespace AikidoWebsite.Web.Controllers {
     public class DojoController : Controller {
@@ -35,7 +36,8 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpGet]
         public ActionResult Standort() {
-            var article = DocumentSession.Query<Seite>().SingleOrDefault(a => a.Name == "standort");
+            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
+                .FirstOrDefault(a => a.Name == "standort");
 
             if (article == null) {
                 article = new Seite { WikiCreole = "" };

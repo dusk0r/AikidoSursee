@@ -42,8 +42,12 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpGet]
         public ActionResult Mitteilung(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
-            var model = new ViewMitteilungModel { Mitteilung = mitteilung, Dateien = CreateDateiModels(mitteilung.DateiIds) };
+            var mitteilung = DocumentSession
+                .Include<Mitteilung>(m => m.AutorId)
+                .Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
+            var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
+
+            var model = new ViewMitteilungModel { Mitteilung = CreateMitteilungModel(mitteilung, benutzer), Dateien = CreateDateiModels(mitteilung.DateiIds) };
 
             return View(model);
         }
@@ -90,8 +94,14 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
                 DocumentSession.Store(mitteilung);
-
                 DocumentSession.SaveChanges();
+
+                // Auf Index warten
+                DocumentSession.Query<Mitteilung>()
+                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Take(0)
+                    .ToArray();
+
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung erstellt");
             } else {
                 mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
@@ -102,8 +112,16 @@ namespace AikidoWebsite.Web.Controllers {
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
                 
                 DocumentSession.SaveChanges();
+
+                // Auf Index warten
+                DocumentSession.Query<Mitteilung>()
+                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Take(0)
+                    .ToArray();
+
                 return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
             }
+
 
         }
 
@@ -270,14 +288,18 @@ namespace AikidoWebsite.Web.Controllers {
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
             var model = new ListMitteilungenModel();
 
+            // Todo, Lazy
             RavenQueryStatistics stats;
-            model.Mitteilungen = DocumentSession.Query<Mitteilung>()
-            .Customize(a => a.WaitForNonStaleResultsAsOfNow(TimeSpan.FromSeconds(2)))
+            var mitteilungen = DocumentSession.Query<Mitteilung>()
+            .Include(m => m.AutorId)
             .Statistics(out stats)
             .OrderByDescending(p => p.ErstelltAm)
             .Skip(start)
             .Take(perPage)
             .ToList();
+            var benutzer = DocumentSession.Load<Benutzer>(mitteilungen.Select(m => m.AutorId)).ToList();
+
+            model.Mitteilungen = mitteilungen.Select(m => CreateMitteilungModel(m, DocumentSession.Load<Benutzer>(m.AutorId)));
 
             //model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
             model.MitteilungenCount = stats.TotalResults;
@@ -298,6 +320,23 @@ namespace AikidoWebsite.Web.Controllers {
                 Summary = termin.Text ?? termin.Titel,
                 Location = termin.Ort,
                 URL = termin.URL
+            };
+        }
+
+        public static MitteilungModel CreateMitteilungModel(Mitteilung mitteilung, Benutzer benutzer) {
+            return new MitteilungModel {
+                Id = mitteilung.Id,
+                Titel = mitteilung.Titel,
+                ErstelltAm = mitteilung.ErstelltAm,
+                AutorId = benutzer.Id,
+                AutorName = benutzer.Name,
+                AutorEmail = benutzer.EMail,
+                Text = mitteilung.Text,
+                Publikum = mitteilung.Publikum,
+                TerminIds = mitteilung.TerminIds,
+                DateiIds = mitteilung.DateiIds,
+                Html = mitteilung.Html,
+                PublikumString = mitteilung.PublikumString
             };
         }
 

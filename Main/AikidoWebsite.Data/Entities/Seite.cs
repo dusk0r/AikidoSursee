@@ -15,16 +15,10 @@ namespace AikidoWebsite.Data.Entities {
         public DateTime ErstellungsDatum { get; set; }
         public string Autor { get; set; }
         public int Revision { get; set; }
-        [Obsolete("Wird entfernt")]
-        public ISet<Seite> AlteRevisionen { get; set; }
         public string WikiCreole { get; set; }
 
         [JsonIgnore]
         public string Html { get { return CreoleParser.ToHTML(WikiCreole ?? ""); } }
-
-        public Seite() {
-            this.AlteRevisionen = new HashSet<Seite>();
-        }
 
         public Seite Copy() {
             return new Seite {
