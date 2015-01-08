@@ -58,10 +58,11 @@ namespace AikidoWebsite.Web {
                 //var passwordHelper = container.Resolve<IPasswordHelper>();
 
                 //var benutzer = new Benutzer[]{
-                //    CreateAdminBenutzer("Armin Müller", "am@arminsoft.ch", passwordHelper.CreateHashAndSalt("3GZKtRlHgd")),
-                //    CreateAdminBenutzer("Georges Zahno", "georges.zahno@sunrise.ch", passwordHelper.CreateHashAndSalt("NQJGmOBmFy")),
-                //    CreateAdminBenutzer("Marcel Schriber", "m_schriber@bluewin.ch", passwordHelper.CreateHashAndSalt("mgijdFiVr4")),
-                //    CreateAdminBenutzer("Priska Gut", "priska@gut.ch", passwordHelper.CreateHashAndSalt("jCyq7mUYZ7")),
+                //    //CreateAdminBenutzer("Armin Müller", "am@arminsoft.ch", passwordHelper.CreateHashAndSalt("xxx")),
+                //    //CreateAdminBenutzer("Georges Zahno", "georges.zahno@sunrise.ch", passwordHelper.CreateHashAndSalt("xxx")),
+                //    //CreateAdminBenutzer("Marcel Schriber", "m_schriber@bluewin.ch", passwordHelper.CreateHashAndSalt("xxx")),
+                //    //CreateAdminBenutzer("Priska Gut", "priska@gut.ch", passwordHelper.CreateHashAndSalt("xxx")),
+                //    CreateAdminBenutzer("Robin Gubler", "robingubler@hotmail.com", passwordHelper.CreateHashAndSalt("xxx"))
                 //};
 
                 //foreach (var b in benutzer) {
