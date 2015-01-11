@@ -30,10 +30,6 @@ namespace AikidoWebsite.Web.Security {
             }
         }
 
-        public override bool ChangePassword(string username, string oldPassword, string newPassword) {
-            throw new NotImplementedException();
-        }
-
         public override bool ChangePasswordQuestionAndAnswer(string username, string password, string newPasswordQuestion, string newPasswordAnswer) {
             throw new NotImplementedException();
         }
@@ -75,7 +71,7 @@ namespace AikidoWebsite.Web.Security {
         }
 
         public override MembershipUser GetUser(string username, bool userIsOnline) {
-            throw new NotImplementedException();
+            return new WebMembershipUser(this, username);
         }
 
         public override MembershipUser GetUser(object providerUserKey, bool userIsOnline) {
@@ -94,9 +90,7 @@ namespace AikidoWebsite.Web.Security {
             get { throw new NotImplementedException(); }
         }
 
-        public override int MinRequiredPasswordLength {
-            get { throw new NotImplementedException(); }
-        }
+        public override int MinRequiredPasswordLength { get { return 8; } }
 
         public override int PasswordAttemptWindow {
             get { throw new NotImplementedException(); }
@@ -130,6 +124,24 @@ namespace AikidoWebsite.Web.Security {
             throw new NotImplementedException();
         }
 
+        public override bool ChangePassword(string username, string oldPassword, string newPassword) {
+            if (String.IsNullOrWhiteSpace(newPassword) || newPassword.Length > 8) {
+                return false;
+            }
+
+            using (var session = DocumentStore.OpenSession()) {
+                var benutzer = session.Query<Benutzer>().Where(a => a.EMail == username).SingleOrDefault();
+
+                if (benutzer != null) {
+                    benutzer.SetPassword(newPassword);
+                    session.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
         public override bool ValidateUser(string username, string password) {
             if (String.IsNullOrWhiteSpace(username) || String.IsNullOrWhiteSpace(password)) {
                 return false;
@@ -137,8 +149,7 @@ namespace AikidoWebsite.Web.Security {
 
             // Todo: config
             using (var session = DocumentStore.OpenSession()) {
-                // Todo, single or default
-                Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail == username).FirstOrDefault();
+                Benutzer benutzer = session.Query<Benutzer>().Where(a => a.EMail == username).SingleOrDefault();
 
                 if (benutzer == null) {
                     Logger.InfoFormat("Benutzer {0} existiert nicht", username);

@@ -5,18 +5,11 @@ using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 
-namespace AikidoWebsite.Models
-{
+namespace AikidoWebsite.Models {
 
-    public class ChangePasswordModel
-    {
+    public class ChangePasswordModel {
         [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "Aktuelles Kennwort")]
-        public string OldPassword { get; set; }
-
-        [Required]
-        [StringLength(100, ErrorMessage = "\"{0}\" muss mindestens {2} Zeichen lang sein.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "\"{0}\" muss mindestens {2} Zeichen lang sein.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Neues Kennwort")]
         public string NewPassword { get; set; }
@@ -27,8 +20,7 @@ namespace AikidoWebsite.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class LogOnModel
-    {
+    public class LogOnModel {
         [Required]
         [Display(Name = "Benutzername")]
         public string UserName { get; set; }
@@ -42,8 +34,7 @@ namespace AikidoWebsite.Models
         public bool RememberMe { get; set; }
     }
 
-    public class RegisterModel
-    {
+    public class RegisterModel {
         [Required]
         [Display(Name = "Benutzername")]
         public string UserName { get; set; }
