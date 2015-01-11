@@ -7,9 +7,18 @@ using System.Web.Routing;
 using System.Web.Security;
 using AikidoWebsite.Models;
 using AikidoWebsite.Common;
+using AikidoWebsite.Web.Extensions;
+using Raven.Client.Document;
+using Raven.Client;
+using AikidoWebsite.Data.ValueObjects;
+using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Web.Models;
 
 namespace AikidoWebsite.Controllers {
     public class AccountController : Controller {
+
+        [Inject]
+        public IDocumentSession DocumentSession { get; set; }
 
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl) {
@@ -68,10 +77,14 @@ namespace AikidoWebsite.Controllers {
             return View();
         }
 
-        //[Authorize(Roles = "Admin")]
+        [RequireGruppe(Gruppe.Admin)]
         public ActionResult ListUsers() {
-            //return View(AccountService.GetAll());
-            return View();
+            var benutzer = DocumentSession.Query<Benutzer>()
+                .Take(1024)
+                .Select(BenutzerModel.CreateBenutzer)
+                .ToList();
+
+            return View(benutzer);
         }
 
         //[Authorize(Roles = "Admin")]

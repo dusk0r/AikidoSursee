@@ -164,6 +164,7 @@
     </Compile>
     <Compile Include="Installer.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\BenutzerModel.cs" />
     <Compile Include="Models\DateiModels.cs" />
     <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
