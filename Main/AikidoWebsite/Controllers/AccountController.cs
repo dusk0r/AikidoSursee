@@ -46,8 +46,6 @@ namespace AikidoWebsite.Controllers {
         public ActionResult ChangePassword(ChangePasswordModel model) {
             if (ModelState.IsValid) {
 
-                // In bestimmten Fehlerszenarien löst ChangePassword eine Ausnahme aus,
-                // anstatt \"false\" zurückzugeben.
                 bool changePasswordSucceeded;
                 try {
                     MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
@@ -59,17 +57,16 @@ namespace AikidoWebsite.Controllers {
                 if (changePasswordSucceeded) {
                     return RedirectToAction("ChangePasswordSuccess");
                 } else {
-                    ModelState.AddModelError("", "Das aktuelle Kennwort ist nicht korrekt, oder das Kennwort ist ungültig.");
+                    ModelState.AddModelError("", "Konnte das Passwort nicht ändern.");
                 }
             }
 
-            // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
             return View(model);
         }
 
-        //public ActionResult ChangePasswordSuccess() {
-        //    return View();
-        //}
+        public ActionResult ChangePasswordSuccess() {
+            return View();
+        }
 
         //[Authorize(Roles = "Admin")]
         public ActionResult ListUsers() {
