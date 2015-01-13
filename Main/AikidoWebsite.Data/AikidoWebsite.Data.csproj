@@ -81,6 +81,7 @@
     <Compile Include="Index\AktuelleSeiteIndex.cs" />
     <Compile Include="Index\MitteilungByTerminIndex.cs" />
     <Compile Include="Installer.cs" />
+    <Compile Include="Listener\SeiteStoreListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="Security\UserIdentity.cs" />

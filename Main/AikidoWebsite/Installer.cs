@@ -1,5 +1,6 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.Listener;
 using AikidoWebsite.Data.Security;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Security;
@@ -30,6 +31,7 @@ namespace AikidoWebsite.Web {
             // Store
             var documentStore = new DocumentStore { ConnectionStringName = "RavenDB" };
             documentStore.Initialize();
+            documentStore.RegisterListener(new SeiteStoreListener());
             container.Register(Component.For<IDocumentStore>().Instance(documentStore).LifeStyle.Singleton);
             container.Register(Component.For<IDocumentSession>().UsingFactoryMethod(() => documentStore.OpenSession()).LifeStyle.PerWebRequest);
             logger.InfoFormat("Using Url {0} and Database {1}", documentStore.Url, documentStore.DefaultDatabase);
