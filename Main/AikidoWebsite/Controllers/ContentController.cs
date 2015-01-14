@@ -119,6 +119,10 @@ namespace AikidoWebsite.Web.Controllers {
                 .Statistics(out stats)
                 .ToList();
 
+            var fileUsage = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
+                .Where(x => x.AttachmentId.In(files.Select(f => f.AttachmentId)))
+                .ToDictionary(x => x.AttachmentId, x => x.Count);
+
             var model = new StoredDateiModel {
                 TotalCount = stats.TotalResults,
                 Start = 0,
@@ -129,8 +133,9 @@ namespace AikidoWebsite.Web.Controllers {
                     AttachmentId = x.AttachmentId,
                     Name = x.Name,
                     Beschreibung = x.Beschreibung,
-                    Bytes = x.Bytes
-                })
+                    Bytes = x.Bytes,
+                    UseCount = fileUsage[x.AttachmentId]
+                }).OrderByDescending(x => x.UseCount)
             };
 
             return View(model);
@@ -161,6 +166,11 @@ namespace AikidoWebsite.Web.Controllers {
                 dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
 
                 DocumentSession.SaveChanges();
+
+                DocumentSession.Query<Datei>()
+                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Take(0)
+                    .ToArray();
 
                 return RedirectToAction("Files");
             }

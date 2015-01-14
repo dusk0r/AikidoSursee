@@ -24,6 +24,7 @@ namespace AikidoWebsite.Web.Models {
         public string Name { get; set; }
         public string Beschreibung { get; set; }
         public int Bytes { get; set; }
+        public int UseCount { get; set; }
     }
 
     public class FileUploadModel {

@@ -18,6 +18,7 @@
         <th>Grösse</th>
         <th>Beschreibung</th>
         <th>Url</th>
+        <th>Verwendung</th>
         <th>@*Link*@</th>
         <th>@*Löschen*@</th>
     </tr>
@@ -28,6 +29,7 @@
         <td data-bind="text: humanSize"></td>
         <td data-bind="text: Beschreibung"></td>
         <td data-bind="text: url"></td>
+        <td data-bind="text: UseCount"></td>
         <td><a href="#" target="_blank" data-bind="attr: {href: url}"><i class="icon icon-mini icon-file-alt"></i> Öffnen</a></td>
         <td><i class="icon icon-mini icon-remove"></i>&nbsp;Löschen</td>
     </tr>
@@ -86,6 +88,7 @@
         self.Name = data.Name;
         self.Beschreibung = data.Beschreibung;
         self.Bytes = data.Bytes;
+        self.UseCount = data.UseCount;
 
         self.url = ko.computed(function() {
             return "@GetBaseUrl(Request.Url)" + "/Content/File/" + self.AttachmentId;
