@@ -19,7 +19,7 @@ namespace AikidoWebsite.Data.Listener {
             var mitteilung = entityInstance as Mitteilung;
 
             if (metadata.ContainsKey("MarkupFiles")) {
-                metadata.Remove("MarkupLinks");
+                metadata.Remove("MarkupFiles");
             }
 
             if (seite != null) {
