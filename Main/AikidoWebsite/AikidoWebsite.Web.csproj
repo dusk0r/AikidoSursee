@@ -70,6 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="FlickrNet">
+      <HintPath>..\packages\FlickrNet.3.16.0\lib\net20\FlickrNet.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
@@ -165,6 +168,7 @@
     <Compile Include="Installer.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BenutzerModel.cs" />
+    <Compile Include="Models\BilderModel.cs" />
     <Compile Include="Models\DateiModels.cs" />
     <Compile Include="Models\DojoModels.cs" />
     <Compile Include="Models\MitteilungenModels.cs" />
@@ -174,6 +178,7 @@
     <Compile Include="Security\WebMembershipUser.cs" />
     <Compile Include="Security\WebRoleProvider.cs" />
     <Compile Include="Security\WebMembershipProvider.cs" />
+    <Compile Include="Service\FlickrService.cs" />
     <Compile Include="Windsor\WindsorControllerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +296,7 @@
     <Content Include="Scripts\creole.js" />
     <Content Include="Scripts\custom-bindings.js" />
     <Content Include="Scripts\ES5.js" />
+    <Content Include="FlickrNet.chm" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />

@@ -13,6 +13,9 @@ using System.Web.Mvc;
 using Recaptcha.Web;
 using Recaptcha.Web.Mvc;
 using AikidoWebsite.Data.Index;
+using FlickrNet;
+using AikidoWebsite.Web.Service;
+using System.Threading.Tasks;
 
 namespace AikidoWebsite.Web.Controllers {
     public class DojoController : Controller {
@@ -20,13 +23,36 @@ namespace AikidoWebsite.Web.Controllers {
         [Inject]
         public IDocumentSession DocumentSession { get; set; }
 
-        [HttpGet]
-        public ActionResult Bilder() {
-            var imageList = Directory.GetFiles(Server.MapPath("~/Content/images/dojo"))
-                .Select(s => Path.GetFileName(s))
-                .Where(s => s.EndsWith(".jpg") && !s.Contains("p.jpg"));
+        [Inject]
+        public FlickrService FlickrService { get; set; }
 
-            return View(imageList);
+        [HttpGet]
+        public async Task<ActionResult> Bilder() {
+            var gallerien = await FlickrService.ListPhotosets();
+            var models = gallerien.HasError ? Enumerable.Empty<PhotoSetModel>() : gallerien.Result.Select(x => new PhotoSetModel {
+                Titel = x.Title,
+                Beschreibung = x.Description,
+                ThumbnailUrl = x.PhotosetSquareThumbnailUrl,
+                PhotosetId = x.PhotosetId,
+                CreationDate = x.DateCreated,
+                Link = x.Url
+            }).OrderByDescending(x => x.CreationDate)
+            .ToList();
+
+            return View(models);
+        }
+
+        [HttpGet]
+        public JsonResult ListBilder(string id) {
+            var models = FlickrService.ListPhotos(id)
+                .Select(x => new BildModel {
+                    Titel = x.Title,
+                    Beschreibung = x.Description,
+                    ImageURL = x.LargeUrl,
+                    Link = x.WebUrl
+                });
+
+            return Json(models, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

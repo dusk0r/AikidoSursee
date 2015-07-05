@@ -4,6 +4,7 @@ using AikidoWebsite.Data.Listener;
 using AikidoWebsite.Data.Security;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Security;
+using AikidoWebsite.Web.Service;
 using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Registration;
@@ -41,6 +42,9 @@ namespace AikidoWebsite.Web {
 
             // Password Helper
             container.Register(Component.For<IPasswordHelper>().Instance(new PasswordHelper()).LifestyleSingleton());
+
+            // Flickr
+            container.Register(Component.For<FlickrService>().LifestyleSingleton());
 
             // Controller
             container.Register(
