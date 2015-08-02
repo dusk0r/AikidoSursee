@@ -9,7 +9,7 @@
 
 <div style="overflow-x: auto; white-space: nowrap;">
     <!-- ko foreach: galleries -->
-    <div style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer;" data-bind="click: $root.setGallery($data), style: { backgroundImage: 'url(\'' + ThumbnailUrl + '\')' }">
+    <div style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer;" data-bind="click: function() { $root.setGallery($data); }, style: { backgroundImage: 'url(\'' + ThumbnailUrl + '\')' }">
         <span data-bind="text: Titel" style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.1); overflow: hidden;"></span>
     </div>
     <!-- /ko -->
@@ -47,7 +47,9 @@ URL zum Album: <a href="#" data-bind="attr: { href: activeGallery().Link} , text
             self.galleries = model;
             self.activeGallery = ko.observable();
             self.photos = ko.observableArray([]);
-            self.photoIndex = ko.observable(-1);
+            self.photoIndex = ko.observable(0);
+
+            self.photoIndex.extend({ notify: 'always' });
 
             self.loadPhotos = function() {
                 $.ajax("/Dojo/ListBilder", {
@@ -56,7 +58,6 @@ URL zum Album: <a href="#" data-bind="attr: { href: activeGallery().Link} , text
                     data: "id=" + self.activeGallery().PhotosetId,
                     success: function (data, status, jqXHR) {
                         self.photos(data);
-                        self.photoIndex(-1);
                         self.photoIndex(0);
                     },
                     error: function (jqXHR) {
