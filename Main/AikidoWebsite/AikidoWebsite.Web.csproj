@@ -204,6 +204,7 @@
     <Content Include="Content\images\dojo\dojo5p.jpg" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\personen\armin-s.jpg" />
     <Content Include="Content\images\personen\armin.jpg" />
     <Content Include="Content\images\personen\beat-s.jpg" />

@@ -4,20 +4,26 @@
     ViewBag.Title = "Bilder";
 }
 
-<h2>Bilder</h2>
+<h2>Bildergallerien</h2>
 
+<br />
 
 <div style="overflow-x: auto; white-space: nowrap;">
     <!-- ko foreach: galleries -->
     <div style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer;" data-bind="click: function() { $root.setGallery($data); }, style: { backgroundImage: 'url(\'' + ThumbnailUrl + '\')' }">
-        <span data-bind="text: Titel" style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.1); overflow: hidden;"></span>
+        <span data-bind="text: Titel" style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.1); overflow: hidden;"></span><br />
     </div>
     <!-- /ko -->
 </div>
 
 <h3 data-bind="text: activeGallery().Titel"></h3>
 
-<table>
+<p data-bind="text: activeGallery().Beschreibung">
+</p>
+
+<br />
+
+<table style="position: relative; left: -15px;">
     <tr>
         <td data-bind="click: prevImage" style="cursor: pointer;">
             <span class="icon-arrow-left"></span>
@@ -51,7 +57,9 @@ URL zum Album: <a href="#" data-bind="attr: { href: activeGallery().Link} , text
 
             self.photoIndex.extend({ notify: 'always' });
 
-            self.loadPhotos = function() {
+            self.loadPhotos = function () {
+                $("#image").attr("src", "/Content/images/loading.gif");
+
                 $.ajax("/Dojo/ListBilder", {
                     type: "GET",
                     dataType: "json",
