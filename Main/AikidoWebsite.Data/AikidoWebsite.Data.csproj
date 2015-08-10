@@ -79,6 +79,7 @@
     <Compile Include="Entities\Termin.cs" />
     <Compile Include="Extensions\IEntityExtensions.cs" />
     <Compile Include="Index\AktuelleSeiteIndex.cs" />
+    <Compile Include="Index\FileUsageBySource.cs" />
     <Compile Include="Index\FileUsageCountIndex.cs" />
     <Compile Include="Index\MitteilungByTerminIndex.cs" />
     <Compile Include="Installer.cs" />

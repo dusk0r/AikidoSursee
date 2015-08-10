@@ -12,6 +12,7 @@ using AikidoWebsite.Data.ValueObjects;
 using Raven.Client.Linq;
 using Raven.Json.Linq;
 using AikidoWebsite.Data.Index;
+using System.Net;
 
 namespace AikidoWebsite.Web.Controllers {
 
@@ -176,6 +177,56 @@ namespace AikidoWebsite.Web.Controllers {
             }
 
             return Json(null);
+        }
+
+        [RequireGruppe(Gruppe.Admin)]
+        [HttpGet]
+        public ActionResult Delete(string id) {
+            var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
+            if (datei == null) {
+                throw new HttpException((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
+            }
+
+            var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
+                .Where(x => x.AttachmentId == datei.AttachmentId)
+                .ProjectFromIndexFieldsInto<FileUsageBySource.Result>()
+                .ToList();
+
+            var model = new FileDeleteModel {
+                Id = id,
+                Name = datei.Name,
+                Usages = usage.Select(u => new FileUsageModel { 
+                    DocumentId = u.AttachmentId,
+                    DocumentName = u.DocumentName,
+                    DocumentUrl = CreateUrl(u)
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        [RequireGruppe(Gruppe.Admin)]
+        [HttpPost]
+        public ActionResult DeleteConfirmed(string id) {
+            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+
+            var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
+            dbCommands.DeleteAttachment(datei.AttachmentId, null);
+            DocumentSession.Delete(datei);
+            DocumentSession.SaveChanges();
+
+            return RedirectToAction("Files");
+        }
+
+        private string CreateUrl(FileUsageBySource.Result usage) {
+            switch (usage.DocumentType) {
+                case "mitteilung":
+                    return "/Aktuelles/Mitteilung/" + usage.DocumentReference.Replace("/", "_");
+                case "seite":
+                    return "/Content/Show/" + usage.DocumentReference;
+                default:
+                    return "/";
+            }
         }
     }
 }

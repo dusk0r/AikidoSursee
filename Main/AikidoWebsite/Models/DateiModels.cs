@@ -32,5 +32,19 @@ namespace AikidoWebsite.Web.Models {
         public HttpPostedFileBase File { get; set; }
     }
 
+    public class FileDeleteModel {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IList<FileUsageModel> Usages { get; set; }
 
+        public FileDeleteModel() {
+            this.Usages = new List<FileUsageModel>();
+        }
+    }
+
+    public class FileUsageModel {
+        public string DocumentId { get; set; }
+        public string DocumentName { get; set; }
+        public string DocumentUrl { get; set; }
+    }
 }

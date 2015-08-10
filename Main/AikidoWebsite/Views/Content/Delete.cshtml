@@ -1,0 +1,23 @@
+﻿@model AikidoWebsite.Web.Models.FileDeleteModel
+@{
+    ViewBag.Title = "Datei löschen";
+}
+
+<h2>Datei löschen</h2>
+
+<h3>Wollen Sie wirklich die Datei '@Model.Name' löschen?</h3>
+
+<form action="/Content/DeleteConfirmed" method="post">
+
+    @if (Model.Usages.Any()) {
+        @:In folgenden Mitteilungen/Seiten wird die Datei verwendet:
+        <ul>
+            @foreach (var usage in Model.Usages) {
+                <li>@usage.DocumentName <a href="@usage.DocumentUrl" target="_blank">Link</a></li>
+            }
+        </ul>
+    }
+
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button class="btn btn-danger">Löschen</button>
+</form>
