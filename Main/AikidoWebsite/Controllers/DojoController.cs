@@ -39,18 +39,43 @@ namespace AikidoWebsite.Web.Controllers {
             }).OrderByDescending(x => x.CreationDate)
             .ToList();
 
+            // Default Gallery
+            var defaultGallery = new PhotoSetModel {
+                Titel = "Das Dojo",
+                Beschreibung = "Bilder vom Dojo Sursee",
+                ThumbnailUrl = "/Content/images/dojo/dojo3p.jpg",
+                PhotosetId = "sursee",
+                CreationDate = new DateTime(2012, 11, 17),
+                Link = @"http://www.aikido-sursee.ch/Dojo/Bilder"
+            };
+            models = new PhotoSetModel[] { defaultGallery }.Union(models);
+
             return View(models);
         }
 
         [HttpGet]
         public JsonResult ListBilder(string id) {
-            var models = FlickrService.ListPhotos(id)
-                .Select(x => new BildModel {
-                    Titel = x.Title,
-                    Beschreibung = x.Description,
-                    ImageURL = x.LargeUrl,
-                    Link = x.WebUrl
-                });
+            IEnumerable<BildModel> models = null;
+
+            if (id == "sursee") {
+                models = Directory.GetFiles(Server.MapPath("~/Content/images/dojo"))
+                    .Select(s => Path.GetFileName(s))
+                    .Where(s => s.EndsWith(".jpg") && !s.Contains("p.jpg"))
+                    .Select(x => new BildModel {
+                        Titel = x,
+                        Beschreibung = "",
+                        ImageURL = "/Content/images/dojo/" + x,
+                        Link = @"http://www.aikido-sursee.ch/Dojo/Bilder"
+                    });
+            } else {
+                models = FlickrService.ListPhotos(id)
+                    .Select(x => new BildModel {
+                        Titel = x.Title,
+                        Beschreibung = x.Description,
+                        ImageURL = x.LargeUrl,
+                        Link = x.WebUrl
+                    });
+            }
 
             return Json(models, JsonRequestBehavior.AllowGet);
         }
