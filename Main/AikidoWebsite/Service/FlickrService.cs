@@ -11,8 +11,7 @@ namespace AikidoWebsite.Web.Service {
         private Flickr Flickr;
 
         public FlickrService() {
-            // Todo, in config auslagern
-            this.Flickr = new Flickr("eb86f95fb5474b06d3ecb2a3f6bf02aa");
+            this.Flickr = new Flickr();
         }
 
         public Task<FlickrResult<PhotosetCollection>> ListPhotosets() {
