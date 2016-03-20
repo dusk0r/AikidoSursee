@@ -209,13 +209,14 @@
     <Content Include="Content\images\personen\armin.jpg" />
     <Content Include="Content\images\personen\beat-s.jpg" />
     <Content Include="Content\images\personen\beat.jpg" />
+    <Content Include="Content\images\personen\boris-s.jpg" />
+    <Content Include="Content\images\personen\fabian-s.jpg" />
     <Content Include="Content\images\personen\fehlt-s.jpg" />
     <Content Include="Content\images\personen\georges-s.jpg" />
     <Content Include="Content\images\personen\georges.jpg" />
-    <Content Include="Content\images\personen\hanspeter-s.jpg" />
-    <Content Include="Content\images\personen\hanspeter.jpg" />
     <Content Include="Content\images\personen\heidi-s.jpg" />
     <Content Include="Content\images\personen\heidi.jpg" />
+    <Content Include="Content\images\personen\johannes-s.jpg" />
     <Content Include="Content\images\personen\manuela-s.jpg" />
     <Content Include="Content\images\personen\manuela.jpg" />
     <Content Include="Content\images\personen\marcel-s.jpg" />
@@ -226,6 +227,7 @@
     <Content Include="Content\images\personen\nick.jpg" />
     <Content Include="Content\images\personen\priska-s.jpg" />
     <Content Include="Content\images\personen\priska.jpg" />
+    <Content Include="Content\images\personen\robin-s.jpg" />
     <Content Include="Content\images\personen\simon-s.jpg" />
     <Content Include="Content\images\personen\simon.jpg" />
     <Content Include="Content\images\personen\toni-s.jpg" />
@@ -298,6 +300,7 @@
     <Content Include="Scripts\custom-bindings.js" />
     <Content Include="Scripts\ES5.js" />
     <Content Include="FlickrNet.chm" />
+    <None Include="Properties\PublishProfiles\Filesystem.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
