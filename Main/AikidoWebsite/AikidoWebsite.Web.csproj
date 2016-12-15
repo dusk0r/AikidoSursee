@@ -216,6 +216,8 @@
     <Content Include="Content\images\personen\georges.jpg" />
     <Content Include="Content\images\personen\heidi-s.jpg" />
     <Content Include="Content\images\personen\heidi.jpg" />
+    <Content Include="Content\images\personen\jasmin-s.jpg" />
+    <Content Include="Content\images\personen\jasmin.jpg" />
     <Content Include="Content\images\personen\johannes-s.jpg" />
     <Content Include="Content\images\personen\manuela-s.jpg" />
     <Content Include="Content\images\personen\manuela.jpg" />
@@ -223,6 +225,8 @@
     <Content Include="Content\images\personen\marcel.jpg" />
     <Content Include="Content\images\personen\markus-s.jpg" />
     <Content Include="Content\images\personen\markus.jpg" />
+    <Content Include="Content\images\personen\melanie-s.jpg" />
+    <Content Include="Content\images\personen\melanie.jpg" />
     <Content Include="Content\images\personen\nick-s.jpg" />
     <Content Include="Content\images\personen\nick.jpg" />
     <Content Include="Content\images\personen\priska-s.jpg" />
