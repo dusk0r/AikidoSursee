@@ -1,5 +1,6 @@
 ﻿using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,10 @@ namespace AikidoWebsite.Web.Extensions {
             this.Calendar = calendar;
         }
 
-        public override void ExecuteResult(ControllerContext context) {
-            context.HttpContext.Response.Clear();
+        public override void ExecuteResult(ActionContext context) {
+            //context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "text/calendar";
-            context.HttpContext.Response.Write(Calendar.ToString());
+            context.HttpContext.Response.Body.Write(Calendar.ToString());
         }
     }
 }

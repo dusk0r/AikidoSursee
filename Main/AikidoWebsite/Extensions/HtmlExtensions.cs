@@ -1,4 +1,5 @@
 ﻿using AikidoWebsite.Data.ValueObjects;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +18,18 @@ namespace AikidoWebsite.Web.Extensions {
         //    return System.Web.Mvc.Html.SelectExtensions.DropDownList(htmlHelper, name, seletItemValues, htmlAttributes);
         //}
 
-        public static MvcHtmlString PublikumDropDown(this HtmlHelper htmlHelper, string name, string dataBind = null) {
-            var seletItemValues = Enum.GetValues(typeof(Publikum))
-                                .Cast<Publikum>()
-                                .Select(e => new SelectListItem { Text = e.ToString(), Value = (Convert.ToInt32(e)).ToString(), Selected = e.Equals(Publikum.Extern) });
+        //public static MvcHtmlString PublikumDropDown(this HtmlHelper htmlHelper, string name, string dataBind = null) {
+        //    var seletItemValues = Enum.GetValues(typeof(Publikum))
+        //                        .Cast<Publikum>()
+        //                        .Select(e => new SelectListItem { Text = e.ToString(), Value = (Convert.ToInt32(e)).ToString(), Selected = e.Equals(Publikum.Extern) });
 
-            object htmlAttributes = null;
-            if (dataBind != null) {
-                htmlAttributes = new { @data_bind = dataBind };
-            }
+        //    object htmlAttributes = null;
+        //    if (dataBind != null) {
+        //        htmlAttributes = new { @data_bind = dataBind };
+        //    }
 
-            return System.Web.Mvc.Html.SelectExtensions.DropDownList(htmlHelper, name, seletItemValues, htmlAttributes);
-        }
+        //    return System.Web.Mvc.Html.SelectExtensions.DropDownList(htmlHelper, name, seletItemValues, htmlAttributes);
+        //}
 
     }
 }

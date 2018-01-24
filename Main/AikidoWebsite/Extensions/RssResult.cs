@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Web.Extensions {
     
@@ -35,7 +36,7 @@ namespace AikidoWebsite.Web.Extensions {
             );
         }
 
-        public override void ExecuteResult(ControllerContext context) {
+        public override void ExecuteResult(ActionContext context) {
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/rss+xml";
             context.HttpContext.Response.Write(rssXml.ToString());
