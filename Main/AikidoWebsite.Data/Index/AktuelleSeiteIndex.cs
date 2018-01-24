@@ -1,12 +1,9 @@
-﻿using AikidoWebsite.Data.Entities;
-using Raven.Client.Indexes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using AikidoWebsite.Data.Entities;
+using Raven.Client.Documents.Indexes;
 
-namespace AikidoWebsite.Data.Index {
+namespace AikidoWebsite.Data.Index
+{
 
     public class AktuelleSeiteIndex : AbstractIndexCreationTask<Seite, AktuelleSeiteIndex.Result> {
 

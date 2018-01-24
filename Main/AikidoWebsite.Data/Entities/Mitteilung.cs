@@ -18,16 +18,12 @@ namespace AikidoWebsite.Data.Entities {
         public DateTime ErstelltAm { get; set; }
         public string AutorId { get; set; }
         public string Text { get; set; }
-        // Todo, custom converter nötig?
-        public Publikum Publikum { get; set; }
         public ISet<string> TerminIds { get; set; }
         public ISet<string> DateiIds { get; set; }
 
         [JsonIgnore]
         public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
 
-        [JsonIgnore]
-        public string PublikumString { get { return Publikum.ToString(); } }
 
         public Mitteilung() {
             this.TerminIds = new HashSet<string>();
