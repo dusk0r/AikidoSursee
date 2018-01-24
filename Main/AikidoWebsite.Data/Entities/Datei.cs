@@ -1,12 +1,10 @@
-﻿using AikidoWebsite.Common;
-using Raven.Imports.Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using AikidoWebsite.Common;
+using Sparrow.Json;
 
-namespace AikidoWebsite.Data.Entities {
-    
+namespace AikidoWebsite.Data.Entities
+{
+
     public class Datei : IEntity {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -15,7 +13,7 @@ namespace AikidoWebsite.Data.Entities {
         public string MimeType { get; set; }
         public int Bytes { get; set; }
 
-        [JsonIgnore]
+        [JsonDeserializationIgnore]
         public bool IsImage { get { return MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase); } }
 
         //############################################################################

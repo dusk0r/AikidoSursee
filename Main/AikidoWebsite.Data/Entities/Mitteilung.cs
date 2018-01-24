@@ -1,14 +1,10 @@
-﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.ValueObjects;
-using Raven.Client;
-using Raven.Imports.Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Sparrow.Json;
 using Wiki;
 
-namespace AikidoWebsite.Data.Entities {
+namespace AikidoWebsite.Data.Entities
+{
 
     public class Mitteilung : IEntity {
         private static readonly CreoleParser CreoleParser = new CreoleParser();
@@ -21,7 +17,7 @@ namespace AikidoWebsite.Data.Entities {
         public ISet<string> TerminIds { get; set; }
         public ISet<string> DateiIds { get; set; }
 
-        [JsonIgnore]
+        [JsonDeserializationIgnore]
         public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
 
 

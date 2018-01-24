@@ -1,13 +1,11 @@
-﻿using AikidoWebsite.Common;
-using Raven.Imports.Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using AikidoWebsite.Common;
+using Sparrow.Json;
 using Wiki;
 
-namespace AikidoWebsite.Data.Entities {
-    
+namespace AikidoWebsite.Data.Entities
+{
+
     public class Hinweis : IEntity {
         private static readonly CreoleParser CreoleParser = new CreoleParser();
 
@@ -15,7 +13,7 @@ namespace AikidoWebsite.Data.Entities {
         public string Text { get; set; }
         public DateTime Enddatum { get; set; }
         
-        [JsonIgnore]
+        [JsonDeserializationIgnore]
         public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
 
         //############################################################################

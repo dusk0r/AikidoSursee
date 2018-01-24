@@ -1,16 +1,10 @@
-﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data;
-using AikidoWebsite.Data.Converter;
-using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.ValueObjects;
-using Raven.Client;
-using Raven.Imports.Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using AikidoWebsite.Common;
+using AikidoWebsite.Data.ValueObjects;
 
-namespace AikidoWebsite.Data.Entities {
+namespace AikidoWebsite.Data.Entities
+{
 
     public class Benutzer : IEntity {
 
@@ -29,7 +23,6 @@ namespace AikidoWebsite.Data.Entities {
         public string Name { get; set; }
         public string EMail { get; set; }
         public string PasswortHash { get; set; }
-        [JsonConverter(typeof(GroupSetConverter))]
         public ISet<Gruppe> Gruppen { get; set; }
         public bool IstAktiv { get; set; }
 
@@ -87,15 +80,7 @@ namespace AikidoWebsite.Data.Entities {
                 return false;
             }
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
-
-            uint diff = (uint)PasswortHash.Length ^ (uint)hashedPassword.Length;
-
-            for (int i = 0; i < PasswortHash.Length && i < hashedPassword.Length; i++) {
-                diff |= (uint)PasswortHash[i] ^ (uint)hashedPassword[i];
-            }
-
-            return diff == 0;
+            return BCrypt.Net.BCrypt.Verify(password, PasswortHash);
         }
 
     }

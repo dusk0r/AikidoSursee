@@ -1,12 +1,9 @@
-﻿using AikidoWebsite.Common;
-using Raven.Imports.Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using Sparrow.Json;
 using Wiki;
 
-namespace AikidoWebsite.Data.Entities {
+namespace AikidoWebsite.Data.Entities
+{
     public class Seite : IEntity {
         private static readonly CreoleParser CreoleParser = new CreoleParser();
 
@@ -17,7 +14,7 @@ namespace AikidoWebsite.Data.Entities {
         public int Revision { get; set; }
         public string WikiCreole { get; set; }
 
-        [JsonIgnore]
+        [JsonDeserializationIgnore]
         public string Html { get { return CreoleParser.ToHTML(WikiCreole ?? ""); } }
 
         public Seite Copy() {

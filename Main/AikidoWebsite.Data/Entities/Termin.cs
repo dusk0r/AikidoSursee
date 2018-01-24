@@ -1,14 +1,9 @@
-﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.ValueObjects;
-using Raven.Client;
-using Raven.Imports.Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using AikidoWebsite.Common;
 
-namespace AikidoWebsite.Data.Entities {
-    
+namespace AikidoWebsite.Data.Entities
+{
+
     public class Termin : IEntity {
 
         public string Id { get; set; }
