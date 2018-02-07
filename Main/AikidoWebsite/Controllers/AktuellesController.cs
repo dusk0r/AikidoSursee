@@ -15,6 +15,7 @@ using System.Web.Mvc;
 using AikidoWebsite.Data;
 using Raven.Json.Linq;
 using Raven.Client.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Web.Controllers {
 

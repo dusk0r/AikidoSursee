@@ -17,4 +17,7 @@
     <ProjectReference Include="..\AikidoWebsite.Common\AikidoWebsite.Common.csproj" />
     <ProjectReference Include="..\AikidoWebsite.Data\AikidoWebsite.Data.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Windsor\" />
+  </ItemGroup>
 </Project>

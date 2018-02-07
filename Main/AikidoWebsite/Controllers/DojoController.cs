@@ -16,6 +16,7 @@ using AikidoWebsite.Data.Index;
 using FlickrNet;
 using AikidoWebsite.Web.Service;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Web.Controllers {
     public class DojoController : Controller {

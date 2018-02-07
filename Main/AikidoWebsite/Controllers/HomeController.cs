@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using AikidoWebsite.Data.Entities;
 using Raven.Client;
 using AikidoWebsite.Data.ValueObjects;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Controllers {
 

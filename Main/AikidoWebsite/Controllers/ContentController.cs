@@ -13,6 +13,7 @@ using Raven.Client.Linq;
 using Raven.Json.Linq;
 using AikidoWebsite.Data.Index;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Web.Controllers {
 

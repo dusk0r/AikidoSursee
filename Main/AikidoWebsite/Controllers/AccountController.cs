@@ -14,6 +14,7 @@ using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AikidoWebsite.Controllers {
     public class AccountController : Controller {
