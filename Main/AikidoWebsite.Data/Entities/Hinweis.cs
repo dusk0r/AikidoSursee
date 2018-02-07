@@ -1,20 +1,18 @@
 ﻿using System;
 using AikidoWebsite.Common;
+using AikidoWebsite.Data.Extensions;
 using Newtonsoft.Json;
-using Wiki;
 
 namespace AikidoWebsite.Data.Entities
 {
 
     public class Hinweis : IEntity {
-        private static readonly CreoleParser CreoleParser = new CreoleParser();
-
         public string Id { get; set; }
         public string Text { get; set; }
         public DateTime Enddatum { get; set; }
         
         [JsonIgnore]
-        public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
+        public string Html { get { return Text.CreoleToHtml(); } }
 
         //############################################################################
         #region Object Overrides

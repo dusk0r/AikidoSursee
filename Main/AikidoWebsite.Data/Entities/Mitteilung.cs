@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sparrow.Json;
-using Wiki;
+using AikidoWebsite.Data.Extensions;
+using Newtonsoft.Json;
 
 namespace AikidoWebsite.Data.Entities
 {
 
     public class Mitteilung : IEntity {
-        private static readonly CreoleParser CreoleParser = new CreoleParser();
-
         public string Id { get; set; }
         public string Titel { get; set; }
         public DateTime ErstelltAm { get; set; }
@@ -17,8 +15,8 @@ namespace AikidoWebsite.Data.Entities
         public ISet<string> TerminIds { get; set; }
         public ISet<string> DateiIds { get; set; }
 
-        [JsonDeserializationIgnore]
-        public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
+        [JsonIgnore]
+        public string Html { get { return Text.CreoleToHtml(); } }
 
 
         public Mitteilung() {

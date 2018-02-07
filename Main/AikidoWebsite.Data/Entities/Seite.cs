@@ -1,12 +1,10 @@
 ﻿using System;
+using AikidoWebsite.Data.Extensions;
 using Newtonsoft.Json;
-using Wiki;
 
 namespace AikidoWebsite.Data.Entities
 {
     public class Seite : IEntity {
-        private static readonly CreoleParser CreoleParser = new CreoleParser();
-
         public string Id { get; set; }
         public string Name { get; set; }
         public DateTime ErstellungsDatum { get; set; }
@@ -15,7 +13,7 @@ namespace AikidoWebsite.Data.Entities
         public string WikiCreole { get; set; }
 
         [JsonIgnore]
-        public string Html { get { return CreoleParser.ToHTML(WikiCreole ?? ""); } }
+        public string Html { get { return WikiCreole.CreoleToHtml(); } }
 
         public Seite Copy() {
             return new Seite {
