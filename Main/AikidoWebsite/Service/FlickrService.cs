@@ -11,18 +11,19 @@ namespace AikidoWebsite.Web.Service {
         private Flickr Flickr;
 
         public FlickrService() {
-            this.Flickr = new Flickr();
-        }
-
-        public Task<FlickrResult<PhotosetCollection>> ListPhotosets() {
-            var t = new TaskCompletionSource<FlickrResult<PhotosetCollection>>();
             // Todo, in config auslagern
-            Flickr.PhotosetsGetListAsync("128101479@N04", r => t.TrySetResult(r));
-            return t.Task;
+            this.Flickr = new Flickr("128101479@N04");
         }
 
-        public PhotosetPhotoCollection ListPhotos(string galleryId) {
-            return Flickr.PhotosetsGetPhotos(galleryId);
+        public async Task<PhotosetCollection> ListPhotosetsAsync() {
+            var t = new TaskCompletionSource<FlickrResult<PhotosetCollection>>();
+            
+            var photosets = await Flickr.PhotosetsGetListAsync();
+            return photosets;
+        }
+
+        public async Task<PhotosetPhotoCollection> ListPhotosAsync(string galleryId) {
+            return await Flickr.PhotosetsGetPhotosAsync(galleryId);
         }
     }
 }

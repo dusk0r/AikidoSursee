@@ -29,7 +29,7 @@ namespace AikidoWebsite.Web.Controllers {
 
         [HttpGet]
         public async Task<ActionResult> Bilder() {
-            var gallerien = await FlickrService.ListPhotosets();
+            var gallerien = await FlickrService.ListPhotosetsAsync();
             var models = gallerien.HasError ? Enumerable.Empty<PhotoSetModel>() : gallerien.Result.Select(x => new PhotoSetModel {
                 Titel = x.Title,
                 Beschreibung = x.Description,
@@ -55,7 +55,7 @@ namespace AikidoWebsite.Web.Controllers {
         }
 
         [HttpGet]
-        public JsonResult ListBilder(string id) {
+        public async Task<JsonResult> ListBilder(string id) {
             IEnumerable<BildModel> models = null;
 
             if (id == "sursee") {
@@ -69,7 +69,7 @@ namespace AikidoWebsite.Web.Controllers {
                         Link = @"http://www.aikido-sursee.ch/Dojo/Bilder"
                     });
             } else {
-                models = FlickrService.ListPhotos(id)
+                models = (await FlickrService.ListPhotosAsync(id))
                     .Select(x => new BildModel {
                         Titel = x.Title,
                         Beschreibung = x.Description,
