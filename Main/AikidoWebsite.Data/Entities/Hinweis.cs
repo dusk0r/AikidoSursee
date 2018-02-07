@@ -1,6 +1,6 @@
 ﻿using System;
 using AikidoWebsite.Common;
-using Sparrow.Json;
+using Newtonsoft.Json;
 using Wiki;
 
 namespace AikidoWebsite.Data.Entities
@@ -13,7 +13,7 @@ namespace AikidoWebsite.Data.Entities
         public string Text { get; set; }
         public DateTime Enddatum { get; set; }
         
-        [JsonDeserializationIgnore]
+        [JsonIgnore]
         public string Html { get { return CreoleParser.ToHTML(Text ?? ""); } }
 
         //############################################################################

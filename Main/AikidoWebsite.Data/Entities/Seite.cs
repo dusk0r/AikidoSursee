@@ -1,5 +1,5 @@
 ﻿using System;
-using Sparrow.Json;
+using Newtonsoft.Json;
 using Wiki;
 
 namespace AikidoWebsite.Data.Entities
@@ -14,7 +14,7 @@ namespace AikidoWebsite.Data.Entities
         public int Revision { get; set; }
         public string WikiCreole { get; set; }
 
-        [JsonDeserializationIgnore]
+        [JsonIgnore]
         public string Html { get { return CreoleParser.ToHTML(WikiCreole ?? ""); } }
 
         public Seite Copy() {

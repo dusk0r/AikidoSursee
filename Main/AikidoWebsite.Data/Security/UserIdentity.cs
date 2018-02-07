@@ -7,13 +7,17 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 using Raven.Client;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Data.Security {
 
     public class UserIdentity : IUserIdentity {
+        private IDocumentSession Session { get; set; }
 
-        [Inject]
-        public IDocumentSession Session { get; set; }
+        public UserIdentity(IDocumentSession session)
+        {
+            this.Session = session;
+        }
 
         public Benutzer Benutzer {
             get {

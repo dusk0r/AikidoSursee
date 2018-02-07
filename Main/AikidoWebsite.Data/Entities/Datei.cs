@@ -1,6 +1,6 @@
 ﻿using System;
 using AikidoWebsite.Common;
-using Sparrow.Json;
+using Newtonsoft.Json;
 
 namespace AikidoWebsite.Data.Entities
 {
@@ -13,7 +13,7 @@ namespace AikidoWebsite.Data.Entities
         public string MimeType { get; set; }
         public int Bytes { get; set; }
 
-        [JsonDeserializationIgnore]
+        [JsonIgnore]
         public bool IsImage { get { return MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase); } }
 
         //############################################################################
