@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using PaulMiami.AspNetCore.Mvc.Recaptcha;
 
 namespace AikidoWebsite.Web
 {
@@ -23,6 +24,10 @@ namespace AikidoWebsite.Web
                 .AddJsonFile("settings.json")
                 .AddJsonFile($"settings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
 
             Configuration = builder.Build();
         }
@@ -36,6 +41,12 @@ namespace AikidoWebsite.Web
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
+
+            services.AddRecaptcha(new RecaptchaOptions
+            {
+                SiteKey = Configuration["Recaptcha:SiteKey"],
+                SecretKey = Configuration["Recaptcha:SecretKey"]
+            });
 
             services.AddMvc();
         }

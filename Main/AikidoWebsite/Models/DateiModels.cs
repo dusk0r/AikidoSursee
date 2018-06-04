@@ -24,7 +24,7 @@ namespace AikidoWebsite.Web.Models {
         public string MimeType { get; set; }
         public string Name { get; set; }
         public string Beschreibung { get; set; }
-        public int Bytes { get; set; }
+        public long Bytes { get; set; }
         public int UseCount { get; set; }
     }
 

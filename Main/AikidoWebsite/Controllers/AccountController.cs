@@ -23,24 +23,26 @@ namespace AikidoWebsite.Controllers
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl) {
             if (ModelState.IsValid) {
-                if (Membership.ValidateUser(model.UserName, model.Password)) {
-                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
-                        return Redirect(returnUrl);
-                    } else {
-                        return RedirectToAction("Index", "Home");
-                    }
-                } else {
-                    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
-                }
+                // TODO: Implementieren
+                //if (Membership.ValidateUser(model.UserName, model.Password)) {
+                //    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                //    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                //        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
+                //        return Redirect(returnUrl);
+                //    } else {
+                //        return RedirectToAction("Index", "Home");
+                //    }
+                //} else {
+                //    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
+                //}
             }
 
             return View(model);
         }
 
         public ActionResult LogOff() {
-            FormsAuthentication.SignOut();
+            //FormsAuthentication.SignOut();
+            //await HttpContext.Authentication.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
@@ -53,22 +55,23 @@ namespace AikidoWebsite.Controllers
         [Authorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model) {
-            if (ModelState.IsValid) {
+            // TODO: Implementieren
+            //if (ModelState.IsValid) {
 
-                bool changePasswordSucceeded;
-                try {
-                    MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-                    changePasswordSucceeded = currentUser.ChangePassword(null, model.NewPassword);
-                } catch (Exception) {
-                    changePasswordSucceeded = false;
-                }
+            //    bool changePasswordSucceeded;
+            //    try {
+            //        MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
+            //        changePasswordSucceeded = currentUser.ChangePassword(null, model.NewPassword);
+            //    } catch (Exception) {
+            //        changePasswordSucceeded = false;
+            //    }
 
-                if (changePasswordSucceeded) {
-                    return RedirectToAction("ChangePasswordSuccess");
-                } else {
-                    ModelState.AddModelError("", "Konnte das Passwort nicht ändern.");
-                }
-            }
+            //    if (changePasswordSucceeded) {
+            //        return RedirectToAction("ChangePasswordSuccess");
+            //    } else {
+            //        ModelState.AddModelError("", "Konnte das Passwort nicht ändern.");
+            //    }
+            //}
 
             return View(model);
         }

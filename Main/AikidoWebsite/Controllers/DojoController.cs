@@ -10,7 +10,9 @@ using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Index;
 using AikidoWebsite.Web.Models;
 using AikidoWebsite.Web.Service;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using PaulMiami.AspNetCore.Mvc.Recaptcha;
 using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web.Controllers
@@ -19,17 +21,19 @@ namespace AikidoWebsite.Web.Controllers
 
         private IDocumentSession DocumentSession { get; }
         private FlickrService FlickrService { get; }
+        private IHostingEnvironment HostingEnvironment { get; }
 
-        public DojoController(IDocumentSession documentSession, FlickrService flickrService)
+        public DojoController(IDocumentSession documentSession, FlickrService flickrService, IHostingEnvironment env)
         {
             DocumentSession = documentSession;
             FlickrService = flickrService;
+            HostingEnvironment = env;
         }
 
         [HttpGet]
         public async Task<ActionResult> Bilder() {
             var gallerien = await FlickrService.ListPhotosetsAsync();
-            var models = gallerien.HasError ? Enumerable.Empty<PhotoSetModel>() : gallerien.Result.Select(x => new PhotoSetModel {
+            var models = gallerien.Select(x => new PhotoSetModel {
                 Titel = x.Title,
                 Beschreibung = x.Description,
                 ThumbnailUrl = x.PhotosetSquareThumbnailUrl,
@@ -46,9 +50,9 @@ namespace AikidoWebsite.Web.Controllers
                 ThumbnailUrl = "/Content/images/dojo/dojo3p.jpg",
                 PhotosetId = "sursee",
                 CreationDate = new DateTime(2012, 11, 17),
-                Link = @"http://www.aikido-sursee.ch/Dojo/Bilder"
+                Link = @"http://www.aikido-sursee.ch/Dojo/Bilder" // TODO: Dynamisch machen
             };
-            models = new PhotoSetModel[] { defaultGallery }.Union(models);
+            models = new PhotoSetModel[] { defaultGallery }.Union(models).ToList();
 
             return View(models);
         }
@@ -58,7 +62,7 @@ namespace AikidoWebsite.Web.Controllers
             IEnumerable<BildModel> models = null;
 
             if (id == "sursee") {
-                models = Directory.GetFiles(Server.MapPath("~/Content/images/dojo"))
+                models = Directory.GetFiles(Path.Combine(HostingEnvironment.WebRootPath, "~/Content/images/dojo"))
                     .Select(s => Path.GetFileName(s))
                     .Where(s => s.EndsWith(".jpg") && !s.Contains("p.jpg"))
                     .Select(x => new BildModel {
@@ -77,7 +81,7 @@ namespace AikidoWebsite.Web.Controllers
                     });
             }
 
-            return Json(models, JsonRequestBehavior.AllowGet);
+            return Json(models);
         }
 
         [HttpGet]
@@ -105,17 +109,18 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateRecaptcha]
         public ActionResult Kontakt(KontaktModel model) {
             // Todo, Keys und Adresse in Config File auslagern
-            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper("6LdHg_ASAAAAAEmzaiVNBGjMaYW8G--qwF6kwS-v");
+            //RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper("6LdHg_ASAAAAAEmzaiVNBGjMaYW8G--qwF6kwS-v");
 
-            if (String.IsNullOrEmpty(recaptchaHelper.Response)) {
-                ModelState.AddModelError("capta", "Bitte geben Sie den Bestätigungscode an");
-            }
-            var recaptaResult = recaptchaHelper.VerifyRecaptchaResponse();
-            if (recaptaResult != RecaptchaVerificationResult.Success) {
-                ModelState.AddModelError("capta", "Falscher Code");
-            }
+            //if (String.IsNullOrEmpty(recaptchaHelper.Response)) {
+            //    ModelState.AddModelError("capta", "Bitte geben Sie den Bestätigungscode an");
+            //}
+            //var recaptaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            //if (recaptaResult != RecaptchaVerificationResult.Success) {
+            //    ModelState.AddModelError("capta", "Falscher Code");
+            //}
 
             if (!ModelState.IsValid) {
                 return View(model);

@@ -10,6 +10,6 @@
     <PackageReference Include="NUnit" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AikidoWebsite.Common\AikidoWebsite.Data.csproj" />
+    <ProjectReference Include="..\AikidoWebsite.Data\AikidoWebsite.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -129,7 +129,7 @@ namespace AikidoWebsite.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "admin")]
         public ActionResult UploadFile([FromBody]IFormFile file, [FromBody]string bezeichnung, [FromBody]string mitteilungsId) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
             
             var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
             var key = Guid.NewGuid().ToString();
@@ -148,7 +148,7 @@ namespace AikidoWebsite.Web.Controllers
             metadata["Bezeichnung"] = bezeichnung;
             metadata["DateiName"] = file.FileName;
             metadata["ContentType"] = file.ContentType;
-            dbCommands.PutAttachment(key, null, file.InputStream, metadata);
+            //dbCommands.PutAttachment(key, null, file.InputStream, metadata); // TODO: Implementieren
 
             mitteilung.DateiIds.Add(key);
             DocumentSession.SaveChanges();
@@ -254,15 +254,15 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             return dateiKeys.Select(g => {
-                var attachment = dbCommands.GetAttachment(g);
+                //var attachment = dbCommands.GetAttachment(g); // TODO: Implementieren
                 return new DateiModel {
                     Id = g,
-                    Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(),
-                    DateiName = attachment.Metadata["DateiName"].ToString(),
-                    Size = attachment.Size
+                    //Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(),
+                    //DateiName = attachment.Metadata["DateiName"].ToString(),
+                    //Size = attachment.Size
                 };
             }).ToList();
         }
@@ -291,7 +291,7 @@ namespace AikidoWebsite.Web.Controllers
             model.MitteilungenCount = stats.TotalResults;
             model.Start = start;
             model.PerPage = perPage;
-            model.IsAdmin = User.IsInGroup(Gruppe.Admin);
+            model.IsAdmin = User.IsInRole("admin");
 
             return model;
         }

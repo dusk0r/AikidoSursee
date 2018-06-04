@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Raven.Client.Documents.Session;
+using Raven.Client.Extensions;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -36,7 +37,7 @@ namespace AikidoWebsite.Web.Controllers
                 return View(article);
             } else {
                 Response.StatusCode = 404;
-                Response.TrySkipIisCustomErrors = true;
+                //Response.TrySkipIisCustomErrors = true;
                 return View("ArtikelNichtGefunden", (object)id);
             }
         }
@@ -56,7 +57,7 @@ namespace AikidoWebsite.Web.Controllers
             };
 
             ViewData["Files"] = DocumentSession.Query<Datei>()
-                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                .Customize(x => x.WaitForNonStaleResults())
                 .ToList();
 
             return View(model);
@@ -100,18 +101,19 @@ namespace AikidoWebsite.Web.Controllers
 
         [HttpGet]
         public ActionResult File(string id) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
-            var attachment = dbCommands.GetAttachment(id);
+            // TODO: Implementieren
+            //var attachment = dbCommands.GetAttachment(id);
 
-            if (attachment == null) {
-                return new HttpStatusCodeResult((int)System.Net.HttpStatusCode.NotFound);
+            //if (attachment == null) {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound);
 
-            } else {
-                var contentType = attachment.Metadata["ContentType"].ToString();
+            //} else {
+            //    var contentType = attachment.Metadata["ContentType"].ToString();
 
-                return File(attachment.Data(), contentType);
-            }
+            //    return File(attachment.Data(), contentType);
+            //}
         }
 
         [HttpGet]
@@ -126,7 +128,7 @@ namespace AikidoWebsite.Web.Controllers
                 .ToList();
 
             var fileUsage = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
-                .Where(x => x.AttachmentId.In(files.Select(f => f.AttachmentId)))
+                //.Where(x => x.AttachmentId.In(files.Select(f => f.AttachmentId))) // TODO: Implementieren
                 .ToDictionary(x => x.AttachmentId, x => x.Count);
 
             var model = new StoredDateiModel {
@@ -194,7 +196,6 @@ namespace AikidoWebsite.Web.Controllers
 
             var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
                 .Where(x => x.AttachmentId == datei.AttachmentId)
-                .ProjectFromIndexFieldsInto<FileUsageBySource.Result>()
                 .ToList();
 
             var model = new FileDeleteModel {
@@ -213,10 +214,10 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult DeleteConfirmed(string id) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
-            dbCommands.DeleteAttachment(datei.AttachmentId, null);
+            //dbCommands.DeleteAttachment(datei.AttachmentId, null); // TODO: Implementieren
             DocumentSession.Delete(datei);
             DocumentSession.SaveChanges();
 
