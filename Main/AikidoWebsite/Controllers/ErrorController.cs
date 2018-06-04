@@ -1,18 +1,17 @@
-﻿using AikidoWebsite.Common;
+﻿using System.Net;
 using Castle.Core.Logging;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
 
-namespace AikidoWebsite.Web.Controllers {
+namespace AikidoWebsite.Web.Controllers
+{
     public class ErrorController : Controller {
 
-        [Inject]
-        public ILogger Logger { get; set; }
+        private ILogger Logger { get; }
+
+        public ErrorController(ILogger logger)
+        {
+            Logger = logger;
+        }
 
         public ActionResult NotFound() {
             Response.StatusCode = (int)HttpStatusCode.NotFound;

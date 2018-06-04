@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
-using AikidoWebsite.Models;
-using AikidoWebsite.Common;
-using AikidoWebsite.Web.Extensions;
-using Raven.Client.Document;
-using Raven.Client;
-using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.ValueObjects;
+using AikidoWebsite.Models;
+using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Controllers {
+namespace AikidoWebsite.Controllers
+{
     public class AccountController : Controller {
 
-        [Inject]
-        public IDocumentSession DocumentSession { get; set; }
+        private IDocumentSession DocumentSession { get; }
+
+        public AccountController(IDocumentSession documentSession)
+        {
+            DocumentSession = documentSession;
+        }
 
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl) {

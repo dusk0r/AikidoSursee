@@ -1,29 +1,29 @@
-﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.Entities;
-using Raven.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AikidoWebsite.Web.Models;
-using AikidoWebsite.Web.Extensions;
-using AikidoWebsite.Data.ValueObjects;
-using Raven.Client.Linq;
-using Raven.Json.Linq;
-using AikidoWebsite.Data.Index;
 using System.Net;
+using AikidoWebsite.Common;
+using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.Index;
+using AikidoWebsite.Data.ValueObjects;
+using AikidoWebsite.Web.Extensions;
+using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Web.Controllers {
+namespace AikidoWebsite.Web.Controllers
+{
 
     public class ContentController : Controller {
 
-        [Inject]
-        public IClock Clock { get; set; }
+        private IDocumentSession DocumentSession { get; }
+        private IClock Clock { get; }
 
-        [Inject]
-        public IDocumentSession DocumentSession { get; set; }
+        public ContentController(IDocumentSession documentSession, IClock clock)
+        {
+            DocumentSession = documentSession;
+            Clock = clock;
+        }
 
         public ActionResult Show(string id) {
             var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()

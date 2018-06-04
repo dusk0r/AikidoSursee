@@ -1,31 +1,29 @@
-﻿using AikidoWebsite.Common;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
+using AikidoWebsite.Data;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
-using Raven.Client;
-using Raven.Client.Linq;
-using Raven.Client.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AikidoWebsite.Data;
-using Raven.Json.Linq;
-using Raven.Client.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Web.Controllers {
+namespace AikidoWebsite.Web.Controllers
+{
 
     public class AktuellesController : Controller {
 
-        [Inject]
-        public IDocumentSession DocumentSession { get; set; }
+        private IDocumentSession DocumentSession { get; }
+        private IClock Clock { get; }
 
-        [Inject]
-        public IClock Clock { get; set; }
+        public AktuellesController(IDocumentSession documentSession, IClock clock)
+        {
+            DocumentSession = documentSession;
+            Clock = clock;
+        }
 
         [HttpGet]
         public ActionResult Index() {

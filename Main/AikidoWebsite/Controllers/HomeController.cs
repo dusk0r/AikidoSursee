@@ -1,21 +1,17 @@
-﻿using AikidoWebsite.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using AikidoWebsite.Data.Entities;
-using Raven.Client;
-using AikidoWebsite.Data.ValueObjects;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Controllers {
+namespace AikidoWebsite.Controllers
+{
 
     public class HomeController : Controller {
 
+        public IDocumentSession DocumentSession { get; }
 
-        [Inject]
-        public IDocumentSession DocumentSession { get; set; }
+        public HomeController(IDocumentSession documentSession)
+        {
+            DocumentSession = documentSession;
+        }
 
         public ActionResult Index() {
 

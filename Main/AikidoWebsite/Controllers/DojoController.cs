@@ -1,31 +1,30 @@
-﻿using AikidoWebsite.Common;
-using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Web.Models;
-using Raven.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using Recaptcha.Web;
-using Recaptcha.Web.Mvc;
-using AikidoWebsite.Data.Index;
-using FlickrNet;
-using AikidoWebsite.Web.Service;
 using System.Threading.Tasks;
+using AikidoWebsite.Common;
+using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.Index;
+using AikidoWebsite.Web.Models;
+using AikidoWebsite.Web.Service;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Web.Controllers {
+namespace AikidoWebsite.Web.Controllers
+{
     public class DojoController : Controller {
 
-        [Inject]
-        public IDocumentSession DocumentSession { get; set; }
+        private IDocumentSession DocumentSession { get; }
+        private FlickrService FlickrService { get; }
 
-        [Inject]
-        public FlickrService FlickrService { get; set; }
+        public DojoController(IDocumentSession documentSession, FlickrService flickrService)
+        {
+            DocumentSession = documentSession;
+            FlickrService = flickrService;
+        }
 
         [HttpGet]
         public async Task<ActionResult> Bilder() {
