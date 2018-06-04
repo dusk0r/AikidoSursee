@@ -10,6 +10,7 @@ using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web.Controllers
@@ -90,7 +91,7 @@ namespace AikidoWebsite.Web.Controllers
             DocumentSession.Store(site);
             DocumentSession.SaveChanges();
             DocumentSession.Query<AktuelleSeiteIndex>()
-                .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                .Customize(c => c.WaitForNonStaleResults())
                 .Take(0)
                 .ToArray();
 
@@ -118,9 +119,9 @@ namespace AikidoWebsite.Web.Controllers
         [ResponseCache(NoStore = true)]
         public ActionResult Files() {
             // Todo: Paging
-            RavenQueryStatistics stats = null;
+            QueryStatistics stats = null;
             var files = DocumentSession.Query<Datei>()
-                .Customize(x => x.WaitForNonStaleResultsAsOfNow())
+                .Customize(x => x.WaitForNonStaleResults())
                 .Statistics(out stats)
                 .ToList();
 
@@ -149,7 +150,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Files(FileUploadModel model) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             if (model.File != null) {
                 var key = Guid.NewGuid().ToString();
@@ -159,21 +160,21 @@ namespace AikidoWebsite.Web.Controllers
                     Name = model.File.FileName,
                     Beschreibung = model.Beschreibung,
                     MimeType = model.File.ContentType,
-                    Bytes = model.File.ContentLength,
+                    Bytes = model.File.Length,
                     AttachmentId = key
                 };
 
                 DocumentSession.Store(datei);
 
-                var metadata = new RavenJObject();
+                var metadata = new JObject();
                 metadata["OriginalDateiName"] = model.File.FileName;
                 metadata["ContentType"] = model.File.ContentType;
-                dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
+                //dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
 
                 DocumentSession.SaveChanges();
 
                 DocumentSession.Query<Datei>()
-                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Customize(c => c.WaitForNonStaleResults())
                     .Take(0)
                     .ToArray();
 
@@ -188,7 +189,7 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult Delete(string id) {
             var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
             if (datei == null) {
-                throw new HttpException((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
+                return StatusCode((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
             }
 
             var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()

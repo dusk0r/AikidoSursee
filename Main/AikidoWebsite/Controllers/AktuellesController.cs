@@ -275,7 +275,7 @@ namespace AikidoWebsite.Web.Controllers
             var model = new ListMitteilungenModel();
 
             // Todo, Lazy
-            RavenQueryStatistics stats;
+            QueryStatistics stats;
             var mitteilungen = DocumentSession.Query<Mitteilung>()
             .Include(m => m.AutorId)
             .Statistics(out stats)

@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.ValueObjects;
+using AikidoWebsite.Web.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web
 {
@@ -28,11 +31,29 @@ namespace AikidoWebsite.Web
         {
             services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
 
+            services.AddIdentity<Benutzer, Role>()
+                .AddUserStore<RavenUserProvider>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            } else
+            {
+                app.UseExceptionHandler("/Error");
+                //app.UseHttpsRedirection();
+                //app.UseHsts();
+            }
+
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
         }
 
@@ -40,16 +61,21 @@ namespace AikidoWebsite.Web
 
     public static class AddStartupExtensions
     {
-        public static void AddRavenDB(this IServiceCollection services, string url, string database, string certificate = null)
+        public static void AddRavenDB(this IServiceCollection services, string url, string database, string certificateString = null)
         {
             var urls = new string[] { url };
+            var certificate = certificateString != null ? new System.Security.Cryptography.X509Certificates.X509Certificate2(Convert.FromBase64String(certificateString)) : null;
 
-            var ravendb = new DocumentStore {
+            var documentStore = new DocumentStore {
                 Urls = urls,
                 Database = database,
-                Certificate = certificate != null ? new System.Security.Cryptography.X509Certificates.X509Certificate2(Convert.FromBase64String(certificate)) : null
+                Certificate = certificate
             };
-            ravendb.Initialize();
+            documentStore.Initialize();
+
+            services.AddScoped<IDocumentSession>(isp => documentStore.OpenSession());
+            services.AddScoped<IAsyncDocumentSession>(isp => documentStore.OpenAsyncSession());
+            services.AddSingleton<IDocumentStore>(documentStore);
         }
     }
 }

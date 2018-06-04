@@ -17,7 +17,7 @@
 
         public static string NullSave(this string str)
         {
-            return (str == null) ? "" : str;
+            return str ?? "";
         }
 
         public static string RemoveNewline(this string str)
