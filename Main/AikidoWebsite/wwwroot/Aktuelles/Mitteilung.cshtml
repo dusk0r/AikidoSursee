@@ -1,0 +1,33 @@
+﻿@model AikidoWebsite.Web.Models.ViewMitteilungModel
+
+@{
+    ViewBag.Title = "Mitteilung";
+}
+
+<h2>Mitteilung</h2>
+
+<h3>@Model.Mitteilung.Titel</h3>
+von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
+&nbsp;&nbsp;<span class="label">@Model.Mitteilung.PublikumString</span>
+<br /><br />
+
+<span class="renderContent">
+    @Html.Raw(Model.Mitteilung.Html)
+</span>
+
+<hr />
+
+@if (Model.Dateien.Any()) {
+    <h5>Dateien</h5>
+    <ul>
+    @foreach (var datei in Model.Dateien) {
+        <li><a href="/Content/File/@datei.Id" title="@datei.DateiName">@datei.Bezeichnung</a></li>
+    }
+    </ul>
+
+    <hr />
+}
+
+
+<a href="javascript: window.history.back();" class="btn btn-small btn-primary">Zurück zu den Mitteilungen</a>
+

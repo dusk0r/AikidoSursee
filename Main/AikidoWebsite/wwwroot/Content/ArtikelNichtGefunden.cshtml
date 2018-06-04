@@ -1,0 +1,11 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "ArtikelNichtGefunden";
+}
+
+<h2><span style="color: red;">404</span> Seite nicht gefunden: @Model</h2>
+
+@if (User.IsInGroup(Gruppe.Admin)) {
+    @Html.ActionLink("Seite erstellen", "Edit", new { id = Model});
+}

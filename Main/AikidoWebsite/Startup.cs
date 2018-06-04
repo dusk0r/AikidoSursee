@@ -11,6 +11,7 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using PaulMiami.AspNetCore.Mvc.Recaptcha;
 using AikidoWebsite.Web.Service;
+using AikidoWebsite.Common;
 
 namespace AikidoWebsite.Web
 {
@@ -49,6 +50,7 @@ namespace AikidoWebsite.Web
                 SecretKey = Configuration["Recaptcha:SecretKey"]
             });
 
+            services.AddClock();
             services.AddFlickr(Configuration["Flickr:ApiKey"]);
 
             services.AddMvc();
@@ -95,6 +97,11 @@ namespace AikidoWebsite.Web
         public static void AddFlickr(this IServiceCollection services, string flickrApiKey)
         {
             services.AddSingleton(new FlickrService(flickrApiKey));
+        }
+
+        public static void AddClock(this IServiceCollection services)
+        {
+            services.AddSingleton<IClock>(new Clock());
         }
     }
 }

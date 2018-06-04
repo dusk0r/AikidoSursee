@@ -1,0 +1,34 @@
+﻿@model IList<AikidoWebsite.Web.Models.BenutzerModel>
+
+@{
+    ViewBag.Title = "Benutzer";
+}
+
+<h2>Benutzer</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            @*<th>Id</th>*@
+            <th>Login / EMail</th>
+            <th>Name</th>
+            <th>Guppen</th>
+            <th>Ist Aktiv</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var account in Model) {
+            <tr>
+                @*<td>@account.Id</td>*@
+                <td>@account.EMail</td>
+                <td>@account.Name</td>
+                <td>@String.Join(", ", account.Gruppen)</td>
+                <td>
+                    @(account.IstAktiv ? "Ja" : "Nein")
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

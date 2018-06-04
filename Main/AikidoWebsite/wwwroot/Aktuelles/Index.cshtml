@@ -1,0 +1,146 @@
+﻿@model AikidoWebsite.Web.Models.ListMitteilungenModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Neuigkeiten</h2>
+
+<!-- ko foreach: mitteilungen -->
+<div class="well">
+    <a href="#" data-bind="attr: { href: show }">
+        <span data-bind="text: titel" style="font-weight: bold;"></span>
+    </a>
+
+    <!-- ko if: hasFiles -->
+        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien"> </i>
+    <!-- /ko -->
+
+    <!-- ko if: $root.isAdmin -->
+        &nbsp;
+        <button class="btn btn-mini" data-bind="click: edit">
+            <span class="icon-edit"> </span>Bearbeiten
+        </button>
+        <button class="btn btn-mini" data-bind="click: remove">
+            <span class="icon-remove"> </span>Löschen
+        </button>
+    <!-- /ko -->
+    <span class="pull-right">
+        <span data-bind="text: erstelltAmText, attr: { title: erstelltAmDatum }" data-toggle="tooltip"></span>
+        <span class="label" data-bind="text: publikumString"></span>
+
+    </span>
+
+    <div data-bind="html: html"></div>
+
+</div>
+<hr />
+<!-- /ko -->
+
+Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
+<ul class="pager">
+    <li data-bind="visible: hasPrev()"><a data-bind="click: prev" class="btn">Neuere</a></li>
+    <li data-bind="visible: hasNext()"><a data-bind="click: next" class="btn">Ältere</a></li>
+</ul>
+
+<br /><br />
+
+@if (User.IsInGroup(Gruppe.Admin)) {
+    @Html.ActionLink("Neue Mitteilung hinzufügen", "AddNews", new  { @class = "btn" })
+}
+
+@section Footer {
+    <script type="text/javascript">
+        var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+
+        function Mitteilung(data) {
+            var self = this;
+
+            self.id = data.Id;
+            self.erstelltAm = moment(data.ErstelltAm).toDate();
+            self.autorName = data.AutorName;
+            self.titel = data.Titel;
+            self.html = data.Html;
+            self.publikumString = data.PublikumString;
+            self.hasFiles = data.DateiIds.length > 0;
+
+            self.erstelltAmText = ko.computed(function () {
+                return moment(self.erstelltAm).fromNow();
+            });
+
+            self.erstelltAmDatum = ko.computed(function () {
+                return moment(self.erstelltAm).format("DD.MM.YYYY HH:mm");
+            });
+
+            self.show = ko.computed(function() {
+                return "/Aktuelles/Mitteilung/" + self.id.replace("/", "_");
+            });
+
+            self.edit = function () {
+                window.location = "/Aktuelles/EditNews/" + self.id.replace("/", "_");
+            };
+
+            self.remove = function () {
+                window.location = "/Aktuelles/RemoveNews/" + self.id.replace("/", "_");
+            }
+
+        }
+
+        function ViewModel(model) {
+            var self = this;
+
+            self.mitteilungen = ko.observableArray(model.Mitteilungen.map(function (value) { return new Mitteilung(value); }));
+            self.start = ko.observable(model.Start);
+            self.perPage = ko.observable(model.PerPage);
+            self.mitteilungenCount = ko.observable(model.MitteilungenCount);
+            self.isAdmin = model.IsAdmin;
+
+            self.hasNext = function () {
+                return self.mitteilungenCount() >= self.start() + self.perPage();
+            };
+
+            self.hasPrev = function () {
+                return self.start() > 0;
+            };
+
+            self.next = function () {
+                self.loadMessages(self.start() + self.perPage());
+            };
+
+            self.prev = function () {
+                var newStart = self.start() - self.perPage();
+                if (newStart < 0) {
+                    newStart = 0;
+                }
+                self.loadMessages(newStart);
+            };
+
+            self.loadMessages = function (start) {
+                $.ajax("/Aktuelles/GetMitteilungen", {
+                    type: "POST",
+                    dataType: "json",
+                    data: "start=" + start,
+                    success: function (message, status, jqXHR) {
+                        self.start(message.Start);
+                        self.perPage(message.PerPage);
+                        self.mitteilungenCount(message.MitteilungenCount);
+                        //self.isAdmin(message.IsAdmin);
+                        self.mitteilungen.removeAll();
+                        self.mitteilungen(message.Mitteilungen.map(function (value) { return new Mitteilung(value); }));
+
+                    },
+                    error: function (jqXHR) {
+                        alert("Irgendwas ist schief gegangen");
+                    }
+                });
+            };
+        }
+
+        ko.applyBindings(viewModel);
+
+        $(document).ready(function () {
+            $("[data-toggle='tooltip']").tooltip();
+        });
+
+    </script>
+
+}

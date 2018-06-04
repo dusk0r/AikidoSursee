@@ -1,0 +1,15 @@
+﻿@model Seite
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<div class="renderContent">
+@Html.Raw(Model.Html)
+</div>
+
+
+@if (User.IsInGroup(Gruppe.Admin)) {
+    <br />
+    <i>Diese Seite wurde von @Model.Autor am @Model.ErstellungsDatum bearbeitet. Seite <a href="/Content/Edit/@Model.Name">bearbeiten</a>.</i>
+}
