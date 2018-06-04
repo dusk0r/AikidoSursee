@@ -9,6 +9,7 @@ using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web.Controllers
@@ -219,7 +220,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [ResponseCache(NoStore = true)]
-        public ActionResult RSS(string id = "alle") {
+        public ActionResult RSS() {
             var rss = new RssResult("Aikido Sursee", "http://www.aikido-sursee.ch/", "Aikido Sursee");
 
             // Todo, 10 kofigurierbar machen
@@ -228,16 +229,10 @@ namespace AikidoWebsite.Web.Controllers
                 .OrderByDescending(p => p.ErstelltAm)
                 .Take(10);
 
-            if (id.Equals(Publikum.Extern.ToString(), StringComparison.OrdinalIgnoreCase)) {
-                mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Extern);
-            }
-            //if (id.Equals(Publikum.Sursee.ToString(), StringComparison.OrdinalIgnoreCase)) {
-            //    mitteilungen = mitteilungen.Where(m => m.Publikum == Publikum.Sursee);
-            //}
-
             foreach (var news in mitteilungen) {
                 var autor = DocumentSession.Load<Benutzer>(news.AutorId);
 
+                // TODO: URL dynamisch machen
                 var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
                 rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(autor.Name, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
             }

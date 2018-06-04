@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AikidoWebsite.Web.Extensions {
-    
+namespace AikidoWebsite.Web.Extensions
+{
+
     public class RssResult : ActionResult {
         private XDocument rssXml;
         private XElement channel;
@@ -36,25 +35,25 @@ namespace AikidoWebsite.Web.Extensions {
             );
         }
 
-        public override void ExecuteResult(ActionContext context) {
+        public override async Task ExecuteResultAsync(ActionContext context) {
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/rss+xml";
-            context.HttpContext.Response.Write(rssXml.ToString());
+            await context.HttpContext.Response.WriteAsync(rssXml.ToString());
         }
 
-        public void SetImage(string url, string title, string link) {
-            // Altes Element löschen
-            channel.Descendants().Where(d => d.Name.Equals("image")).Remove();
+        //public void SetImage(string url, string title, string link) {
+        //    // Altes Element löschen
+        //    channel.Descendants().Where(d => d.Name.Equals("image")).Remove();
 
-            var image = new XElement("image",
-                new XElement("url", url),
-                new XElement("title", title),
-                new XElement("link", link)
-            );
+        //    var image = new XElement("image",
+        //        new XElement("url", url),
+        //        new XElement("title", title),
+        //        new XElement("link", link)
+        //    );
 
-            // Neues Element hinzufügen
-            channel.Add(image);
-        }
+        //    // Neues Element hinzufügen
+        //    channel.Add(image);
+        //}
 
         public void AddItem(string title, string description, string link, string author, string guid, DateTime date) {
 
