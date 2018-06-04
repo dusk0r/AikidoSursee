@@ -14,7 +14,7 @@ namespace AikidoWebsite.Data.Entities
         public int Bytes { get; set; }
 
         [JsonIgnore]
-        public bool IsImage { get { return MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase); } }
+        public bool IsImage => MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase);
 
         //############################################################################
         #region Object Overrides

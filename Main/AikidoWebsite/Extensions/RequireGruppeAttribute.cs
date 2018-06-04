@@ -1,24 +1,24 @@
-﻿using AikidoWebsite.Data.ValueObjects;
-using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿//using AikidoWebsite.Data.ValueObjects;
+//using Microsoft.AspNetCore.Authorization;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Web;
+//using System.Web.Mvc;
 
-namespace AikidoWebsite.Web.Extensions {
+//namespace AikidoWebsite.Web.Extensions {
     
-    [AttributeUsage(AttributeTargets.Method)]
-    public class RequireGruppeAttribute : AuthorizeAttribute {
-        public Gruppe Gruppe { get; private set; }
+//    [AttributeUsage(AttributeTargets.Method)]
+//    public class RequireGruppeAttribute : AuthorizeAttribute {
+//        public Gruppe Gruppe { get; private set; }
 
-        public RequireGruppeAttribute(Gruppe gruppe) {
-            this.Gruppe = gruppe;
-        }
+//        public RequireGruppeAttribute(Gruppe gruppe) {
+//            this.Gruppe = gruppe;
+//        }
 
-        protected override bool AuthorizeCore(HttpContextBase httpContext) {
-            return System.Web.Security.Roles.Provider.IsUserInRole(httpContext.User.Identity.Name, Gruppe.ToString());
-        }
+//        protected override bool AuthorizeCore(HttpContextBase httpContext) {
+//            return System.Web.Security.Roles.Provider.IsUserInRole(httpContext.User.Identity.Name, Gruppe.ToString());
+//        }
 
-    }
-}
+//    }
+//}

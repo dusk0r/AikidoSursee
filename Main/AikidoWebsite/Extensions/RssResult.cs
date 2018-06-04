@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AikidoWebsite.Web.Extensions
 {
-
     public class RssResult : ActionResult {
         private XDocument rssXml;
         private XElement channel;
