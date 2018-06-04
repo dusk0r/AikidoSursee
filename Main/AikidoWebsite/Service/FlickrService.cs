@@ -1,25 +1,18 @@
-﻿using FlickrNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
+using FlickrNet;
 
-namespace AikidoWebsite.Web.Service {
+namespace AikidoWebsite.Web.Service
+{
 
     public class FlickrService {
-        private Flickr Flickr;
+        private readonly Flickr Flickr;
 
-        public FlickrService() {
-            // Todo, in config auslagern
-            this.Flickr = new Flickr("128101479@N04");
+        public FlickrService(string apiKey) {
+            this.Flickr = new Flickr(apiKey);
         }
 
         public async Task<PhotosetCollection> ListPhotosetsAsync() {
-            var t = new TaskCompletionSource<FlickrResult<PhotosetCollection>>();
-            
-            var photosets = await Flickr.PhotosetsGetListAsync();
-            return photosets;
+            return await Flickr.PhotosetsGetListAsync();
         }
 
         public async Task<PhotosetPhotoCollection> ListPhotosAsync(string galleryId) {
