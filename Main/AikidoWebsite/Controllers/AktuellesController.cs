@@ -9,7 +9,9 @@ using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
@@ -57,7 +59,7 @@ namespace AikidoWebsite.Web.Controllers
         public JsonResult Hinweis() {
             var hinweis = DocumentSession.Load<Hinweis>("default");
             var metadata = DocumentSession.Advanced.GetMetadataFor(hinweis);
-            var etag = metadata.Value<Guid>("@etag");
+            var etag = metadata.GetString("@etag");
 
             return Json(new { Hinweis = hinweis.Html, Tag = etag.ToString() });
         }
@@ -71,7 +73,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult EditNews(string id) {
             var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(RavenDbHelper.DecodeDocumentId(id));
-            var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds);
+            var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
             var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
 
             // Dateien
@@ -85,7 +87,7 @@ namespace AikidoWebsite.Web.Controllers
         public JsonResult EditNews(EditMitteilungModel model) {
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
-            PersistTermine(model.Termine, model.Mitteilung.Publikum, benutzer);
+            PersistTermine(model.Termine, benutzer);
 
             // TODO, Validate ...
             Mitteilung mitteilung = model.Mitteilung;
@@ -99,36 +101,34 @@ namespace AikidoWebsite.Web.Controllers
 
                 // Auf Index warten
                 DocumentSession.Query<Mitteilung>()
-                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Customize(c => c.WaitForNonStaleResults())
                     .Take(0)
                     .ToArray();
 
-                return new JsonSaveSuccess(mitteilung.Id, "Mitteilung erstellt");
+                return Json(mitteilung.Id);
             } else {
                 mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
                 mitteilung.AutorId = benutzer.Id;
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
-                mitteilung.Publikum = model.Mitteilung.Publikum;
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
                 
                 DocumentSession.SaveChanges();
 
                 // Auf Index warten
                 DocumentSession.Query<Mitteilung>()
-                    .Customize(c => c.WaitForNonStaleResultsAsOfLastWrite())
+                    .Customize(c => c.WaitForNonStaleResults())
                     .Take(0)
                     .ToArray();
 
-                return new JsonSaveSuccess(mitteilung.Id, "Mitteilung geändert");
+                return Json(mitteilung.Id);
             }
-
 
         }
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public ActionResult UploadFile(HttpPostedFileBase file, string bezeichnung, string mitteilungsId) {
+        public ActionResult UploadFile([FromBody]IFormFile file, [FromBody]string bezeichnung, [FromBody]string mitteilungsId) {
             var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
             
             var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
@@ -139,12 +139,12 @@ namespace AikidoWebsite.Web.Controllers
                 Name = file.FileName,
                 Beschreibung = bezeichnung,
                 MimeType = file.ContentType,
-                Bytes = file.ContentLength,
+                Bytes = file.Length,
                 AttachmentId = key
             };
             DocumentSession.Store(datei);
 
-            var metadata = new RavenJObject();
+            var metadata = new JObject();
             metadata["Bezeichnung"] = bezeichnung;
             metadata["DateiName"] = file.FileName;
             metadata["ContentType"] = file.ContentType;
@@ -159,7 +159,7 @@ namespace AikidoWebsite.Web.Controllers
         [HttpGet]
         [Authorize(Roles = "admin")]
         public ActionResult DeleteFile(string mitteilungsId, string fileId) {
-            var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
             var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(mitteilungsId));
 
@@ -168,15 +168,13 @@ namespace AikidoWebsite.Web.Controllers
                 DocumentSession.SaveChanges();
             }
 
-            dbCommands.DeleteAttachment(fileId, null);
+            //dbCommands.DeleteAttachment(fileId, null);
 
             return RedirectToAction("EditNews", new { id = mitteilungsId });
         }
 
-        private void PersistTermine(IEnumerable<Termin> termine, Publikum publikum, Benutzer benutzer) {
+        private void PersistTermine(IEnumerable<Termin> termine, Benutzer benutzer) {
             foreach (var termin in termine) {
-                termin.Publikum = publikum;
-
                 // TODO, Validate ...
                 if (termin.IsNew()) {
                     //termin.MitteilungId = mitteilung.Id;

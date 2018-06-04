@@ -11,7 +11,7 @@ namespace AikidoWebsite.Data.Entities
         public string Beschreibung { get; set; }
         public string AttachmentId { get; set; }
         public string MimeType { get; set; }
-        public int Bytes { get; set; }
+        public long Bytes { get; set; }
 
         [JsonIgnore]
         public bool IsImage => MimeType.StartsWith("image", StringComparison.OrdinalIgnoreCase);
