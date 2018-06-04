@@ -6,15 +6,12 @@ using System.Text;
 namespace AikidoWebsite.Common.VCalendar {
     
     public class Calendar {
-        public IList<CalendarEvent> Events { get; private set; }
+        public IList<CalendarEvent> Events { get; private set; } = new List<CalendarEvent>();
 
         public Calendar() {
-            this.Events = new List<CalendarEvent>();
         }
 
-        public bool IsValid {
-            get { return Events.All(e => e.IsValid); }
-        }
+        public bool IsValid => Events.All(e => e.IsValid);
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();

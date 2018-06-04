@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text;
 using AikidoWebsite.Common;
 
-namespace AikidoWebsite.Common.VCalendar {
-    
-    public class CalendarEvent {
+namespace AikidoWebsite.Common.VCalendar
+{
+
+    public class CalendarEvent
+    {
         private static readonly int Summary_Limit = 100;
 
         public string UID { get; set; }
+        public int Sequnce { get; set; }
         public DateTime Timestamp { get; set; }
         public DateTime Starttime { get; set; }
         public DateTime Endtime { get; set; }
@@ -19,54 +22,69 @@ namespace AikidoWebsite.Common.VCalendar {
         public string Summary { get; set; }
         public string URL { get; set; }
 
-        public bool IsValid {
-            get {
-                try {
+        public bool IsValid
+        {
+            get
+            {
+                try
+                {
                     Check();
                     return true;
-                } catch (CalendarDataException e) {
+                }
+                catch (CalendarDataException)
+                {
                     return false;
                 }
             }
         }
 
-        public void Check() {
-            if (String.IsNullOrWhiteSpace(UID)) {
+        public void Check()
+        {
+            if (String.IsNullOrWhiteSpace(UID))
+            {
                 throw new CalendarDataException(this, "Keine UID");
             }
 
-            if (Organizer == null) {
+            if (Organizer == null)
+            {
                 throw new CalendarDataException(this, "Kein Organizer");
             }
 
-            if (!Organizer.IsValid) {
+            if (!Organizer.IsValid)
+            {
                 throw new CalendarDataException(Organizer, "Ungültiger Organizer");
             }
 
-            if (Endtime <= Starttime) {
+            if (Endtime <= Starttime)
+            {
                 throw new CalendarDataException(this, "Endtime vor oder gleich Starttime");
             }
 
-            if (String.IsNullOrWhiteSpace(Summary)) {
+            if (String.IsNullOrWhiteSpace(Summary))
+            {
                 throw new CalendarDataException(this, "Ungültiges Summary");
             }
 
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             var sb = new StringBuilder();
 
             sb.AppendLine("BEGIN:VEVENT");
             sb.AppendLine("UID:" + UID);
+            sb.AppendLine("SEQUENCE:" + Sequnce);
             sb.AppendLine("DTSTAMP:" + FormatDateTime(Timestamp));
             sb.AppendLine(Organizer.ToString());
             sb.AppendLine("DTSTART:" + FormatDateTime(Starttime));
             sb.AppendLine("DTEND:" + FormatDateTime(Endtime));
             sb.AppendLine("SUMMARY:" + FormatText(Summary));
-            if (!String.IsNullOrWhiteSpace(URL)) {
+            if (!String.IsNullOrWhiteSpace(URL))
+            {
                 sb.AppendLine("URL:" + URL);
             }
-            if (!String.IsNullOrWhiteSpace(Location)) {
+            if (!String.IsNullOrWhiteSpace(Location))
+            {
                 sb.AppendLine("LOCATION:" + FormatText(Location));
             }
             sb.AppendLine("END:VEVENT");
@@ -74,11 +92,13 @@ namespace AikidoWebsite.Common.VCalendar {
             return sb.ToString();
         }
 
-        private static string FormatDateTime(DateTime dateTime) {
+        private static string FormatDateTime(DateTime dateTime)
+        {
             return dateTime.ToUniversalTime().ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
         }
 
-        private static string FormatText(string text) {
+        private static string FormatText(string text)
+        {
             return text.RemoveNewline().Limit(Summary_Limit);
         }
     }
