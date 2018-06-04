@@ -17,6 +17,7 @@ namespace AikidoWebsite.Data.Entities
         public string AutorId { get; set; }
         public string AutorName { get; set; }
         public DateTime ErstellungsDatum { get; set; }
+        public int Sequnce { get; set; }
 
 
         //############################################################################
