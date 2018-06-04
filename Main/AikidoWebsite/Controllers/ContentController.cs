@@ -8,6 +8,7 @@ using AikidoWebsite.Data.Index;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
 
@@ -25,6 +26,7 @@ namespace AikidoWebsite.Web.Controllers
             Clock = clock;
         }
 
+        [HttpGet]
         public ActionResult Show(string id) {
             var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
                 .FirstOrDefault(a => a.Name == id);
@@ -38,7 +40,8 @@ namespace AikidoWebsite.Web.Controllers
             }
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
+        [HttpPost]
         public ActionResult Edit(string id, bool saved = false) {
             var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
                 .FirstOrDefault(a => a.Name == id);
@@ -58,7 +61,7 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
             var site = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
@@ -110,9 +113,9 @@ namespace AikidoWebsite.Web.Controllers
             }
         }
 
-        [RequireGruppe(Gruppe.Admin)]
         [HttpGet]
-        [OutputCache(Duration=0)]
+        [Authorize(Roles = "admin")]
+        [ResponseCache(NoStore = true)]
         public ActionResult Files() {
             // Todo: Paging
             RavenQueryStatistics stats = null;
@@ -143,7 +146,7 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Files(FileUploadModel model) {
             var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
@@ -180,7 +183,7 @@ namespace AikidoWebsite.Web.Controllers
             return Json(null);
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult Delete(string id) {
             var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
@@ -206,7 +209,7 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult DeleteConfirmed(string id) {
             var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;

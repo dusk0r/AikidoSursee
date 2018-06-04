@@ -77,7 +77,7 @@ namespace AikidoWebsite.Controllers
             return View();
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult ListUsers() {
             var benutzer = DocumentSession.Query<Benutzer>()
                 .Take(1024)

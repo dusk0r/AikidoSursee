@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace AikidoWebsite.Web.Models {
 
@@ -29,7 +30,7 @@ namespace AikidoWebsite.Web.Models {
 
     public class FileUploadModel {
         public string Beschreibung { get; set; }
-        public HttpPostedFileBase File { get; set; }
+        public IFormFile File { get; set; }
     }
 
     public class FileDeleteModel {

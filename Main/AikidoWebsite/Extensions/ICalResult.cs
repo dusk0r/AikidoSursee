@@ -1,16 +1,12 @@
-﻿using AikidoWebsite.Common;
+﻿using System.Threading.Tasks;
+using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 
-namespace AikidoWebsite.Web.Extensions {
-    
+namespace AikidoWebsite.Web.Extensions
+{
+
     public class ICalResult : ActionResult {
         public Calendar Calendar { get; private set; }
 

@@ -8,6 +8,7 @@ using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
@@ -61,13 +62,13 @@ namespace AikidoWebsite.Web.Controllers
             return Json(new { Hinweis = hinweis.Html, Tag = etag.ToString() });
         }
 
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult AddNews() {
             return View("EditNews", new EditMitteilungModel());
         }
 
         [HttpGet]
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult EditNews(string id) {
             var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(RavenDbHelper.DecodeDocumentId(id));
             var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds);
@@ -80,7 +81,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpPost]
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public JsonResult EditNews(EditMitteilungModel model) {
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
@@ -126,7 +127,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpPost]
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult UploadFile(HttpPostedFileBase file, string bezeichnung, string mitteilungsId) {
             var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
             
@@ -156,7 +157,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpGet]
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult DeleteFile(string mitteilungsId, string fileId) {
             var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
@@ -199,7 +200,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpGet]
-        [RequireGruppe(Gruppe.Admin)]
+        [Authorize(Roles = "admin")]
         public ActionResult RemoveNews(string id) {
             var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
 
@@ -320,11 +321,9 @@ namespace AikidoWebsite.Web.Controllers
                 AutorName = benutzer.Name,
                 AutorEmail = benutzer.EMail,
                 Text = mitteilung.Text,
-                Publikum = mitteilung.Publikum,
                 TerminIds = mitteilung.TerminIds,
                 DateiIds = mitteilung.DateiIds,
-                Html = mitteilung.Html,
-                PublikumString = mitteilung.PublikumString
+                Html = mitteilung.Html
             };
         }
 

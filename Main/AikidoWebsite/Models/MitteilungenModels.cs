@@ -33,7 +33,6 @@ namespace AikidoWebsite.Web.Models {
         public string AutorName { get; set; }
         public string AutorEmail { get; set; }
         public string Text { get; set; }
-        public Publikum Publikum { get; set; }
         public ISet<string> TerminIds { get; set; }
         public ISet<string> DateiIds { get; set; }
 
