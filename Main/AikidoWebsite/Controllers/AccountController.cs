@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Models;
-using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
@@ -21,8 +25,30 @@ namespace AikidoWebsite.Controllers
         }
 
         [HttpPost]
-        public ActionResult LogOn(LogOnModel model, string returnUrl) {
-            if (ModelState.IsValid) {
+        public async Task<ActionResult> LogOn([FromBody]LogOnModel model) {
+            var benutzer = DocumentSession.Query<Benutzer>()
+                .FirstOrDefault(b => b.Username == model.UserName);
+
+            if (benutzer != null && benutzer.IstAktiv && benutzer.CheckPassword(model.Password))
+            {
+                var claims = new List<Claim> {
+                    new Claim(ClaimTypes.NameIdentifier, benutzer.Id),
+                    new Claim(ClaimTypes.Name, benutzer.Username),
+                    new Claim(ClaimTypes.Email, benutzer.EMail)
+                };
+                foreach (var role in benutzer.Gruppen)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, Enum.GetName(typeof(Gruppe), role).ToLowerInvariant()));
+                }
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(principal, new AuthenticationProperties { IsPersistent = model.RememberMe });
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            //if (ModelState.IsValid) {
                 // TODO: Implementieren
                 //if (Membership.ValidateUser(model.UserName, model.Password)) {
                 //    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
@@ -35,7 +61,7 @@ namespace AikidoWebsite.Controllers
                 //} else {
                 //    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
                 //}
-            }
+            //}
 
             return View(model);
         }

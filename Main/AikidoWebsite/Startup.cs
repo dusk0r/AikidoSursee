@@ -39,11 +39,19 @@ namespace AikidoWebsite.Web
         {
             services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
 
-            services.AddIdentity<Benutzer, Role>()
-                .AddUserStore<RavenUserProvider>();
+            //services.AddIdentity<Benutzer, Role>()
+            //    .AddUserStore<RavenUserProvider>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+                .AddCookie(options =>
+                {
+
+                })
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                });
 
             services.AddRecaptcha(new RecaptchaOptions
             {
