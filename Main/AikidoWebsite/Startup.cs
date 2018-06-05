@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Reflection;
+using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Security;
+using AikidoWebsite.Web.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
 using PaulMiami.AspNetCore.Mvc.Recaptcha;
-using AikidoWebsite.Web.Service;
-using AikidoWebsite.Common;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Indexes;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web
 {
@@ -89,6 +90,8 @@ namespace AikidoWebsite.Web
                 Certificate = certificate
             };
             documentStore.Initialize();
+
+            IndexCreation.CreateIndexes(Assembly.GetAssembly(typeof(IEntity)), documentStore);
 
             services.AddScoped<IDocumentSession>(isp => documentStore.OpenSession());
             services.AddScoped<IAsyncDocumentSession>(isp => documentStore.OpenAsyncSession());
