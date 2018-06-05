@@ -63,6 +63,7 @@ namespace AikidoWebsite.Web
             services.AddClock();
             services.AddFlickr(Configuration["Flickr:ApiKey"]);
 
+            services.AddAntiforgery();
             services.AddMvc();
         }
 
