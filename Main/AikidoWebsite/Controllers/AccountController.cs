@@ -9,6 +9,9 @@ using AikidoWebsite.Models;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Twitter;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents.Session;
@@ -24,8 +27,29 @@ namespace AikidoWebsite.Controllers
             DocumentSession = documentSession;
         }
 
+        [HttpGet]
+        public ActionResult LogOnExternal(string id)
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "/"
+            };
+
+            switch (id)
+            {
+                case "google":
+                    return new ChallengeResult(GoogleDefaults.AuthenticationScheme, properties);
+                case "facebook":
+                    return new ChallengeResult(FacebookDefaults.AuthenticationScheme, properties);
+                case "twitter":
+                    return new ChallengeResult(TwitterDefaults.AuthenticationScheme, properties);
+                default:
+                    throw new Exception("Unknown Scheme: " + id);
+            }
+        }
+
         [HttpPost]
-        public async Task<ActionResult> LogOn([FromBody]LogOnModel model) {
+        public async Task<ActionResult> LogOn([FromForm]LogOnModel model) {
             var benutzer = DocumentSession.Query<Benutzer>()
                 .FirstOrDefault(b => b.Username == model.UserName);
 
@@ -48,27 +72,11 @@ namespace AikidoWebsite.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            //if (ModelState.IsValid) {
-                // TODO: Implementieren
-                //if (Membership.ValidateUser(model.UserName, model.Password)) {
-                //    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                //    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
-                //        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\")) {
-                //        return Redirect(returnUrl);
-                //    } else {
-                //        return RedirectToAction("Index", "Home");
-                //    }
-                //} else {
-                //    ModelState.AddModelError("", "Der angegebene Benutzername oder das angegebene Kennwort ist ungültig.");
-                //}
-            //}
-
             return View(model);
         }
 
-        public ActionResult LogOff() {
-            //FormsAuthentication.SignOut();
-            //await HttpContext.Authentication.SignOutAsync();
+        public async Task<ActionResult> LogOff() {
+            await HttpContext.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }

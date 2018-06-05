@@ -14,7 +14,7 @@
         <li><a href="/Content/Show/einführungskurse">Einführungskurse</a></li>
         <li>@Html.ActionLink("Bilder", "Bilder", "Dojo")</li>
         <li>@Html.ActionLink("Lehrer", "Personen", "Dojo")</li>
-        <li>@Html.ActionLink("Weg zum Dojo", "Standort", "Dojo")</a></li>
+        <li>@Html.ActionLink("Weg zum Dojo", "Standort", "Dojo")</li>
         <li><a href="/Content/Show/velos">Aikido Velos</a></li>
         <li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>
 
@@ -30,6 +30,8 @@
 <small><a href="/Content/Show/impresum">Impressum</a></small><br />
 
 @if (!User.Identity.IsAuthenticated) {
+    <login-window></login-window>
+
     <small><a onclick="$('#passwordForm').toggle()">Anmelden</a></small>
 
     <div class="well" id="passwordForm" style="display: none;">
@@ -39,4 +41,6 @@
                             <button type="submit" class="btn">Anmelden</button>
         }
     </div>
+
+    <a href="/Account/LogOnExternal/google">Mit Google anmelden</a>
 }

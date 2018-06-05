@@ -50,7 +50,7 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
 
 @section Footer {
     <script type="text/javascript">
-        var viewModel = new ViewModel(@*@Html.Raw(Json.Encode(Model)*@));
+        @*var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
 
         function Mitteilung(data) {
             var self = this;
@@ -139,7 +139,7 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
 
         $(document).ready(function () {
             $("[data-toggle='tooltip']").tooltip();
-        });
+        });*@
 
     </script>
 
