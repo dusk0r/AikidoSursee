@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -9,7 +10,7 @@ using Raven.Client.Documents;
 
 namespace AikidoWebsite.Web.Security
 {
-    public class RavenUserProvider : IUserStore<Benutzer>/*, IRoleStore<Role>*/
+    public class RavenUserProvider : IUserStore<Benutzer>, IUserRoleStore<Benutzer>/*, IUserEmailStore<Benutzer>, IQueryableUserStore<Benutzer> , IRoleStore<Role>*/
     {
         private IDocumentStore DocumentStore { get; }
 
@@ -107,6 +108,52 @@ namespace AikidoWebsite.Web.Security
 
         public void Dispose()
         {
+        }
+
+        public async Task AddToRoleAsync(Benutzer user, string roleName, CancellationToken cancellationToken)
+        {
+            using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
+            {
+                var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
+                loaded.Gruppen.Add(roleName);
+                await asyncDocumentSession.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveFromRoleAsync(Benutzer user, string roleName, CancellationToken cancellationToken)
+        {
+            using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
+            {
+                var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
+                loaded.Gruppen.Remove(roleName);
+                await asyncDocumentSession.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IList<string>> GetRolesAsync(Benutzer user, CancellationToken cancellationToken)
+        {
+            using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
+            {
+                var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
+                return loaded.Gruppen.ToList();
+            }
+        }
+
+        public async Task<bool> IsInRoleAsync(Benutzer user, string roleName, CancellationToken cancellationToken)
+        {
+            using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
+            {
+                var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
+                return loaded.Gruppen.Contains(roleName);
+            }
+        }
+
+        public async Task<IList<Benutzer>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
+            {
+                return await asyncDocumentSession.Query<Benutzer>().Where(b => b.Gruppen.Any(x => x == roleName)).ToListAsync();
+            }
         }
     }
 }

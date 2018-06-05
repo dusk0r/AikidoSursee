@@ -9,13 +9,13 @@ namespace AikidoWebsite.Data.Entities
     public class Benutzer : IEntity {
 
         public Benutzer() {
-            Gruppen = new HashSet<Gruppe>();
+            Gruppen = new HashSet<string>();
         }
 
         public Benutzer(string name, string email) : this() {
             this.Name = name;
             this.EMail = email;
-            this.Gruppen.Add(Gruppe.Benutzer);
+            this.Gruppen.Add("benutzer");
             this.IstAktiv = true;
         }
 
@@ -24,7 +24,7 @@ namespace AikidoWebsite.Data.Entities
         public string Name { get; set; }
         public string EMail { get; set; }
         public string PasswortHash { get; set; }
-        public ISet<Gruppe> Gruppen { get; set; }
+        public ISet<string> Gruppen { get; set; }
         public bool IstAktiv { get; set; }
 
         //############################################################################
@@ -39,9 +39,7 @@ namespace AikidoWebsite.Data.Entities
                 return true;
             }
 
-            var other = obj as Benutzer;
-
-            return (other == null) ? false : Id.Equals(other.Id);
+            return (!(obj is Benutzer other)) ? false : Id.Equals(other.Id);
         }
 
         public override int GetHashCode() {
@@ -53,9 +51,9 @@ namespace AikidoWebsite.Data.Entities
 
         public void SetAdmin(bool isAdmin) {
             if (isAdmin) {
-                Gruppen.Add(Gruppe.Admin);
+                Gruppen.Add("admin");
             } else {
-                Gruppen.Remove(Gruppe.Admin);
+                Gruppen.Remove("admin");
             }
         }
 

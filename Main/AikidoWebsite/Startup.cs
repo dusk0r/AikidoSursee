@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Reflection;
+using System.Security.Claims;
 using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Web.Security;
 using AikidoWebsite.Web.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +42,10 @@ namespace AikidoWebsite.Web
             services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
 
             //services.AddIdentity<Benutzer, Role>()
+            //.AddRoleManager
+            //.AddUserStore<RavenUserProvider>()
+            //.AddRoleStore<RavenRoleStore>();
+            //services.AddIdentityCore<Benutzer>()
             //    .AddUserStore<RavenUserProvider>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -51,6 +57,14 @@ namespace AikidoWebsite.Web
                 {
                     options.ClientId = Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+
+                    // TODO: Gruppen korrekt hinzufügen
+                    var test = options.Events.OnCreatingTicket;
+                    options.Events.OnCreatingTicket = async ctx =>
+                    {
+                        await test(ctx);
+                        ctx.Identity.AddClaim(new Claim(ClaimTypes.Role, "benutzer"));
+                    };
                 });
 
             services.AddRecaptcha(new RecaptchaOptions

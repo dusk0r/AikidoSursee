@@ -32,7 +32,7 @@ namespace AikidoWebsite.Data.Security {
 
         public bool IsAdmin {
             get {
-                return (this.Benutzer != null && this.Benutzer.Gruppen.Contains(Gruppe.Admin));
+                return (this.Benutzer != null && this.Benutzer.Gruppen.Contains("admin"));
             }
         }
 
