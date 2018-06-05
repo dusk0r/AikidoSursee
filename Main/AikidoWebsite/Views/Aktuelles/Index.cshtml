@@ -44,13 +44,13 @@ Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
 
 <br /><br />
 
-@if (User.IsInGroup(Gruppe.Admin)) {
+@if (User.IsInRole("admin")) {
     @Html.ActionLink("Neue Mitteilung hinzufügen", "AddNews", new  { @class = "btn" })
 }
 
 @section Footer {
     <script type="text/javascript">
-        var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+        var viewModel = new ViewModel(@*@Html.Raw(Json.Encode(Model)*@));
 
         function Mitteilung(data) {
             var self = this;

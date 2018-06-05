@@ -17,7 +17,7 @@
         <div class="navbar-inner">
             <img class="brand" src="@Url.Content("~/Content/images/AikidoHeader.png")" alt="Aikido Sursee" />
 
-            @if (Request.IsAuthenticated)
+            @if (User.Identity.IsAuthenticated)
             {
                 <div class="btn-group pull-right">
                     <button class="btn dropdown-toggle" data-toggle="dropdown" href="#">

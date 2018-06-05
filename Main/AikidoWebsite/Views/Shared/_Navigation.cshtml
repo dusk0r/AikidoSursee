@@ -18,7 +18,7 @@
         <li><a href="/Content/Show/velos">Aikido Velos</a></li>
         <li>@Html.ActionLink("Kontakt", "Kontakt", "Dojo")</li>
 
-        @if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
+        @if (User.IsInRole("admin")) {
             <li class="nav-header">Website</li>
             <li><a href="/Content/Files">Dateien</a></li>
             <li><a href="/Account/ListUsers">Benutzer verwalten</a></li>
@@ -29,7 +29,7 @@
 
 <small><a href="/Content/Show/impresum">Impressum</a></small><br />
 
-@if (!Request.IsAuthenticated) {
+@if (!User.Identity.IsAuthenticated) {
     <small><a onclick="$('#passwordForm').toggle()">Anmelden</a></small>
 
     <div class="well" id="passwordForm" style="display: none;">

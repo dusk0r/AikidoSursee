@@ -47,7 +47,8 @@ namespace AikidoWebsite.Web
             services.AddRecaptcha(new RecaptchaOptions
             {
                 SiteKey = Configuration["Recaptcha:SiteKey"],
-                SecretKey = Configuration["Recaptcha:SecretKey"]
+                SecretKey = Configuration["Recaptcha:SecretKey"],
+                LanguageCode = "de"
             });
 
             services.AddClock();
