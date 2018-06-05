@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Claims;
 using AikidoWebsite.Common;
@@ -39,7 +41,7 @@ namespace AikidoWebsite.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
+            var documentStore = services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
 
             //services.AddIdentity<Benutzer, Role>()
             //.AddRoleManager
@@ -58,12 +60,47 @@ namespace AikidoWebsite.Web
                     options.ClientId = Configuration["Authentication:Google:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
 
-                    // TODO: Gruppen korrekt hinzufügen
-                    var test = options.Events.OnCreatingTicket;
+                    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
                     options.Events.OnCreatingTicket = async ctx =>
                     {
-                        await test(ctx);
-                        ctx.Identity.AddClaim(new Claim(ClaimTypes.Role, "benutzer"));
+                        await baseOnCreatingTicket(ctx);
+                        var id = ctx.User["id"].ToString();
+
+                        using (var documentSession = documentStore.OpenSession())
+                        {
+                            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.GoogleLogin == id && b.IstAktiv);
+
+                            if (benutzer != null)
+                            {
+                                foreach (var claim in ctx.Identity.Claims.ToList())
+                                {
+                                    ctx.Identity.RemoveClaim(claim);
+                                }
+                                var claims = new List<Claim> {
+                                    new Claim(ClaimTypes.NameIdentifier, benutzer.Username),
+                                    new Claim(ClaimTypes.Name, benutzer.Name),
+                                    new Claim(ClaimTypes.Email, benutzer.EMail)
+                                };
+                                foreach (var role in benutzer.Gruppen)
+                                {
+                                    claims.Add(new Claim(ClaimTypes.Role, role));
+                                }
+                                ctx.Identity.AddClaims(claims);
+                            }
+
+
+                        }
+                    };
+                })
+                .AddTwitter(options =>
+                {
+                    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+
+                    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
+                    options.Events.OnCreatingTicket = async ctx =>
+                    {
+                        await baseOnCreatingTicket(ctx);
                     };
                 });
 
@@ -102,7 +139,7 @@ namespace AikidoWebsite.Web
 
     public static class AddStartupExtensions
     {
-        public static void AddRavenDB(this IServiceCollection services, string url, string database, string certificateString = null)
+        public static IDocumentStore AddRavenDB(this IServiceCollection services, string url, string database, string certificateString = null)
         {
             var urls = new string[] { url };
             var certificate = certificateString != null ? new System.Security.Cryptography.X509Certificates.X509Certificate2(Convert.FromBase64String(certificateString)) : null;
@@ -119,6 +156,8 @@ namespace AikidoWebsite.Web
             services.AddScoped<IDocumentSession>(isp => documentStore.OpenSession());
             services.AddScoped<IAsyncDocumentSession>(isp => documentStore.OpenAsyncSession());
             services.AddSingleton<IDocumentStore>(documentStore);
+
+            return documentStore;
         }
 
         public static void AddFlickr(this IServiceCollection services, string flickrApiKey)

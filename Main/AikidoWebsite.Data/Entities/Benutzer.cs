@@ -27,6 +27,9 @@ namespace AikidoWebsite.Data.Entities
         public ISet<string> Gruppen { get; set; }
         public bool IstAktiv { get; set; }
 
+        public string GoogleLogin { get; set; }
+        public string TwitterLogin { get; set; }
+
         //############################################################################
         #region Object Overrides
 

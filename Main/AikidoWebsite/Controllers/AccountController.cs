@@ -56,13 +56,13 @@ namespace AikidoWebsite.Controllers
             if (benutzer != null && benutzer.IstAktiv && benutzer.CheckPassword(model.Password))
             {
                 var claims = new List<Claim> {
-                    new Claim(ClaimTypes.NameIdentifier, benutzer.Id),
-                    new Claim(ClaimTypes.Name, benutzer.Username),
+                    new Claim(ClaimTypes.NameIdentifier, benutzer.Username),
+                    new Claim(ClaimTypes.Name, benutzer.Name),
                     new Claim(ClaimTypes.Email, benutzer.EMail)
                 };
                 foreach (var role in benutzer.Gruppen)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, Enum.GetName(typeof(Gruppe), role).ToLowerInvariant()));
+                    claims.Add(new Claim(ClaimTypes.Role, role));
                 }
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);
