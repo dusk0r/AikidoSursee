@@ -1,63 +1,58 @@
-﻿//using AikidoWebsite.Data.Entities;
-//using Raven.Client.Listeners;
-//using Raven.Json.Linq;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Text.RegularExpressions;
-//using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using AikidoWebsite.Data.Entities;
+using Raven.Client.Documents.Session;
 
-namespace AikidoWebsite.Data.Listener {
-    
-    //public class SeiteStoreListener : IDocumentStoreListener {
-    //    private static readonly Regex CreoleLink = new Regex(@"\[\[(.*\/)(.*)\]\]");
-    //    private static readonly Regex CreoleImage = new Regex(@"{{(.*\/)(.*)}}");
+namespace AikidoWebsite.Data.Listener
+{
 
-    //    public bool BeforeStore(string key, object entityInstance, Raven.Json.Linq.RavenJObject metadata, Raven.Json.Linq.RavenJObject original) {
-    //        var seite = entityInstance as Seite;
-    //        var mitteilung = entityInstance as Mitteilung;
+    public static class SeiteStoreListener
+    {
+        private static readonly Regex CreoleLink = new Regex(@"\[\[(.*\/)(.*)\]\]");
+        private static readonly Regex CreoleImage = new Regex(@"{{(.*\/)(.*)}}");
 
-    //        if (metadata.ContainsKey("MarkupFiles")) {
-    //            metadata.Remove("MarkupFiles");
-    //        }
+        public static void BeforeStore(object sender, BeforeStoreEventArgs e)
+        {
+            if (e.DocumentMetadata.ContainsKey("MarkupFiles"))
+            {
+                e.DocumentMetadata.Remove("MarkupFiles");
+            }
 
-    //        if (seite != null) {
-    //            metadata.Add("MarkupFiles", new RavenJArray(ExtractFiles(seite.WikiCreole)));
-    //            return true;
-    //        }
+            switch (e.Entity)
+            {
+                case Seite seite:
+                    e.DocumentMetadata.Add("MarkupFiles", ExtractFiles(seite.WikiCreole));
+                    break;
+                case Mitteilung mitteilung:
+                    e.DocumentMetadata.Add("MarkupFiles", ExtractFiles(mitteilung.Text));
+                    break;
+            }
+        }
 
-    //        if (mitteilung != null) {
-    //            metadata.Add("MarkupFiles", new RavenJArray(ExtractFiles(mitteilung.Text)));
-    //            return true;
-    //        }
+        private static IEnumerable<string> ExtractFiles(string creole)
+        {
+            var linkMatches = CreoleLink.Matches(creole ?? "");
+            var imageMatches = CreoleImage.Matches(creole ?? "");
 
-    //        return false;
-    //    }
+            var links = linkMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value).Select(StripLinkId);
+            var images = imageMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value);
 
-    //    public void AfterStore(string key, object entityInstance, Raven.Json.Linq.RavenJObject metadata) {
-            
-    //    }
+            return links.Concat(images);
+        }
 
-    //    private static IEnumerable<string> ExtractFiles(string creole) {
-    //        var linkMatches = CreoleLink.Matches(creole ?? "");
-    //        var imageMatches = CreoleImage.Matches(creole ?? "");
+        private static string StripLinkId(string link)
+        {
+            if (link.Contains('|'))
+            {
+                var parts = link.Split('|');
+                return parts[0];
+            }
+            else
+            {
+                return link;
+            }
+        }
 
-    //        var links = linkMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value).Select(StripLinkId);
-    //        var images = imageMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value);
-
-    //        return links.Concat(images);
-    //    }
-
-    //    private static string StripLinkId(string link) {
-    //        if (link.Contains('|')) {
-    //            var parts = link.Split('|');
-    //            return parts[0];
-    //        } else {
-    //            return link;
-    //        }
-    //    }
-
-
-    //}
+    }
 }

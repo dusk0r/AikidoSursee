@@ -17,6 +17,7 @@ using PaulMiami.AspNetCore.Mvc.Recaptcha;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Session;
+using AikidoWebsite.Data.Listener;
 
 namespace AikidoWebsite.Web
 {
@@ -151,7 +152,11 @@ namespace AikidoWebsite.Web
             };
             documentStore.Initialize();
 
+            // Index
             IndexCreation.CreateIndexes(Assembly.GetAssembly(typeof(IEntity)), documentStore);
+
+            // Listener
+            documentStore.OnBeforeStore += SeiteStoreListener.BeforeStore;
 
             services.AddScoped<IDocumentSession>(isp => documentStore.OpenSession());
             services.AddScoped<IAsyncDocumentSession>(isp => documentStore.OpenAsyncSession());
