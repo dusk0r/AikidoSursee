@@ -185,7 +185,7 @@ namespace AikidoWebsite.Web.Controllers
                     DocumentSession.Store(termin);
                 } else {
                     var existingTermin = DocumentSession.Load<Termin>(termin.Id);
-                    existingTermin.Titel = termin.Titel;
+                    existingTermin.Titel = termin.Titel.Trim().RemoveNewlines();
                     existingTermin.Text = termin.Text;
                     existingTermin.StartDatum = termin.StartDatum;
                     existingTermin.EndDatum = termin.EndDatum;

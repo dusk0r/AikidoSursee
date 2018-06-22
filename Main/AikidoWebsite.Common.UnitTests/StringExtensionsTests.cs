@@ -38,7 +38,7 @@ namespace AikidoWebsite.Common.UnitTests {
 
         [Test]
         public void RemoveNewline_with_newlines() {
-            "a\nb\rcd\n\ref\r\ng".RemoveNewline().Should().Be("abcdefg");
+            "a\nb\rcd\n\ref\r\ng".RemoveNewlines().Should().Be("abcdefg");
         }
 
     }

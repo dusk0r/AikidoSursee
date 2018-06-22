@@ -1,0 +1,17 @@
+﻿<div>
+    <a ng-show="!showAnmelden" ng-click="showAnmelden = true"><small>Anmelden</small></a>
+
+    <div ng-show="showAnmelden" class="well">
+        <h3>Anmelden</h3>
+        <form action="/Account/LogOn" method="post">
+            <input class="span12" type="text" placeholder="EMail" name="UserName" /><br />
+            <input class="span12" type="password" placeholder="Passwort" name="Passwort" /><br />
+            <button type="submit" class="btn">Anmelden</button>
+        </form>
+
+        <div>
+            <img src="/Content/images/google.png" /> <a href="/Account/LogOnExternal/google">Mit Google anmelden</a>
+        </div>
+
+    </div>
+</div>

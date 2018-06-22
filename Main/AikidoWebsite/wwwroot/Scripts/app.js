@@ -8,7 +8,7 @@
             {
 
             },
-            template: '<span>Hallo</span>',
+            templateUrl: '/Content/component/loginComponent.html',
             replace: true
         };
     });

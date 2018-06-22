@@ -96,7 +96,7 @@ namespace AikidoWebsite.Common.VCalendar
 
         private static string FormatText(string text)
         {
-            return text.RemoveNewline().Limit(Summary_Limit);
+            return text.RemoveNewlines().Limit(Summary_Limit);
         }
     }
 }

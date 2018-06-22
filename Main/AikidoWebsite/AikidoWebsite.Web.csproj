@@ -35,6 +35,11 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="wwwroot\Content\images\google.png" />
+    <None Include="wwwroot\Content\images\StadtSursee.png" />
+    <None Include="wwwroot\Content\images\Swisslos_KtLU.jpg" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
