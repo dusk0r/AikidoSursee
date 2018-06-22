@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Index;
+using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using AikidoWebsite.Web.Service;
 using Microsoft.AspNetCore.Hosting;
@@ -69,7 +70,7 @@ namespace AikidoWebsite.Web.Controllers
                         Titel = x,
                         Beschreibung = "",
                         ImageURL = "/Content/images/dojo/" + x,
-                        Link = @"http://www.aikido-sursee.ch/Dojo/Bilder"
+                        Link = $@"{HttpContext.GetBaseUrl()}Dojo/Bilder"
                     });
             } else {
                 models = (await FlickrService.ListPhotosAsync(id))

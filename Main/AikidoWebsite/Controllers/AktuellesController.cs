@@ -65,12 +65,13 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [Authorize(Roles = "admin")]
+        [HttpGet]
         public ActionResult AddNews() {
             return View("EditNews", new EditMitteilungModel());
         }
 
-        [HttpGet]
         [Authorize(Roles = "admin")]
+        [HttpGet]
         public ActionResult EditNews(string id) {
             var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(RavenDbHelper.DecodeDocumentId(id));
             var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
@@ -82,8 +83,8 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
         [Authorize(Roles = "admin")]
+        [HttpPost]
         public JsonResult EditNews(EditMitteilungModel model) {
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
@@ -126,8 +127,8 @@ namespace AikidoWebsite.Web.Controllers
 
         }
 
-        [HttpPost]
         [Authorize(Roles = "admin")]
+        [HttpPost]
         public ActionResult UploadFile([FromBody]IFormFile file, [FromBody]string bezeichnung, [FromBody]string mitteilungsId) {
             //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
             
@@ -156,8 +157,8 @@ namespace AikidoWebsite.Web.Controllers
             return RedirectToAction("EditNews", new { id = RavenDbHelper.EncodeDocumentId(mitteilungsId) });
         }
 
-        [HttpGet]
         [Authorize(Roles = "admin")]
+        [HttpGet]
         public ActionResult DeleteFile(string mitteilungsId, string fileId) {
             //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
@@ -177,11 +178,9 @@ namespace AikidoWebsite.Web.Controllers
             foreach (var termin in termine) {
                 // TODO, Validate ...
                 if (termin.IsNew()) {
-                    //termin.MitteilungId = mitteilung.Id;
                     termin.ErstellungsDatum = Clock.Now;
                     termin.AutorId = benutzer.Id;
                     termin.AutorName = benutzer.Name;
-                    //termin.URL = ...
 
                     DocumentSession.Store(termin);
                 } else {
@@ -191,9 +190,8 @@ namespace AikidoWebsite.Web.Controllers
                     existingTermin.StartDatum = termin.StartDatum;
                     existingTermin.EndDatum = termin.EndDatum;
                     existingTermin.Ort = termin.Ort;
-
+                    existingTermin.Sequnce += 1;
                 }
-
             }
         }
 
@@ -207,6 +205,7 @@ namespace AikidoWebsite.Web.Controllers
             return Redirect("/Aktuelles");
         }
 
+        [HttpGet]
         public ActionResult Termine() {
             var model = new ListTermineModel();
 
@@ -219,20 +218,20 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [ResponseCache(NoStore = true)]
-        public ActionResult RSS() {
-            var rss = new RssResult("Aikido Sursee", "http://www.aikido-sursee.ch/", "Aikido Sursee");
+        [HttpGet]
+        public ActionResult RSS(int items = 10) {
+            items = (items > 0 && items <= 50) ? items : 10; // Min 1, Max 50
+            var rss = new RssResult("Aikido Sursee", HttpContext.GetBaseUrl(), "Aikido Sursee");
 
-            // Todo, 10 kofigurierbar machen
             var mitteilungen = DocumentSession.Query<Mitteilung>()
                 .Include(m => m.AutorId)
                 .OrderByDescending(p => p.ErstelltAm)
-                .Take(10);
+                .Take(items);
 
             foreach (var news in mitteilungen) {
                 var autor = DocumentSession.Load<Benutzer>(news.AutorId);
 
-                // TODO: URL dynamisch machen
-                var url = String.Format("http://aikido.amigo-online.ch/Aktuelles/Mitteilung/{0}", RavenDbHelper.EncodeDocumentId(news.Id));
+                var url = $"{HttpContext.GetBaseUrl()}Aktuelles/Mitteilung/{RavenDbHelper.EncodeDocumentId(news.Id)}";
                 rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(autor.Name, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
             }
 
@@ -240,6 +239,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [ResponseCache(NoStore = true)]
+        [HttpGet]
         public ActionResult Ical() {
             var calendar = new Calendar();
 
@@ -274,20 +274,18 @@ namespace AikidoWebsite.Web.Controllers
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
             var model = new ListMitteilungenModel();
 
-            // Todo, Lazy
             QueryStatistics stats;
             var mitteilungen = DocumentSession.Query<Mitteilung>()
-            .Include(m => m.AutorId)
-            .Statistics(out stats)
-            .OrderByDescending(p => p.ErstelltAm)
-            .Skip(start)
-            .Take(perPage)
-            .ToList();
-            var benutzer = DocumentSession.Load<Benutzer>(mitteilungen.Select(m => m.AutorId)).ToList();
+                .Include(m => m.AutorId)
+                .Statistics(out stats)
+                .OrderByDescending(p => p.ErstelltAm)
+                .Skip(start)
+                .Take(perPage)
+                .ToList();
+            var benutzer = DocumentSession.Load<Benutzer>(mitteilungen.Select(m => m.AutorId).Distinct());
 
-            model.Mitteilungen = mitteilungen.Select(m => CreateMitteilungModel(m, DocumentSession.Load<Benutzer>(m.AutorId)));
+            model.Mitteilungen = mitteilungen.Select(m => CreateMitteilungModel(m, benutzer[m.AutorId]));
 
-            //model.MitteilungenCount = DocumentSession.Query<Mitteilung>().Count();
             model.MitteilungenCount = stats.TotalResults;
             model.Start = start;
             model.PerPage = perPage;
@@ -310,7 +308,7 @@ namespace AikidoWebsite.Web.Controllers
             };
         }
 
-        public static MitteilungModel CreateMitteilungModel(Mitteilung mitteilung, Benutzer benutzer) {
+        private static MitteilungModel CreateMitteilungModel(Mitteilung mitteilung, Benutzer benutzer) {
             return new MitteilungModel {
                 Id = mitteilung.Id,
                 Titel = mitteilung.Titel,

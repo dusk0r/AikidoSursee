@@ -116,9 +116,9 @@ namespace AikidoWebsite.Web.Controllers
             //}
         }
 
-        [HttpGet]
         [Authorize(Roles = "admin")]
         [ResponseCache(NoStore = true)]
+        [HttpGet]
         public ActionResult Files() {
             // Todo: Paging
             QueryStatistics stats = null;
