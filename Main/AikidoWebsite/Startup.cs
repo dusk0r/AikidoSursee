@@ -18,6 +18,9 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Session;
 using AikidoWebsite.Data.Listener;
+using Rollbar;
+using Rollbar.AspNetCore;
+using Microsoft.Extensions.Logging;
 
 namespace AikidoWebsite.Web
 {
@@ -112,6 +115,12 @@ namespace AikidoWebsite.Web
                 LanguageCode = "de"
             });
 
+            RollbarLocator.RollbarInstance.Configure(new RollbarConfig(Configuration["Rollbar:AccessToken"]));
+            services.AddRollbarLogger(options =>
+            {
+                options.Filter = (loggerName, logLevel) => logLevel >= LogLevel.Error;
+            });
+
             services.AddClock();
             services.AddFlickr(Configuration["Flickr:ApiKey"]);
 
@@ -130,6 +139,8 @@ namespace AikidoWebsite.Web
                 //app.UseHttpsRedirection();
                 //app.UseHsts();
             }
+
+            app.UseRollbarMiddleware();
 
             app.UseStaticFiles();
             app.UseAuthentication();
