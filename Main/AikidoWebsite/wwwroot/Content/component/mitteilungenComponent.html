@@ -1,0 +1,39 @@
+﻿<div>
+    <div class="well" ng-repeat="mitteilung in data.mitteilungen">
+        <a href="#" data-bind="attr: { href: show }">
+            {{ mitteilung.titel }}
+        </a>
+
+        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien" ng-show="mitteilung.hasFiles"> </i>
+
+        <span ng-show="data.isAdmin">
+            &nbsp;
+            <button class="btn btn-mini" data-bind="click: edit">
+                <span class="icon-edit"> </span>Bearbeiten
+            </button>
+            <button class="btn btn-mini" data-bind="click: remove">
+                <span class="icon-remove"> </span>Löschen
+            </button>
+        </span>
+
+        <span class="pull-right">
+            {{ mitteilung.erstelltAmText }}
+            <!--<span data-bind="text: erstelltAmText, attr: { title: erstelltAmDatum }" data-toggle="tooltip"></span>-->
+        </span>
+
+        <span ng-bind-html="mitteilung.html"></span>
+
+        <hr />
+    </div>
+
+    <!--Total Mitteilungen: {{ data.mitteilungenCount }}-->
+    <ul class="pager">
+        <li ng-show="hasNewer"><a ng-click="getMitteilungen(0)" class="btn">Neuste</a></li>
+        <li ng-show="hasNewer"><a ng-click="getNewer()" class="btn">Neuere</a></li>
+        <li ng-show="hasOlder"><a ng-click="getOlder()" class="btn">Ältere</a></li>
+    </ul>
+    <div class="pager">
+        {{ data.start+1 }} bis {{ data.start + data.perPage }} von {{ data.mitteilungenCount }}
+    </div>
+
+</div>

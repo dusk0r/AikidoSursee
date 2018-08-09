@@ -138,9 +138,8 @@ namespace AikidoWebsite.Web
                 app.UseExceptionHandler("/Error");
                 //app.UseHttpsRedirection();
                 //app.UseHsts();
+                app.UseRollbarMiddleware();
             }
-
-            app.UseRollbarMiddleware();
 
             app.UseStaticFiles();
             app.UseAuthentication();

@@ -5,42 +5,7 @@
 
 <h2>Neuigkeiten</h2>
 
-<!-- ko foreach: mitteilungen -->
-<div class="well">
-    <a href="#" data-bind="attr: { href: show }">
-        <span data-bind="text: titel" style="font-weight: bold;"></span>
-    </a>
-
-    <!-- ko if: hasFiles -->
-        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien"> </i>
-    <!-- /ko -->
-
-    <!-- ko if: $root.isAdmin -->
-        &nbsp;
-        <button class="btn btn-mini" data-bind="click: edit">
-            <span class="icon-edit"> </span>Bearbeiten
-        </button>
-        <button class="btn btn-mini" data-bind="click: remove">
-            <span class="icon-remove"> </span>Löschen
-        </button>
-    <!-- /ko -->
-    <span class="pull-right">
-        <span data-bind="text: erstelltAmText, attr: { title: erstelltAmDatum }" data-toggle="tooltip"></span>
-        <span class="label" data-bind="text: publikumString"></span>
-
-    </span>
-
-    <div data-bind="html: html"></div>
-
-</div>
-<hr />
-<!-- /ko -->
-
-Total Mitteilungen: <span data-bind="text: mitteilungenCount"></span>
-<ul class="pager">
-    <li data-bind="visible: hasPrev()"><a data-bind="click: prev" class="btn">Neuere</a></li>
-    <li data-bind="visible: hasNext()"><a data-bind="click: next" class="btn">Ältere</a></li>
-</ul>
+<mitteilungen></mitteilungen>
 
 <br /><br />
 

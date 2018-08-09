@@ -36,7 +36,7 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetMitteilungen(int start = 0, int perPage = 5) {
             var model = CreateListMittelungenModel(start, perPage);
 
