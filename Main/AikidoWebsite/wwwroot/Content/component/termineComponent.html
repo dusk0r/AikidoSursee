@@ -1,0 +1,15 @@
+﻿<div>
+    <div ng-repeat="(key, value) in data.termine">
+        <h3>{{ key | moment:"MMMM YYYY" }}</h3>
+
+        <table class="table">
+            <tbody>
+                <tr ng-repeat="termin in value">
+                    <td class="span3">{{ getDatumString(termin) }}</td>
+                    <td class="span3">{{ termin.titel }}</td>
+                    <td>{{ termin.text }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

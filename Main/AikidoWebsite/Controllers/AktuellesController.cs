@@ -31,9 +31,7 @@ namespace AikidoWebsite.Web.Controllers
 
         [HttpGet]
         public ActionResult Index() {
-            var model = CreateListMittelungenModel();
-
-            return View(model);
+            return View();
         }
 
         [HttpGet]
@@ -209,12 +207,27 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult Termine() {
             var model = new ListTermineModel();
 
-            model.Termine = DocumentSession.Query<Termin>()
-                .Where(t => t.StartDatum > Clock.Now.AddDays(-1))
-                .OrderBy(t => t.StartDatum)
-                .Take(30);
+            return View();
+        }
 
-            return View(model);
+        [HttpGet]
+        public ActionResult GetTermine()
+        {
+            int numberToShow = 30;
+            var termine = DocumentSession.Query<Termin>()
+                .Where(t => (t.EndDatum != null && t.EndDatum > Clock.Now.AddDays(-1)) || t.StartDatum > Clock.Now.AddDays(-1))
+                .OrderBy(t => t.StartDatum)
+                .Take(numberToShow + 1)
+                .ToList();
+
+            var model = new ListTermineModel
+            {
+                Termine = termine.Take(numberToShow).GroupBy(t => new DateTime(t.StartDatum.Year, t.StartDatum.Month, 1))
+                    .ToDictionary(g => g.Key, g => g.ToList()),
+                HasMore = termine.Count > numberToShow
+            };
+
+            return Json(model);
         }
 
         [ResponseCache(NoStore = true)]

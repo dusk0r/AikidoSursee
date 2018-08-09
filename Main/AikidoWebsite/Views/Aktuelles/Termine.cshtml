@@ -1,82 +1,9 @@
-﻿@model AikidoWebsite.Web.Models.ListTermineModel
-@{
+﻿@{
     ViewBag.Title = "Termine";
 }
 
 <h2>Termine</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-            <th style="min-width: 160px">Datum</th>
-            <th style="min-width: 320px">Termin</th>
-            <th></th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        <!-- ko foreach: termine -->
-        <tr>
-            <td class="span1">
-                <span class="label" data-bind="text: publikumString"></span>
-            </td>
-            <td class="span2" data-bind="text: datumString"></td>
-            <td class="span3" data-bind="text: titel"></td>
-            <td data-bind="text: text"></td>
-        </tr>
-        <!-- /ko -->
-
-    </tbody>
-</table>
+<termine></termine>
 
 <small><a href="/Content/Show/abonnieren">Abonnieren</a></small>
-
-@section Footer {
-    <script type="text/javascript">
-        var viewModel = new ViewModel();
-
-        function Termin(data) {
-            var self = this;
-
-            self.titel = data.Titel;
-            self.startDatum = moment(data.StartDatum).toDate();
-            self.endDatum = data.EndDatum && moment(data.EndDatum).toDate();
-            self.publikumString = data.PublikumString;
-            self.text = data.Text;
-
-            self.datumString = ko.computed(function () {
-                
-                if (self.endDatum) {
-                    if (moment(self.startDatum).isSame(self.endDatum, "day")) {
-                        return moment(self.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(self.endDatum).format("HH:mm");
-                    } else {
-                        return moment(self.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(self.endDatum).format("DD.MM.YYYY HH:mm");
-                    }
-                    //var dateStr1 = moment(self.startDatum).format("DD.MM.YYYY hh:mm");
-                    //var dateStr2 = moment(self.endDatum).format("DD.MM.YYYY hh:mm");
-
-                    //return dateStr1 + " - " + dateStr2;
-                } else {
-                    return moment(self.startDatum).format("DD.MM.YYYY");
-                }
-            });
-        }
-
-        function ViewModel() {
-            var self = this;
-
-            self.termine = ko.observableArray([]);
-
-            // Load Data
-            var model = JSON.parse('@Html.Raw(Json.Encode(Model))');
-            @*var model = JSON.parse('@Html.Raw(@Newtonsoft.Json.JsonConvert.SerializeObject(Model))');*@
-            self.termine(model.Termine.map(function (termin) { return new Termin(termin); }));
-
-        }
-
-        ko.applyBindings(viewModel);
-
-    </script>
-    
-}

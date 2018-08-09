@@ -1,4 +1,11 @@
 ﻿angular.module('aikidoApp', [])
+    .filter('moment', function ()
+    {
+        return function (input, format)
+        {
+            return moment(input).format(format);
+        };
+    })
     .directive('loginWindow', function ()
     {
         return {
@@ -87,6 +94,46 @@
                 $scope.getMitteilungen(0);
             },
             templateUrl: '/Content/component/mitteilungenComponent.html',
+            replace: true
+        };
+    })
+    .directive('termine', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: function ($scope, $element, $http, $sce)
+            {
+                getTermine = function ()
+                {
+                    $http.get('/Aktuelles/GetTermine').then(function (resp) 
+                    {
+                        $scope.data = resp.data;
+                    });
+                }
+
+                $scope.getDatumString = function (termin)
+                {
+                    if (termin.endDatum)
+                    {
+                        if (moment(termin.startDatum).isSame(termin.endDatum, "day"))
+                        {
+                            return moment(termin.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(termin.endDatum).format("HH:mm");
+                        }
+                        else
+                        {
+                            return moment(termin.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(termin.endDatum).format("DD.MM.YYYY HH:mm");
+                        }
+                    }
+                    else
+                    {
+                        return moment(termin.startDatum).format("DD.MM.YYYY");
+                    }
+                }
+
+                getTermine();
+            },
+            templateUrl: '/Content/component/termineComponent.html',
             replace: true
         };
     });
