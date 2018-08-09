@@ -12,6 +12,47 @@
             replace: true
         };
     })
+    .directive('tooltip', function ()
+    {
+        return {
+            restrict: 'A',
+            link: function ($scope, $element, $attrs)
+            {
+                $element[0].onmouseover = function ()
+                {
+                    // on mouseenter
+                    $($element[0]).tooltip('show');
+                };
+                $element[0].onmouseout = function ()
+                {
+                    // on mouseleave
+                    $($element[0]).tooltip('hide');
+                };
+            }
+        };
+    })
+    .directive('datum', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {
+                datum: '=value'
+            },
+            controller: function ($scope, $element, $timeout)
+            {
+                var datum = moment($scope.datum);
+                $scope.dateString = datum.format("DD.MM.YYYY HH:mm");
+                $scope.agoString = datum.fromNow();
+
+                $timeout(function ()
+                {
+                    $scope.agoString = datum.fromNow();
+                }, 600000);
+            },
+            templateUrl: '/Content/component/datumComponent.html',
+            replace: true
+        };
+    })
     .directive('mitteilungen', function ()
     {
         return {

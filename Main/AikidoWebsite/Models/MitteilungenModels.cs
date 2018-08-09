@@ -38,7 +38,6 @@ namespace AikidoWebsite.Web.Models {
 
         // Todo, Nicht direkt parsen? Oder Text weglassen?
         public string Html { get; set; }
-        public string PublikumString { get; set; }
     }
 
     public class EditMitteilungModel {
