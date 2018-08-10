@@ -11,9 +11,8 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: function ($scope, $element)
+            controller: function ()
             {
-
             },
             templateUrl: '/Content/component/loginComponent.html',
             replace: true
@@ -23,7 +22,7 @@
     {
         return {
             restrict: 'A',
-            link: function ($scope, $element, $attrs)
+            link: ["$scope", "$element", "$attrs", function ($scope, $element, $attrs)
             {
                 $element[0].onmouseover = function ()
                 {
@@ -35,7 +34,7 @@
                     // on mouseleave
                     $($element[0]).tooltip('hide');
                 };
-            }
+            }]
         };
     })
     .directive('datum', function ()
@@ -45,7 +44,7 @@
             scope: {
                 datum: '=value'
             },
-            controller: function ($scope, $element, $timeout)
+            controller: ["$scope", "$element", "$timeout", function ($scope, $element, $timeout)
             {
                 var datum = moment($scope.datum);
                 $scope.dateString = datum.format("DD.MM.YYYY HH:mm");
@@ -55,7 +54,7 @@
                 {
                     $scope.agoString = datum.fromNow();
                 }, 600000);
-            },
+            }],
             templateUrl: '/Content/component/datumComponent.html',
             replace: true
         };
@@ -65,7 +64,7 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: function ($scope, $element, $http, $sce)
+            controller: ["$scope", "$element", "$http", "$sce", function ($scope, $element, $http, $sce)
             {
                 $scope.getMitteilungen = function (start)
                 {
@@ -92,7 +91,7 @@
                 }
 
                 $scope.getMitteilungen(0);
-            },
+            }],
             templateUrl: '/Content/component/mitteilungenComponent.html',
             replace: true
         };
@@ -102,7 +101,7 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: function ($scope, $element, $http, $sce)
+            controller: ["$scope", "$element", "$http", "$sce", function ($scope, $element, $http, $sce)
             {
                 getTermine = function ()
                 {
@@ -122,7 +121,7 @@
                         }
                         else
                         {
-                            return moment(termin.startDatum).format("DD.MM.YYYY HH:mm") + " bis " + moment(termin.endDatum).format("DD.MM.YYYY HH:mm");
+                            return moment(termin.startDatum).format("DD.MM.YYYY") + " bis " + moment(termin.endDatum).format("DD.MM.YYYY");
                         }
                     }
                     else
@@ -132,7 +131,7 @@
                 }
 
                 getTermine();
-            },
+            }],
             templateUrl: '/Content/component/termineComponent.html',
             replace: true
         };
