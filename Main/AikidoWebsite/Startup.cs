@@ -21,6 +21,7 @@ using AikidoWebsite.Data.Listener;
 using Rollbar;
 using Rollbar.AspNetCore;
 using Microsoft.Extensions.Logging;
+using AikidoWebsite.Data.Migration;
 
 namespace AikidoWebsite.Web
 {
@@ -171,6 +172,9 @@ namespace AikidoWebsite.Web
             services.AddScoped<IDocumentSession>(isp => documentStore.OpenSession());
             services.AddScoped<IAsyncDocumentSession>(isp => documentStore.OpenAsyncSession());
             services.AddSingleton<IDocumentStore>(documentStore);
+
+            // Migration
+            Migration.DoMigration(documentStore);
 
             return documentStore;
         }

@@ -48,7 +48,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Edit(string id, bool saved = false) {
-            var article = DocumentSession.Load<Seite>(id);
+            var article = DocumentSession.Load<Seite>(GetSeiteId(id));
 
             var model = new SeiteModel {
                 Name = id,
@@ -68,7 +68,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
-            var article = DocumentSession.Load<Seite>(model.Name);
+            var article = DocumentSession.Load<Seite>(GetSeiteId(model.Name));
             var benutzer = DocumentSession.Query<Benutzer>()
                 .First(b => b.EMail ==User.Identity.Name);
 
