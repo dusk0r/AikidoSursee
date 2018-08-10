@@ -6,6 +6,6 @@
 
 <h2><span style="color: red;">404</span> Seite nicht gefunden: @Model</h2>
 
-@if (User.IsInGroup(Gruppe.Admin)) {
+@if (User.IsInRole("admin")) {
     @Html.ActionLink("Seite erstellen", "Edit", new { id = Model});
 }

@@ -1,11 +1,9 @@
-﻿using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.ValueObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using AikidoWebsite.Data.Entities;
 
-namespace AikidoWebsite.Web.Models {
+namespace AikidoWebsite.Web.Models
+{
 
     public class ListMitteilungenModel {
         public int MitteilungenCount { get; set; }

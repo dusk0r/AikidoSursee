@@ -29,13 +29,16 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Show(string id) {
-            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
-                .FirstOrDefault(a => a.Name == id);
+        public ActionResult Show(string id)
+        {
+            var article = DocumentSession.Load<Seite>(GetSeiteId(id));
 
-            if (article != null) {
+            if (article != null)
+            {
                 return View(article);
-            } else {
+            }
+            else
+            {
                 Response.StatusCode = 404;
                 //Response.TrySkipIisCustomErrors = true;
                 return View("ArtikelNichtGefunden", (object)id);
@@ -45,8 +48,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Edit(string id, bool saved = false) {
-            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
-                .FirstOrDefault(a => a.Name == id);
+            var article = DocumentSession.Load<Seite>(id);
 
             var model = new SeiteModel {
                 Name = id,
@@ -66,37 +68,36 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
-            var site = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
-                .FirstOrDefault(a => a.Name == model.Name);
+            var article = DocumentSession.Load<Seite>(model.Name);
             var benutzer = DocumentSession.Query<Benutzer>()
                 .First(b => b.EMail ==User.Identity.Name);
 
             var oldRevisions = new HashSet<Seite>();
 
-            if (site == null) {
-                site = new Seite {
+            if (article == null) {
+                article = new Seite {
                     Revision = 0,
                     Name = model.Name
                 };
             } else {
                 // Revisionen aufräumen
-                DocumentSession.Store(site.Copy(), site.Id + "/revision/" + site.Revision);
+                DocumentSession.Store(article.Copy(), article.Id + "/revision/" + article.Revision);
             }
 
             // Update
-            site.ErstellungsDatum = Clock.Now;
-            site.Autor = benutzer.Name;
-            site.WikiCreole = model.Markdown;
-            site.Revision += 1;
+            article.ErstellungsDatum = Clock.Now;
+            article.Autor = benutzer.Name;
+            article.WikiCreole = model.Markdown;
+            article.Revision += 1;
 
-            DocumentSession.Store(site);
+            DocumentSession.Store(article);
             DocumentSession.SaveChanges();
-            DocumentSession.Query<AktuelleSeiteIndex>()
-                .Customize(c => c.WaitForNonStaleResults())
-                .Take(0)
-                .ToArray();
+            //DocumentSession.Query<AktuelleSeiteIndex>()
+            //    .Customize(c => c.WaitForNonStaleResults())
+            //    .Take(0)
+            //    .ToArray();
 
-            return Json(site.Id);
+            return Json(article.Id);
         }
 
         [HttpGet]
@@ -233,6 +234,12 @@ namespace AikidoWebsite.Web.Controllers
                 default:
                     return "/";
             }
+        }
+
+        private string GetSeiteId(string id)
+        {
+            var collectionName = DocumentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(Seite)).ToLowerInvariant();
+            return $"{collectionName}/{id}";
         }
     }
 }

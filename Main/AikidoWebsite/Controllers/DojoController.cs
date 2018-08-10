@@ -92,8 +92,7 @@ namespace AikidoWebsite.Web.Controllers
 
         [HttpGet]
         public ActionResult Standort() {
-            var article = DocumentSession.Query<Seite, AktuelleSeiteIndex>()
-                .FirstOrDefault(a => a.Name == "standort");
+            var article = DocumentSession.Load<Seite>("standort");
 
             if (article == null) {
                 article = new Seite { WikiCreole = "" };
