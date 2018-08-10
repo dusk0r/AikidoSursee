@@ -1,4 +1,5 @@
-﻿using AikidoWebsite.Data.Entities;
+﻿using System.IO;
+using AikidoWebsite.Data.Entities;
 using Raven.Client.Documents;
 
 namespace AikidoWebsite.Data.Migration
@@ -13,10 +14,16 @@ namespace AikidoWebsite.Data.Migration
             {
                 case 0:
                     DoMigrationTo1(store);
+                    goto case 1;
+                case 1:
+                    DoMigrationTo2(store);
                     break;
             }
         }
 
+        /// <summary>
+        /// Seite aktualisieren
+        /// </summary>
         private static void DoMigrationTo1(IDocumentStore store)
         {
             using (var session = store.OpenSession())
@@ -29,7 +36,8 @@ namespace AikidoWebsite.Data.Migration
                     if (stream.Current.Id.Contains("revision"))
                     {
                         session.Store(new ArchivedSeite { Seite = stream.Current.Document.Copy() });
-                    } else
+                    }
+                    else
                     {
                         var seite = stream.Current.Document.Copy();
                         seite.Id = "seites/" + seite.Name;
@@ -38,7 +46,47 @@ namespace AikidoWebsite.Data.Migration
                     session.Delete(stream.Current.Id);
                 }
 
-                session.Store(new DatabaseVersion {  Version = 1 });
+                session.Store(new DatabaseVersion { Version = 1 });
+                session.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Seite aktualisieren
+        /// </summary>
+        private static void DoMigrationTo2(IDocumentStore store)
+        {
+            string attachmentDir = @"C:\Temp\Aikido-Backup-18-08-09";
+
+            using (var session = store.OpenSession())
+            {
+                var query = session.Query<Datei>();
+                var stream = session.Advanced.Stream(query);
+
+                while (stream.MoveNext())
+                {
+                    var attachmentFilePath = Path.Combine(attachmentDir, stream.Current.Document.AttachmentId);
+
+                    if (File.Exists(attachmentFilePath))
+                    {
+                        var entity = new Datei
+                        {
+                            Id = "dateis/" + stream.Current.Document.AttachmentId,
+                            AttachmentId = stream.Current.Document.AttachmentId,
+                            Name = stream.Current.Document.Name,
+                            Beschreibung = stream.Current.Document.Beschreibung,
+                            MimeType = stream.Current.Document.MimeType,
+                            Bytes = stream.Current.Document.Bytes
+                        };
+                        session.Store(entity);
+                        session.Advanced.Attachments.Store(entity, "file", File.Open(attachmentFilePath, FileMode.Open));
+                    }
+
+                    session.Delete(stream.Current.Id);
+                }
+
+                var version = session.Load<DatabaseVersion>("version");
+                version.Version = 2;
                 session.SaveChanges();
             }
         }

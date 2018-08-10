@@ -101,20 +101,21 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(Duration = 3600)]
         public ActionResult File(string id) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-
-            // TODO: Implementieren
-            //var attachment = dbCommands.GetAttachment(id);
-
-            //if (attachment == null) {
+            var datei = DocumentSession.Load<Datei>(GetDateiId(id));
+            if (datei == null)
+            {
                 return StatusCode((int)System.Net.HttpStatusCode.NotFound);
+            }
 
-            //} else {
-            //    var contentType = attachment.Metadata["ContentType"].ToString();
+            var attachment = DocumentSession.Advanced.Attachments.Get(datei, "file");
 
-            //    return File(attachment.Data(), contentType);
-            //}
+            if (attachment == null) {
+                return StatusCode((int)System.Net.HttpStatusCode.NotFound);
+            } else {
+                return File(attachment.Stream, datei.MimeType);
+            }
         }
 
         [Authorize(Roles = "admin")]
@@ -239,6 +240,12 @@ namespace AikidoWebsite.Web.Controllers
         private string GetSeiteId(string id)
         {
             var collectionName = DocumentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(Seite)).ToLowerInvariant();
+            return $"{collectionName}/{id}";
+        }
+
+        private string GetDateiId(string id)
+        {
+            var collectionName = DocumentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(Datei)).ToLowerInvariant();
             return $"{collectionName}/{id}";
         }
     }
