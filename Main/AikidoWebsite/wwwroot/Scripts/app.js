@@ -135,4 +135,36 @@
             templateUrl: '/Content/component/termineComponent.html',
             replace: true
         };
+    })
+    .directive('hinweis', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: ["$scope", "$http", "$timeout", "$sce", function ($scope, $http, $timeout, $sce)
+            {
+                function updateHinweis()
+                {
+                    $http.get('/Aktuelles/Hinweis').then(function (resp) 
+                    {
+                        $scope.data = resp.data;
+                        $scope.data.html = $sce.trustAsHtml($scope.data.html);
+                        if (window.localStorage["hinweisKey"] !== resp.data.dateModified)
+                        {
+                            $scope.showHinweis = true;
+                        }
+                    });
+                }
+
+                $scope.closeHinweis = function ()
+                {
+                    window.localStorage.setItem("hinweisKey", $scope.data.dateModified);
+                    $scope.showHinweis = false;
+                }
+
+                updateHinweis();
+            }],
+            templateUrl: '/Content/component/hinweisComponent.html',
+            replace: true
+        };
     });

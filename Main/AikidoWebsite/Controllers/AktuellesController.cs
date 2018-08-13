@@ -55,11 +55,17 @@ namespace AikidoWebsite.Web.Controllers
 
         [HttpGet]
         public JsonResult Hinweis() {
-            var hinweis = DocumentSession.Load<Hinweis>("default");
-            var metadata = DocumentSession.Advanced.GetMetadataFor(hinweis);
-            var etag = metadata.GetString("@etag");
+            var hinweis = DocumentSession.Load<Hinweis>(DocumentSession.GetRavenName<Hinweis>("default"));
 
-            return Json(new { Hinweis = hinweis.Html, Tag = etag.ToString() });
+            var model = new HinweisModel();
+            if (hinweis != null && hinweis.Enddatum > Clock.Now.Date)
+            {
+                model.HasHinweis = true;
+                model.Html = hinweis.Html;
+                model.DateModified = DocumentSession.Advanced.GetLastModifiedFor(hinweis);
+            }
+
+            return Json(model);
         }
 
         [Authorize(Roles = "admin")]
