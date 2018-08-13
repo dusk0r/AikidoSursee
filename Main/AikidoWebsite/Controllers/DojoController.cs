@@ -51,7 +51,7 @@ namespace AikidoWebsite.Web.Controllers
                 ThumbnailUrl = "/Content/images/dojo/dojo3p.jpg",
                 PhotosetId = "sursee",
                 CreationDate = new DateTime(2012, 11, 17),
-                Link = @"http://www.aikido-sursee.ch/Dojo/Bilder" // TODO: Dynamisch machen
+                Link = @"https://www.aikido-sursee.ch/Dojo/Bilder" // TODO: Dynamisch machen
             };
             models = new PhotoSetModel[] { defaultGallery }.Union(models).ToList();
 
@@ -111,17 +111,6 @@ namespace AikidoWebsite.Web.Controllers
         [HttpPost]
         [ValidateRecaptcha]
         public ActionResult Kontakt(KontaktModel model) {
-            // Todo, Keys und Adresse in Config File auslagern
-            //RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper("6LdHg_ASAAAAAEmzaiVNBGjMaYW8G--qwF6kwS-v");
-
-            //if (String.IsNullOrEmpty(recaptchaHelper.Response)) {
-            //    ModelState.AddModelError("capta", "Bitte geben Sie den Bestätigungscode an");
-            //}
-            //var recaptaResult = recaptchaHelper.VerifyRecaptchaResponse();
-            //if (recaptaResult != RecaptchaVerificationResult.Success) {
-            //    ModelState.AddModelError("capta", "Falscher Code");
-            //}
-
             if (!ModelState.IsValid) {
                 return View(model);
             }
