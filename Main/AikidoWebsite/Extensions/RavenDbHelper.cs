@@ -1,4 +1,5 @@
 ﻿using AikidoWebsite.Common;
+using Raven.Client.Documents.Session;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,17 @@ namespace AikidoWebsite.Web.Extensions {
     
     public static class RavenDbHelper {
 
-        public static string EncodeDocumentId(string documentId) {
-            Check.StringHasValue(documentId, "DocumentId");
-
-            return documentId.Replace('/', '_');
+        public static string GetRavenName<T>(this IDocumentSession documentSession, string id)
+        {
+            var collectionName = documentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(T)).ToLowerInvariant();
+            return $"{collectionName}/{id}";
         }
 
-        public static string DecodeDocumentId(string encodedDocumentId) {
-            Check.StringHasValue(encodedDocumentId, "DocumentId");
+        public static string GetPublicName(string id)
+        {
+            Check.StringHasValue(id, nameof(id));
 
-            return encodedDocumentId.Replace('_', '/');
+            return id.Substring(id.IndexOf('/'));
         }
     }
 }

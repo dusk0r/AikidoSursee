@@ -31,7 +31,7 @@ namespace AikidoWebsite.Web.Controllers
         [HttpGet]
         public ActionResult Show(string id)
         {
-            var article = DocumentSession.Load<Seite>(GetSeiteId(id));
+            var article = DocumentSession.Load<Seite>(DocumentSession.GetRavenName<Seite>(id));
 
             if (article != null)
             {
@@ -48,7 +48,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Edit(string id, bool saved = false) {
-            var article = DocumentSession.Load<Seite>(GetSeiteId(id));
+            var article = DocumentSession.Load<Seite>(DocumentSession.GetRavenName<Seite>(id));
 
             var model = new SeiteModel {
                 Name = id,
@@ -68,7 +68,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public JsonResult Edit(SeiteModel model) {
-            var article = DocumentSession.Load<Seite>(GetSeiteId(model.Name));
+            var article = DocumentSession.Load<Seite>(DocumentSession.GetRavenName<Seite>(model.Name));
             var benutzer = DocumentSession.Query<Benutzer>()
                 .First(b => b.EMail ==User.Identity.Name);
 
@@ -103,7 +103,7 @@ namespace AikidoWebsite.Web.Controllers
         [HttpGet]
         [ResponseCache(Duration = 3600)]
         public ActionResult File(string id) {
-            var datei = DocumentSession.Load<Datei>(GetDateiId(id));
+            var datei = DocumentSession.Load<Datei>(DocumentSession.GetRavenName<Datei>(id));
             if (datei == null)
             {
                 return StatusCode((int)System.Net.HttpStatusCode.NotFound);
@@ -235,18 +235,6 @@ namespace AikidoWebsite.Web.Controllers
                 default:
                     return "/";
             }
-        }
-
-        private string GetSeiteId(string id)
-        {
-            var collectionName = DocumentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(Seite)).ToLowerInvariant();
-            return $"{collectionName}/{id}";
-        }
-
-        private string GetDateiId(string id)
-        {
-            var collectionName = DocumentSession.Advanced.DocumentStore.Conventions.GetCollectionName(typeof(Datei)).ToLowerInvariant();
-            return $"{collectionName}/{id}";
         }
     }
 }

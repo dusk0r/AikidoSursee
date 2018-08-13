@@ -45,7 +45,7 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult Mitteilung(string id) {
             var mitteilung = DocumentSession
                 .Include<Mitteilung>(m => m.AutorId)
-                .Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
+                .Load<Mitteilung>(DocumentSession.GetRavenName<Mitteilung>(id));
             var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
 
             var model = new ViewMitteilungModel { Mitteilung = CreateMitteilungModel(mitteilung, benutzer), Dateien = CreateDateiModels(mitteilung.DateiIds) };
@@ -71,7 +71,7 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult EditNews(string id) {
-            var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(RavenDbHelper.DecodeDocumentId(id));
+            var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
             var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
             var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
 
@@ -152,7 +152,7 @@ namespace AikidoWebsite.Web.Controllers
             mitteilung.DateiIds.Add(key);
             DocumentSession.SaveChanges();
 
-            return RedirectToAction("EditNews", new { id = RavenDbHelper.EncodeDocumentId(mitteilungsId) });
+            return RedirectToAction("EditNews", new { id = RavenDbHelper.GetPublicName(mitteilungsId) });
         }
 
         [Authorize(Roles = "admin")]
@@ -160,7 +160,7 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult DeleteFile(string mitteilungsId, string fileId) {
             //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(mitteilungsId));
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.GetPublicName(mitteilungsId));
 
             if (mitteilung != null) {
                 mitteilung.DateiIds.Remove(fileId);
@@ -196,7 +196,7 @@ namespace AikidoWebsite.Web.Controllers
         [HttpGet]
         [Authorize(Roles = "admin")]
         public ActionResult RemoveNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.DecodeDocumentId(id));
+            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.GetPublicName(id));
 
             DocumentSession.Delete(mitteilung);
             DocumentSession.SaveChanges();
@@ -244,7 +244,7 @@ namespace AikidoWebsite.Web.Controllers
             foreach (var news in mitteilungen) {
                 var autor = DocumentSession.Load<Benutzer>(news.AutorId);
 
-                var url = $"{HttpContext.GetBaseUrl()}Aktuelles/Mitteilung/{RavenDbHelper.EncodeDocumentId(news.Id)}";
+                var url = $"{HttpContext.GetBaseUrl()}Aktuelles/Mitteilung/{RavenDbHelper.GetPublicName(news.Id)}";
                 rss.AddItem(news.Titel, news.Text, url, CreatEmailWithName(autor.Name, "info@aikido-sursee.ch"), news.Id, news.ErstelltAm);
             }
 

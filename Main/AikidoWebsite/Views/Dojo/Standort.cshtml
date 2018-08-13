@@ -1,4 +1,4 @@
-﻿@model Seite
+﻿@model AikidoWebsite.Data.Entities.Seite
 @{
     ViewBag.Title = "Weg zum Dojo";
 }
@@ -18,7 +18,7 @@
     @Html.Raw(Model.Html)
 </div>
 
-@if (AikidoWebsite.Web.Extensions.UserExtensions.IsInGroup(User, AikidoWebsite.Data.ValueObjects.Gruppe.Admin)) {
+@if (User.IsInRole("admin")) {
     <i><a href="/Content/Edit/standort">Text bearbeiten</a></i>
 }
 
@@ -26,7 +26,7 @@
 
 <div id="google-map" style="min-height: 550px; width: 100%; max-width: 1000px;"></div>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyA8IzRHosWTyDdKAk1JhVH04mDd-FbB6n8"></script>
 <script type="text/javascript">
     var map;
 
