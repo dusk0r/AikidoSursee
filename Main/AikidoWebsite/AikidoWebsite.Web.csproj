@@ -2,12 +2,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <UserSecretsId>aspnet-AikidoSursee-631A729E-A32A-4BF2-9FE3-A359913070F0</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FlickrNetCore" Version="1.0.0" />
+    <PackageReference Include="FlickrNet" Version="3.25.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.1.1" />

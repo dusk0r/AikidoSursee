@@ -9,11 +9,13 @@
 <br />
 
 <div style="overflow-x: auto; white-space: nowrap;">
-    <!-- ko foreach: galleries -->
-    <div style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer;" data-bind="click: function() { $root.setGallery($data); }, style: { backgroundImage: 'url(\'' + ThumbnailUrl + '\')' }">
-        <span data-bind="text: Titel" style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.1); overflow: hidden;"></span><br />
-    </div>
-    <!-- /ko -->
+    @foreach (var gallery in Model)
+    {
+        <div style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer; background-image: url('@gallery.ThumbnailUrl') !important" data-bind="click: function() { $root.setGallery($data); }">
+            <span style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.1); overflow: hidden;">@gallery.Titel</span><br />
+        </div>
+
+    }
 </div>
 
 <h3 data-bind="text: activeGallery().Titel"></h3>
@@ -40,7 +42,7 @@
 URL zum Album: <a href="#" data-bind="attr: { href: activeGallery().Link} , text: activeGallery().Link" target="_blank"></a>
 
 @section Footer {
-    <script type="text/javascript">
+    @*<script type="text/javascript">
         //function changeImage(imageUrl) {
         //    $("#image").attr("src", imageUrl);
         //}
@@ -106,5 +108,5 @@ URL zum Album: <a href="#" data-bind="attr: { href: activeGallery().Link} , text
         }
 
         ko.applyBindings(viewModel);
-    </script>
+    </script>*@
 }
