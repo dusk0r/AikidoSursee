@@ -22,7 +22,7 @@
     {
         return {
             restrict: 'A',
-            link: ["$scope", "$element", "$attrs", function ($scope, $element, $attrs)
+            link: function ($scope, $element, $attrs)
             {
                 $element[0].onmouseover = function ()
                 {
@@ -34,7 +34,7 @@
                     // on mouseleave
                     $($element[0]).tooltip('hide');
                 };
-            }]
+            }
         };
     })
     .directive('datum', function ()
