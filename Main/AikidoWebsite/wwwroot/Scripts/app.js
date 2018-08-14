@@ -50,10 +50,16 @@
                 $scope.dateString = datum.format("DD.MM.YYYY HH:mm");
                 $scope.agoString = datum.fromNow();
 
-                $timeout(function ()
+                function refresh()
                 {
-                    $scope.agoString = datum.fromNow();
-                }, 600000);
+                    $timeout(function ()
+                    {
+                        $scope.agoString = datum.fromNow();
+                        refresh();
+                    }, 600000 /* 10 Min */);
+                }
+
+                refresh();
             }],
             templateUrl: '/Content/component/datumComponent.html',
             replace: true
@@ -153,6 +159,11 @@
                         {
                             $scope.showHinweis = true;
                         }
+
+                        $timeout(function ()
+                        {
+                            updateHinweis();
+                        }, 600000 /* 10 Min */);
                     });
                 }
 
