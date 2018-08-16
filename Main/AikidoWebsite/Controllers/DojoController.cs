@@ -51,7 +51,7 @@ namespace AikidoWebsite.Web.Controllers
                 ThumbnailUrl = "/Content/images/dojo/dojo3p.jpg",
                 PhotosetId = "sursee",
                 CreationDate = new DateTime(2012, 11, 17),
-                Link = @"https://www.aikido-sursee.ch/Dojo/Bilder" // TODO: Dynamisch machen
+                Link = $@"{HttpContext.GetBaseUrl()}Dojo/Bilder" // TODO: Dynamisch machen
             };
             models = new PhotoSetModel[] { defaultGallery }.Union(models).ToList();
 
