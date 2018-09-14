@@ -62,7 +62,7 @@ namespace AikidoWebsite.Controllers
                 };
                 foreach (var role in benutzer.Gruppen)
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, role));
+                    claims.Add(new Claim(ClaimTypes.Role, role.ToLowerInvariant()));
                 }
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);

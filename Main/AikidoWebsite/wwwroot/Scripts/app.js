@@ -95,6 +95,13 @@
                 {
                     $scope.getMitteilungen(Math.max($scope.data.start - $scope.data.perPage, 0));
                 }
+                $scope.deleteMitteilung = function (mitteilung)
+                {
+                    $http.delete('/Aktuelles/DeleteMitteilung/' + encodeURIComponent(mitteilung.id)).then(
+                        function () { $scope.getMitteilungen($scope.data.start); },
+                        function () { alert("Konnte Mitteilung nicht löschen"); }
+                    );
+                }
 
                 $scope.getMitteilungen(0);
             }],

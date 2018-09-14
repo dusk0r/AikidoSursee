@@ -53,6 +53,25 @@ namespace AikidoWebsite.Web.Controllers
             return View(model);
         }
 
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        public ActionResult DeleteMitteilung(string id)
+        {
+            // TODO: Bessere Lösung finden
+            id = System.Net.WebUtility.UrlDecode(id);
+            var mitteilung = DocumentSession.Load<Mitteilung>(id);
+            if (mitteilung != null)
+            {
+                DocumentSession.Delete(mitteilung);
+                DocumentSession.SaveChanges();
+                return Json(true);
+            }
+            else
+            {
+                return Json(false);
+            }
+        }
+
         [HttpGet]
         public JsonResult Hinweis() {
             var hinweis = DocumentSession.Load<Hinweis>(DocumentSession.GetRavenName<Hinweis>("default"));
