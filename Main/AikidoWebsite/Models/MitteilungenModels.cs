@@ -56,6 +56,6 @@ namespace AikidoWebsite.Web.Models
         public string Bezeichnung { get; set; }
         public string Id { get; set; }
         public string ContentType { get; set; }
-        public int Size { get; set; }
+        public long Size { get; set; }
     }
 }

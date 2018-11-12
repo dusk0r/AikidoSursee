@@ -38,11 +38,13 @@
     </style>
 
     <h3>{{ album.titel }}</h3>
-    {{ album.beschreibung }}
+    {{ album.creationDate | date:'dd.MM.yyyy' }} | {{ album.beschreibung || '-' }}
 
     <div ng-show="!currentImage">
         <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
     </div>
+
+    <br />
 
     <div ng-show="currentImage">
         <div style="position: absolute; background: rgb(230, 230, 230)">

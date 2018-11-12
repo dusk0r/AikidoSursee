@@ -8,7 +8,8 @@
             {{ mitteilung.titel }}
         </a>
 
-        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien" ng-show="mitteilung.hasFiles"> </i>
+        <i class="icon-calendar btn-mini" data-toggle="tooltip" title="Hat Termine" tooltip ng-show="mitteilung.terminIds.length > 0"> </i>
+        <i class="icon-file btn-mini" data-toggle="tooltip" title="Hat Dateien" tooltip ng-show="mitteilung.dateiIds.length > 0"> </i>
 
         <span ng-show="data.isAdmin">
             &nbsp;

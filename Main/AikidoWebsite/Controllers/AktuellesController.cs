@@ -5,13 +5,11 @@ using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
 using AikidoWebsite.Data;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
@@ -48,7 +46,9 @@ namespace AikidoWebsite.Web.Controllers
                 .Load<Mitteilung>(DocumentSession.GetRavenName<Mitteilung>(id));
             var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
 
-            var model = new ViewMitteilungModel { Mitteilung = CreateMitteilungModel(mitteilung, benutzer), Dateien = CreateDateiModels(mitteilung.DateiIds) };
+            var model = new ViewMitteilungModel {
+                Mitteilung = CreateMitteilungModel(mitteilung, benutzer),
+                Dateien = CreateDateiModels(mitteilung.DateiIds) };
 
             return View(model);
         }
@@ -136,14 +136,9 @@ namespace AikidoWebsite.Web.Controllers
                 mitteilung.Titel = model.Mitteilung.Titel;
                 mitteilung.Text = model.Mitteilung.Text;
                 mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
-                
-                DocumentSession.SaveChanges();
 
-                // Auf Index warten
-                DocumentSession.Query<Mitteilung>()
-                    .Customize(c => c.WaitForNonStaleResults())
-                    .Take(0)
-                    .ToArray();
+                DocumentSession.Advanced.WaitForIndexesAfterSaveChanges();
+                DocumentSession.SaveChanges();
 
                 return Json(mitteilung.Id);
             }
@@ -153,8 +148,6 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult UploadFile([FromBody]IFormFile file, [FromBody]string bezeichnung, [FromBody]string mitteilungsId) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-            
             var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
             var key = Guid.NewGuid().ToString();
 
@@ -168,11 +161,10 @@ namespace AikidoWebsite.Web.Controllers
             };
             DocumentSession.Store(datei);
 
-            var metadata = new JObject();
-            metadata["Bezeichnung"] = bezeichnung;
-            metadata["DateiName"] = file.FileName;
-            metadata["ContentType"] = file.ContentType;
-            //dbCommands.PutAttachment(key, null, file.InputStream, metadata); // TODO: Implementieren
+            using (var inputStream = file.OpenReadStream())
+            {
+                DocumentSession.Advanced.Attachments.Store(datei, file.FileName, inputStream, file.ContentType);
+            }
 
             mitteilung.DateiIds.Add(key);
             DocumentSession.SaveChanges();
@@ -292,17 +284,15 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-
-            return dateiKeys.Select(g => {
-                //var attachment = dbCommands.GetAttachment(g); // TODO: Implementieren
-                return new DateiModel {
-                    Id = g,
-                    //Bezeichnung = attachment.Metadata["Bezeichnung"].ToString(),
-                    //DateiName = attachment.Metadata["DateiName"].ToString(),
-                    //Size = attachment.Size
-                };
-            }).ToList();
+            return from file in DocumentSession.Load<Datei>(dateiKeys)
+                   select new DateiModel
+                   {
+                       Id = file.Key,
+                       Bezeichnung = file.Value.Beschreibung,
+                       ContentType = file.Value.MimeType,
+                       DateiName = file.Value.Name,
+                       Size = file.Value.Bytes
+                   };
         }
 
         private string CreatEmailWithName(string name, string email) {
