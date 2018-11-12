@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="PaulMiami.AspNetCore.Mvc.Recaptcha" Version="1.2.1" />
-    <PackageReference Include="RavenDB.Client" Version="4.0.6" />
+    <PackageReference Include="RavenDB.Client" Version="4.1.2" />
     <PackageReference Include="Rollbar" Version="1.5.5" />
     <PackageReference Include="TweetinviAPI" Version="4.0.0" />
   </ItemGroup>
