@@ -1,9 +1,15 @@
 ﻿<div>
-    <div style="overflow-x: auto; white-space: nowrap;">
-        <div ng-repeat="album in albums" style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer" ng-style="{'background-image' : 'url(' + album.thumbnailUrl + ')'}" ng-click="setAlbum(album)">
-            <span style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.5); overflow: hidden; display: block; width: 100px; word-wrap:break-word;">{{ album.titel }}</span>
-        </div>
+    <div ng-show="!albums">
+        <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
     </div>
 
-    <album album="currentAlbum"></album>
+    <div ng-show="albums">
+        <div style="overflow-x: auto; white-space: nowrap;">
+            <div ng-repeat="album in albums" style="display: inline-block; height: 100px; width: 100px; background-size: cover; text-align: center; margin-left: 10px; cursor: pointer" ng-style="{'background-image' : 'url(' + album.thumbnailUrl + ')'}" ng-click="setAlbum(album)">
+                <span style="color: white; text-shadow: 15px 15px 15px black; background: rgba(0,0,0,0.5); overflow: hidden; display: block; width: 100px; word-wrap:break-word;">{{ album.titel }}</span>
+            </div>
+        </div>
+
+        <album album="currentAlbum"></album>
+    </div>
 </div>

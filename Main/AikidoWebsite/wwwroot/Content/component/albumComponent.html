@@ -12,11 +12,11 @@
             font-size: 50px;
         }
 
-        .back:hover {
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            opacity: 1;
-        }
+            .back:hover {
+                background: rgba(255, 255, 255, 0.5);
+                cursor: pointer;
+                opacity: 1;
+            }
 
         .forward {
             position: absolute;
@@ -30,27 +30,33 @@
             font-size: 50px;
         }
 
-        .forward:hover {
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            opacity: 1;
-        }
+            .forward:hover {
+                background: rgba(255, 255, 255, 0.5);
+                cursor: pointer;
+                opacity: 1;
+            }
     </style>
 
     <h3>{{ album.titel }}</h3>
     {{ album.beschreibung }}
 
-    <div style="position: relative; background: rgb(230, 230, 230)">
-        <img src="{{ currentImage.imageURL }}" />
-        <div class="back" ng-click="prevImage()">
-            <span class="icon-arrow-left"></span>
-        </div>
-        <div class="forward" ng-click="nextImage()">
-            <span class="icon-arrow-right"></span>
-        </div>
+    <div ng-show="!currentImage">
+        <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
     </div>
 
-    <br />
+    <div ng-show="currentImage">
+        <div style="position: absolute; background: rgb(230, 230, 230)">
+            <img src="{{ currentImage.imageURL }}" />
+            <div class="back" ng-click="prevImage()">
+                <span class="icon-arrow-left"></span>
+            </div>
+            <div class="forward" ng-click="nextImage()">
+                <span class="icon-arrow-right"></span>
+            </div>
+        </div>
 
-    URL zum Album: <a href="{{album.link}}" target="_blank">{{ album.link }}</a>
+        <br />
+
+        URL zum Album: <a href="{{ album.link }}" target="_blank">{{ album.link }}</a>
+    </div>
 </div>
