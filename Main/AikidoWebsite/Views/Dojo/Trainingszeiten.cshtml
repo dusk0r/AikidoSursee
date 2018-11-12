@@ -1,6 +1,4 @@
-﻿@model AikidoWebsite.Web.Models.StundenplanModel
-
-@{
+﻿@{
     ViewBag.Title = "Trainingszeiten";
 }
 
@@ -71,7 +69,7 @@
             self.editable = ko.observable(false);
 
             // Load Data
-            var data = JSON.parse('@Html.Raw(Json.Encode(Model))');
+            var data = JSON.parse('Html.Raw(Json.Encode(Model))');
             self.montag = new Tagesplan(data.Plan.Montag);
             self.dienstag = new Tagesplan(data.Plan.Dienstag);
             self.mittwoch = new Tagesplan(data.Plan.Mittwoch);

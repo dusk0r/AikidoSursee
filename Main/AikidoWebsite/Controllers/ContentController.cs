@@ -5,14 +5,12 @@ using System.Net;
 using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Index;
-using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Raven.Client.Documents.Session;
-using Raven.Client.Extensions;
 
 namespace AikidoWebsite.Web.Controllers
 {

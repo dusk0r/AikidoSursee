@@ -62,22 +62,9 @@
     </table>
 </form>
 
-@helper GetBaseUrl(Uri url) { 
-    var sb = new System.Text.StringBuilder();
-    sb.Append(url.Scheme);
-    sb.Append("://");
-    sb.Append(url.Host);
-    if (url.Port != 80 && url.Port != 443) {
-        sb.Append(":");
-        sb.Append(url.Port);
-    }
-    
-    @sb.ToString();
-}
-
 @section Footer {
 <script type="text/javascript">
-    var viewModel = new ViewModel(@Html.Raw(Json.Encode(Model)));
+    var viewModel = new ViewModel(Html.Raw(Json.Encode(Model)));
 
     function StoredDateiEintrag(data) {
         var self = this;
@@ -91,11 +78,11 @@
         self.UseCount = data.UseCount;
 
         self.url = ko.computed(function() {
-            return "@GetBaseUrl(Request.Url)" + "/Content/File/" + self.AttachmentId;
+            return "GetBaseUrl(Request.Url)" + "/Content/File/" + self.AttachmentId;
         });
 
         self.deleteUrl = ko.computed(function() {
-            return "@GetBaseUrl(Request.Url)" + "/Content/Delete/" + self.Id.replace("/", "_");
+            return "GetBaseUrl(Request.Url)" + "/Content/Delete/" + self.Id.replace("/", "_");
         });
 
         self.humanSize = ko.computed(function () {

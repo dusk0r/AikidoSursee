@@ -1,5 +1,5 @@
-﻿@model AikidoWebsite.Web.Models.SeiteModel
-@{
+﻿model AikidoWebsite.Web.Models.SeiteModel
+{
     ViewBag.Title = "Bearbeiten";
     var files = ViewData["Files"] as IList<Datei>;
 }
@@ -22,9 +22,9 @@
     }
 </style>
 
-<h2>Seite '@Model.Name' bearbeiten</h2>
+<h2>Seite 'Model.Name' bearbeiten</h2>
 
-@using (Html.BeginForm("Edit", "Content", FormMethod.Post, new { id = "contentForm" })) {
+using (Html.BeginForm("Edit", "Content", FormMethod.Post, new { id = "contentForm" })) {
 
     <div class="btn-group">
         @*<input type="submit" value="speichern" class="btn btn-primary" />*@
@@ -36,10 +36,10 @@
 
     <div class="wmd-panel">
         <div id="wmd-button-bar"></div>
-        @Html.TextAreaFor(x => x.Markdown, new { @class = "creole-input", id = "creole-input", wrap = "off" })
+        Html.TextAreaFor(x => x.Markdown, new { clazz = "creole-input", id = "creole-input", wrap = "off" })
     </div>
 
-    @Html.HiddenFor(x => x.Name)
+    Html.HiddenFor(x => x.Name)
 
 }
 
@@ -56,10 +56,10 @@
         <div id="creole-preview" class="creole-preview renderContent"></div>
     </div>
     <div class="tab-pane renderContent" id="currentV">
-        @Html.Raw(Model.Html)
+        Html.Raw(Model.Html)
     </div>
     <div class="tab-pane" id="creole">
-        @Html.Partial("CreoleHelp")
+        Html.Partial("CreoleHelp")
     </div>
     <div class="tab-pane" id="dateien">
         <table class="filesTable table">
@@ -68,14 +68,14 @@
                 <th>Link</th>
                 <th></th>
             </tr>
-            @foreach (var file in files) {
+            foreach (var file in files) {
     <tr>
-        <td>@file.Beschreibung</td>
-        <td>/Content/File/@file.AttachmentId</td>
-        @{
+        <td>file.Beschreibung</td>
+        <td>/Content/File/file.AttachmentId</td>
+        {
                 var textToInsert = file.IsImage ? "{{/Content/File/" + file.AttachmentId + "}}" : "[[/Content/File/" + file.AttachmentId + "]]";
         }
-        <td><a href="javascript:insertText('@textToInsert')">Einfügen</a></td>
+        <td><a href="javascript:insertText('textToInsert')">Einfügen</a></td>
     </tr>
 }
         </table>
@@ -106,7 +106,7 @@
         });
 
         function save() {
-            var data = { Name: '@Model.Name', Markdown: $("Markdown").value };
+            var data = { Name: 'Model.Name', Markdown: $("Markdown").value };
             $.post("/Content/Edit", $("#contentForm").serialize())
             .done(function (data) {
                 location.href = window.location.href.split('?')[0] + "?saved=true";

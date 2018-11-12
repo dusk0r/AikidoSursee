@@ -32,9 +32,16 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Bilder() {
+        public ActionResult Bilder() {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> ListAlbums()
+        {
             var gallerien = await FlickrService.ListPhotosetsAsync();
-            var models = gallerien.Select(x => new PhotoSetModel {
+            var models = gallerien.Select(x => new PhotoSetModel
+            {
                 Titel = x.Title,
                 Beschreibung = x.Description,
                 ThumbnailUrl = x.PhotosetSquareThumbnailUrl,
@@ -45,25 +52,26 @@ namespace AikidoWebsite.Web.Controllers
             .ToList();
 
             // Default Gallery
-            var defaultGallery = new PhotoSetModel {
+            var defaultGallery = new PhotoSetModel
+            {
                 Titel = "Das Dojo",
                 Beschreibung = "Bilder vom Dojo Sursee",
                 ThumbnailUrl = "/Content/images/dojo/dojo3p.jpg",
                 PhotosetId = "sursee",
                 CreationDate = new DateTime(2012, 11, 17),
-                Link = $@"{HttpContext.GetBaseUrl()}Dojo/Bilder" // TODO: Dynamisch machen
+                Link = $@"{HttpContext.GetBaseUrl()}Dojo/Bilder"
             };
             models = new PhotoSetModel[] { defaultGallery }.Union(models).ToList();
 
-            return View(models);
+            return Json(models);
         }
 
         [HttpGet]
         public async Task<JsonResult> ListBilder(string id) {
             IEnumerable<BildModel> models = null;
 
-            if (id == "sursee") {
-                models = Directory.GetFiles(Path.Combine(HostingEnvironment.WebRootPath, "~/Content/images/dojo"))
+            if (id == "sursee") { // Default Gallery
+                models = Directory.GetFiles(Path.Combine(HostingEnvironment.WebRootPath, "Content" ,"images", "dojo"))
                     .Select(s => Path.GetFileName(s))
                     .Where(s => s.EndsWith(".jpg") && !s.Contains("p.jpg"))
                     .Select(x => new BildModel {

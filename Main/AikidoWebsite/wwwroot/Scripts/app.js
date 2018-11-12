@@ -74,7 +74,7 @@
             {
                 $scope.getMitteilungen = function (start)
                 {
-                    $http.get('/Aktuelles/GetMitteilungen', { params: { start: start || 0 }}).then(function (resp) 
+                    $http.get('/Aktuelles/GetMitteilungen', { params: { start: start || 0 } }).then(function (resp) 
                     {
                         $scope.data = resp.data;
                         for (var idx in $scope.data.mitteilungen)
@@ -85,23 +85,23 @@
                         $scope.hasOlder = resp.data.mitteilungenCount >= (resp.data.start + resp.data.perPage);
                         $scope.hasNewer = resp.data.start !== 0;
                     });
-                }
+                };
 
                 $scope.getOlder = function ()
-                { 
+                {
                     $scope.getMitteilungen($scope.data.start + $scope.data.perPage);
-                }
+                };
                 $scope.getNewer = function ()
                 {
                     $scope.getMitteilungen(Math.max($scope.data.start - $scope.data.perPage, 0));
-                }
+                };
                 $scope.deleteMitteilung = function (mitteilung)
                 {
                     $http.delete('/Aktuelles/DeleteMitteilung/' + encodeURIComponent(mitteilung.id)).then(
                         function () { $scope.getMitteilungen($scope.data.start); },
                         function () { alert("Konnte Mitteilung nicht löschen"); }
                     );
-                }
+                };
 
                 $scope.getMitteilungen(0);
             }],
@@ -122,7 +122,7 @@
                     {
                         $scope.data = resp.data;
                     });
-                }
+                };
 
                 $scope.getDatumString = function (termin)
                 {
@@ -141,7 +141,7 @@
                     {
                         return moment(termin.startDatum).format("DD.MM.YYYY");
                     }
-                }
+                };
 
                 getTermine();
             }],
@@ -162,6 +162,7 @@
                     {
                         $scope.data = resp.data;
                         $scope.data.html = $sce.trustAsHtml($scope.data.html);
+                        console.log(window.localStorage["hinweisKey"] + " !== " + resp.data.dateModified);
                         if (window.localStorage["hinweisKey"] !== resp.data.dateModified)
                         {
                             $scope.showHinweis = true;
@@ -178,11 +179,79 @@
                 {
                     window.localStorage.setItem("hinweisKey", $scope.data.dateModified);
                     $scope.showHinweis = false;
-                }
+                };
 
                 updateHinweis();
             }],
             templateUrl: '/Content/component/hinweisComponent.html',
+            replace: true
+        };
+    })
+    .directive('albums', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: ["$scope", "$http", function ($scope, $http)
+            {
+                function loadAlbums()
+                {
+                    $http.get('/Dojo/ListAlbums').then(function (resp) 
+                    {
+                        $scope.albums = resp.data;
+                        $scope.currentAlbum = resp.data[0];
+                    });
+                }
+
+                $scope.setAlbum = function (album)
+                {
+                    $scope.currentAlbum = album;
+                };
+
+                loadAlbums();
+
+            }],
+            templateUrl: '/Content/component/albumsComponent.html',
+            replace: true
+        };
+    })
+    .directive('album', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {
+                album: '<album'
+            },
+            controller: ["$scope", "$http", function ($scope, $http)
+            {
+                $scope.$watch('album', function (newValue)
+                {
+                    if (newValue)
+                    {
+                        $http.get('/Dojo/ListBilder/' + newValue.photosetId).then(function (resp) 
+                        {
+                            $scope.images = resp.data;
+                            $scope.currentImageIndex = 0;
+                            $scope.currentImage = resp.data[$scope.currentImageIndex];
+                        });
+                    }
+                }, true);
+
+                $scope.nextImage = function ()
+                {
+                    $scope.currentImageIndex = ($scope.currentImageIndex + 1) % $scope.images.length;
+                    $scope.currentImage = $scope.images[$scope.currentImageIndex];
+                };
+
+                $scope.prevImage = function ()
+                {
+                    $scope.currentImageIndex = $scope.currentImageIndex === 0 ?
+                        $scope.images.length - 1 :
+                        $scope.currentImageIndex - 1;
+                    $scope.currentImage = $scope.images[$scope.currentImageIndex];
+                };
+            }],
+            templateUrl: '/Content/component/albumComponent.html',
             replace: true
         };
     });
