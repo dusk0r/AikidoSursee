@@ -6,6 +6,20 @@
             return moment(input).format(format);
         };
     })
+    .filter('urlencode', function ()
+    {
+        return function (input)
+        {
+            return window.encodeURIComponent(input);
+        };
+    })
+    .filter('documentIdPart', function ()
+    {
+        return function (input)
+        {
+            return input.split('/')[1];
+        };
+    })
     .directive('loginWindow', function ()
     {
         return {
@@ -122,6 +136,19 @@
             replace: true
         };
     })
+    .directive('mitteilungEdit', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {},
+            controller: ["$scope", "$http", function ($scope, $http)
+            {
+
+            }],
+            templateUrl: '/Content/component/mitteilungEditComponent.html',
+            replace: true
+        };
+    })
     .directive('termine', function ()
     {
         return {
@@ -175,8 +202,7 @@
                     {
                         $scope.data = resp.data;
                         $scope.data.html = $sce.trustAsHtml($scope.data.html);
-                        console.log(window.localStorage["hinweisKey"] + " !== " + resp.data.dateModified);
-                        if (window.localStorage["hinweisKey"] !== resp.data.dateModified)
+                        if (resp.data.hasHinweis && window.localStorage["hinweisKey"] !== resp.data.dateModified)
                         {
                             $scope.showHinweis = true;
                         }

@@ -48,7 +48,9 @@ namespace AikidoWebsite.Web.Controllers
 
             var model = new ViewMitteilungModel {
                 Mitteilung = CreateMitteilungModel(mitteilung, benutzer),
-                Dateien = CreateDateiModels(mitteilung.DateiIds) };
+                Dateien = CreateDateiModels(mitteilung.DateiIds),
+                Termine = CreateTerminModels(mitteilung.TerminIds)
+            };
 
             return View(model);
         }
@@ -285,6 +287,7 @@ namespace AikidoWebsite.Web.Controllers
 
         private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
             return from file in DocumentSession.Load<Datei>(dateiKeys)
+                   where file.Value != null
                    select new DateiModel
                    {
                        Id = file.Key,
@@ -292,6 +295,18 @@ namespace AikidoWebsite.Web.Controllers
                        ContentType = file.Value.MimeType,
                        DateiName = file.Value.Name,
                        Size = file.Value.Bytes
+                   };
+        }
+
+        private IEnumerable<TerminModel> CreateTerminModels(ISet<string> terminIds)
+        {
+            return from termin in DocumentSession.Load<Termin>(terminIds)
+                   where termin.Value != null
+                   select new TerminModel
+                   {
+                       Text = termin.Value.Text,
+                       StartDatum = termin.Value.StartDatum,
+                       EndDatum = termin.Value.EndDatum
                    };
         }
 

@@ -5,7 +5,8 @@ using AikidoWebsite.Data.Entities;
 namespace AikidoWebsite.Web.Models
 {
 
-    public class ListMitteilungenModel {
+    public class ListMitteilungenModel
+    {
         public int MitteilungenCount { get; set; }
         public IEnumerable<MitteilungModel> Mitteilungen { get; set; }
         public int Start { get; set; }
@@ -13,17 +14,15 @@ namespace AikidoWebsite.Web.Models
         public bool IsAdmin { get; set; }
     }
 
-    public class ViewMitteilungModel {
+    public class ViewMitteilungModel
+    {
         public MitteilungModel Mitteilung { get; set; }
-        public IEnumerable<DateiModel> Dateien { get; set; }
-
-        public ViewMitteilungModel() {
-
-            this.Dateien = new List<DateiModel>();
-        }
+        public IEnumerable<DateiModel> Dateien { get; set; } = new List<DateiModel>();
+        public IEnumerable<TerminModel> Termine { get; set; } = new List<TerminModel>();
     }
 
-    public class MitteilungModel {
+    public class MitteilungModel
+    {
         public string Id { get; set; }
         public string Titel { get; set; }
         public DateTime ErstelltAm { get; set; }
@@ -38,24 +37,34 @@ namespace AikidoWebsite.Web.Models
         public string Html { get; set; }
     }
 
-    public class EditMitteilungModel {
+    public class EditMitteilungModel
+    {
         public bool WithTermin { get; set; }
         public Mitteilung Mitteilung { get; set; }
         public IEnumerable<Termin> Termine { get; set; }
         public IEnumerable<DateiModel> Dateien { get; set; }
 
-        public EditMitteilungModel() {
+        public EditMitteilungModel()
+        {
             this.Mitteilung = new Mitteilung();
             this.Termine = new List<Termin>();
             this.Dateien = new List<DateiModel>();
         }
     }
 
-    public class DateiModel {
+    public class DateiModel
+    {
         public string DateiName { get; set; }
         public string Bezeichnung { get; set; }
         public string Id { get; set; }
         public string ContentType { get; set; }
         public long Size { get; set; }
+    }
+
+    public class TerminModel
+    {
+        public string Text { get; set; }
+        public DateTime StartDatum { get; set; }
+        public DateTime? EndDatum { get; set; }
     }
 }
