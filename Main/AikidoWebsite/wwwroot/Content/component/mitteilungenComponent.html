@@ -1,4 +1,8 @@
 ﻿<div>
+    <div ng-show="!data">
+        <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
+    </div>
+
     <div class="well" ng-repeat="mitteilung in data.mitteilungen">
         <a href="#" data-bind="attr: { href: show }">
             {{ mitteilung.titel }}

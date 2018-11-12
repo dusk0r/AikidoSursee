@@ -74,6 +74,7 @@
             {
                 $scope.getMitteilungen = function (start)
                 {
+                    $scope.data = null;
                     $http.get('/Aktuelles/GetMitteilungen', { params: { start: start || 0 } }).then(function (resp) 
                     {
                         $scope.data = resp.data;
@@ -105,11 +106,11 @@
 
                 $(document).keydown(function (e)
                 {
-                    if (e.which === 37)
+                    if (e.which === 37) // <-
                     {
                         $timeout(function () { $scope.getNewer(); }, 0);
                     }
-                    if (e.which === 39)
+                    if (e.which === 39) // ->
                     {
                         $timeout(function () { $scope.getOlder(); }, 0);
                     }
@@ -126,7 +127,7 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: ["$scope", "$element", "$http", "$sce", function ($scope, $element, $http, $sce)
+            controller: ["$scope", "$http", function ($scope, $http)
             {
                 getTermine = function ()
                 {
@@ -266,11 +267,11 @@
 
                 $(document).keydown(function (e)
                 {
-                    if (e.which === 37)
+                    if (e.which === 37) // <-
                     {
                         $timeout(function () { $scope.prevImage(); }, 0);
                     }
-                    if (e.which === 39)
+                    if (e.which === 39) // ->
                     {
                         $timeout(function () { $scope.nextImage(); }, 0);
                     }
