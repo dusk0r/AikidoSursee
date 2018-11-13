@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using AikidoWebsite.Data.Extensions;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -47,7 +48,7 @@ namespace AikidoWebsite.Web.Controllers
             var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
 
             var model = new ViewMitteilungModel {
-                Mitteilung = CreateMitteilungModel(mitteilung, benutzer),
+                Mitteilung = MitteilungModel.Build(mitteilung, benutzer),
                 Dateien = CreateDateiModels(mitteilung.DateiIds),
                 Termine = CreateTerminModels(mitteilung.TerminIds)
             };
@@ -91,8 +92,36 @@ namespace AikidoWebsite.Web.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public ActionResult AddNews() {
-            return View("EditNews", new EditMitteilungModel());
+        public ActionResult EditMitteilung() {
+            return View("EditMitteilung");
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public JsonResult LoadMitteilungEditModel(string id = null)
+        {
+            EditMitteilungModel model;
+
+            if (id == null)
+            {
+                model = new EditMitteilungModel();
+            }
+            else
+            {
+                var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
+                var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
+                model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
+
+            }
+
+            return Json(model);
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public string ParseCreole([FromBody] CreoleModel model)
+        {
+            return model?.Text?.CreoleToHtml();
         }
 
         [Authorize(Roles = "admin")]
@@ -100,7 +129,7 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult EditNews(string id) {
             var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
             var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
-            var model = new EditMitteilungModel { Mitteilung = mitteilung, Termine = termine };
+            var model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
 
             // Dateien
             model.Dateien = CreateDateiModels(mitteilung.DateiIds);
@@ -111,40 +140,40 @@ namespace AikidoWebsite.Web.Controllers
         [Authorize(Roles = "admin")]
         [HttpPost]
         public JsonResult EditNews(EditMitteilungModel model) {
-            var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
+            //var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
 
-            PersistTermine(model.Termine, benutzer);
+            //PersistTermine(model.Termine, benutzer);
 
-            // TODO, Validate ...
-            Mitteilung mitteilung = model.Mitteilung;
-            if (mitteilung.IsNew()) {
-                mitteilung.AutorId = benutzer.Id;
-                mitteilung.ErstelltAm = Clock.Now;
-                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
+            //// TODO, Validate ...
+            //Mitteilung mitteilung = model.Mitteilung;
+            //if (mitteilung.IsNew()) {
+            //    mitteilung.AutorId = benutzer.Id;
+            //    mitteilung.ErstelltAm = Clock.Now;
+            //    mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
-                DocumentSession.Store(mitteilung);
-                DocumentSession.SaveChanges();
+            //    DocumentSession.Store(mitteilung);
+            //    DocumentSession.SaveChanges();
 
-                // Auf Index warten
-                DocumentSession.Query<Mitteilung>()
-                    .Customize(c => c.WaitForNonStaleResults())
-                    .Take(0)
-                    .ToArray();
+            //    // Auf Index warten
+            //    DocumentSession.Query<Mitteilung>()
+            //        .Customize(c => c.WaitForNonStaleResults())
+            //        .Take(0)
+            //        .ToArray();
 
-                return Json(mitteilung.Id);
-            } else {
-                mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
-                mitteilung.AutorId = benutzer.Id;
-                mitteilung.Titel = model.Mitteilung.Titel;
-                mitteilung.Text = model.Mitteilung.Text;
-                mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
+            //    return Json(mitteilung.Id);
+            //} else {
+            //    mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
+            //    mitteilung.AutorId = benutzer.Id;
+            //    mitteilung.Titel = model.Mitteilung.Titel;
+            //    mitteilung.Text = model.Mitteilung.Text;
+            //    mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
 
-                DocumentSession.Advanced.WaitForIndexesAfterSaveChanges();
-                DocumentSession.SaveChanges();
+            //    DocumentSession.Advanced.WaitForIndexesAfterSaveChanges();
+            //    DocumentSession.SaveChanges();
 
-                return Json(mitteilung.Id);
-            }
-
+            //    return Json(mitteilung.Id);
+            //}
+            return null;
         }
 
         [Authorize(Roles = "admin")]
@@ -327,7 +356,7 @@ namespace AikidoWebsite.Web.Controllers
                 .ToList();
             var benutzer = DocumentSession.Load<Benutzer>(mitteilungen.Select(m => m.AutorId).Distinct());
 
-            model.Mitteilungen = mitteilungen.Select(m => CreateMitteilungModel(m, benutzer[m.AutorId]));
+            model.Mitteilungen = mitteilungen.Select(m => MitteilungModel.Build(m, benutzer[m.AutorId]));
 
             model.MitteilungenCount = stats.TotalResults;
             model.Start = start;
@@ -350,21 +379,5 @@ namespace AikidoWebsite.Web.Controllers
                 Sequnce = termin.Sequnce
             };
         }
-
-        private static MitteilungModel CreateMitteilungModel(Mitteilung mitteilung, Benutzer benutzer) {
-            return new MitteilungModel {
-                Id = mitteilung.Id,
-                Titel = mitteilung.Titel,
-                ErstelltAm = mitteilung.ErstelltAm,
-                AutorId = benutzer.Id,
-                AutorName = benutzer.Name,
-                AutorEmail = benutzer.EMail,
-                Text = mitteilung.Text,
-                TerminIds = mitteilung.TerminIds,
-                DateiIds = mitteilung.DateiIds,
-                Html = mitteilung.Html
-            };
-        }
-
     }
 }

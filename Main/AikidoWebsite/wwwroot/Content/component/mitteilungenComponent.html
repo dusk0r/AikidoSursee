@@ -13,7 +13,7 @@
 
         <span ng-show="data.isAdmin">
             &nbsp;
-            <button class="btn btn-mini" data-bind="click: edit">
+            <button class="btn btn-mini" ng-click="editMitteilung(mitteilung)">
                 <span class="icon-edit"> </span>Bearbeiten
             </button>
             <button class="btn btn-mini" ng-click="deleteMitteilung(mitteilung)">

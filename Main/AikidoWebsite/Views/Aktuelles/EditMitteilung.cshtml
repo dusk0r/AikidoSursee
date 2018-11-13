@@ -1,7 +1,10 @@
-﻿model AikidoWebsite.Web.Models.EditMitteilungModel
-@{
-    ViewBag.Title = "AddNews";
+﻿@{
+    ViewBag.Title = "Mitteilung Hinzufügen";
 }
+
+<mitteilung-edit></mitteilung-edit>
+
+<hr /><hr />
 
 <style type="text/css">
     .creole-input {
@@ -17,165 +20,12 @@
     }
 </style>
 
-<h2>Mitteilung hinzufügen:</h2>
-
-<div class="btn-group">
-<a href="#" class="btn btn-primary" data-bind="click: save, css: { disabled: !isDirty() }">Speichern</a>
-<a href="#" class="btn btn-primary" data-bind="click: discard, css: { disabled: !isDirty() }">Verwerfen</a>
-<a href="#" class="btn btn-primary" data-bind="click: remove, css: { disabled: Mitteilung().Id() === null }">Löschen</a>
-</div>
-
-<br /><br />
-
-<!-- ko with: Mitteilung -->
-    <div class="control-group" data-bind="css: { error: Titel().length < 1 }">
-        <label class="control-label"><h4>Titel</h4></label>
-        <div class="controls">
-            <input type="text" size="30" class="span10" data-bind="value: Titel, valueUpdate:'afterkeydown'" />
-        </div>
-    </div>
-    <div class="control-group" data-bind="css: { error: Text().length < 1 }">
-        <label class="control-label"><h4>Text</h4></label>
-
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#text" data-toggle="tab">Bearbeiten</a></li>
-            <li><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
-            <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
-            <li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane active" id="text">
-                <div class="controls">
-                    <textarea class="span10" rows="5" id="creole-input" data-bind="value: Text, valueUpdate: 'afterkeydown'"></textarea>
-                </div>
-            </div>
-            <div class="tab-pane" id="vorschau">
-                <div id="creole-preview" class="creole-preview"></div>
-            </div>
-            <div class="tab-pane" id="currentV">
-                <div class="creole-preview">
-                    Html.Raw(Model.Mitteilung.Html)
-                </div>
-            </div>
-            <div class="tab-pane" id="creole">
-                Html.Partial("CreoleHelp")
-            </div>
-        </div>
-
-        <br />
-
-    </div>
-    <div class="control-group">
-        <label class="control-label"><h4>Publikum</h4></label>
-        <div class="controls">
-            Html.PublikumDropDown("publikum", "value: Publikum")
-        </div>
-    </div>
-<!-- /ko -->
-
-<div data-bind="visible: $root.Mitteilung().Id() != null">
-    <h4>Dateien</h4>
-
-    <span data-bind="visible: $root.Dateien().length <= 0">
-        <i>Keine Dateien</i>
-    </span>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th></th>
-                <th>Bezeichnung</th>
-                <th>Datei Name</th>
-                <th>Grösse</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- ko foreach: Dateien -->
-            <tr>
-                <td></td>
-                <td>
-                    <a href="#" data-bind="text: Bezeichnung, attr: { href: link }"></a>
-                </td>
-                <td>
-                    <span data-bind="text: DateiName"></span>
-                </td>
-                <td>
-                    <span data-bind="text: sizeText"></span>
-                </td>
-                <td>
-                    <a href="#" title="Löschen" class="icon-trash" data-bind="attr: { href: removeLink($root.Mitteilung) }"></a>
-                </td>
-            </tr>
-
-            <!-- /ko -->
-        </tbody>
-    </table>
-
-    using (Html.BeginForm("UploadFile", "Aktuelles", FormMethod.Post, new { enctype = "multipart/form-data" })) {
-        <input type="file" name="file" />
-        <input type="text" name="bezeichnung" />
-        <input type="submit" value="hinzufügen" />
-        <input type="hidden" name="mitteilungsId" value="Model.Mitteilung.Id" />
-    }
-</div>
-
-<h4>Termine</h4>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th style="width: 220px">Titel</th>
-            <th style="width: 170px">Start</th>
-            <th style="width: 170px">Ende</th>
-            <th>Text</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- ko foreach: Termine -->
-        <tr>
-            <td>
-                <input type="text" data-bind="value: Titel" placeholder="Neuer Termin" />
-            </td>
-            <td>
-@*                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />*@
-                <div class="well">
-                    <div class="input-append date datetimepicker" data-bind="datetimepicker: StartDatum">
-                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
-                        <span class="add-on">
-                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </td>
-            <td>
-@*                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />*@
-                <div class="well">
-                    <div class="input-append date datetimepicker" data-bind="datetimepicker: EndDatum">
-                        <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
-                        <span class="add-on">
-                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                        </span>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <textarea rows="2" data-bind="value: Text" style="min-width: 300px"></textarea>
-            </td>
-        </tr>
-        <!-- /ko -->
-
-    </tbody>
-</table>
-
-<a class="btn" data-bind="click: addTermin">Termin hinzufügen</a>
-
-@section Footer {
+@*@section Footer {
     <script type="text/javascript">
         var viewModel = new ViewModel(Html.Raw(Json.Encode(Model)));
-        @*var viewModel = new ViewModel(@Html.Raw(JsonExtensions.Serialize(Model)));*@
+        var viewModel = new ViewModel(@Html.Raw(JsonExtensions.Serialize(Model)));
 
         function Datei(data) {
             var self = this;
@@ -328,4 +178,4 @@
             render();
         });
     </script>
-}
+}*@

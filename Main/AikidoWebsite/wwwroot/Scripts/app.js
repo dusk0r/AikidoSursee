@@ -1,4 +1,11 @@
 ﻿angular.module('aikidoApp', [])
+    .config(function ($locationProvider)
+    {
+        $locationProvider.html5Mode({
+            enabled: true,
+            rewriteLinks: false
+        });
+    })
     .filter('moment', function ()
     {
         return function (input, format)
@@ -18,6 +25,14 @@
         return function (input)
         {
             return input.split('/')[1];
+        };
+    })
+    .directive('syntaxHelp', function ()
+    {
+        return {
+            restrict: 'E',
+            templateUrl: '/Content/component/syntaxHelpCompoment.html',
+            replace: true
         };
     })
     .directive('loginWindow', function ()
@@ -117,6 +132,10 @@
                         function () { alert("Konnte Mitteilung nicht löschen"); }
                     );
                 };
+                $scope.editMitteilung = function (mitteilung)
+                {
+                    window.location.href = "/Aktuelles/EditMitteilung?id=" + mitteilung.id.split('/')[1];
+                };
 
                 $(document).keydown(function (e)
                 {
@@ -141,9 +160,26 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: ["$scope", "$http", function ($scope, $http)
+            controller: ["$scope", "$http", "$location", "$sce", function ($scope, $http, $location, $sce)
             {
+                function loadMitteilung(mitteilungId)
+                {
+                    $http.get('/Aktuelles/LoadMitteilungEditModel', { params: { id: mitteilungId } }).then(function (resp) 
+                    {
+                        $scope.data = resp.data;
+                        $scope.data.mitteilung.html = $sce.trustAsHtml(resp.data.mitteilung.html);
+                    });
+                }
 
+                $scope.generatePreview = function () {
+                    $http.post('/Aktuelles/ParseCreole', { text: $scope.data.mitteilung.text }).then(function (resp)
+                    {
+                        $scope.preview = $sce.trustAsHtml(resp.data);
+                    });
+                };
+
+                var id = $location.search()['id'];
+                loadMitteilung(id);
             }],
             templateUrl: '/Content/component/mitteilungEditComponent.html',
             replace: true

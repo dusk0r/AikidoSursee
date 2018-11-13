@@ -6,7 +6,8 @@
 
 @if (User.IsInRole("admin"))
 {
-    @Html.ActionLink("Neue Mitteilung hinzufügen", "AddNews", new { @class = "btn" })
+    <a class="btn" href="/Aktuelles/EditMitteilung">Neue Mitteilung hinzufügen</a>
+    <br /><br />
 }
 
 <mitteilungen></mitteilungen>

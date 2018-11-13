@@ -32,21 +32,35 @@ namespace AikidoWebsite.Web.Models
         public string Text { get; set; }
         public ISet<string> TerminIds { get; set; }
         public ISet<string> DateiIds { get; set; }
-
-        // Todo, Nicht direkt parsen? Oder Text weglassen?
         public string Html { get; set; }
+
+        public static MitteilungModel Build(Mitteilung mitteilung, Benutzer benutzer = null)
+        {
+            return new MitteilungModel
+            {
+                Id = mitteilung.Id,
+                Titel = mitteilung.Titel,
+                ErstelltAm = mitteilung.ErstelltAm,
+                AutorId = mitteilung.AutorId,
+                AutorName = benutzer?.Name,
+                AutorEmail = benutzer?.EMail,
+                Text = mitteilung.Text,
+                TerminIds = mitteilung.TerminIds,
+                DateiIds = mitteilung.DateiIds,
+                Html = mitteilung.Html
+            };
+        }
     }
 
     public class EditMitteilungModel
     {
-        public bool WithTermin { get; set; }
-        public Mitteilung Mitteilung { get; set; }
+        public MitteilungModel Mitteilung { get; set; }
         public IEnumerable<Termin> Termine { get; set; }
         public IEnumerable<DateiModel> Dateien { get; set; }
 
         public EditMitteilungModel()
         {
-            this.Mitteilung = new Mitteilung();
+            this.Mitteilung = new MitteilungModel();
             this.Termine = new List<Termin>();
             this.Dateien = new List<DateiModel>();
         }
@@ -66,5 +80,10 @@ namespace AikidoWebsite.Web.Models
         public string Text { get; set; }
         public DateTime StartDatum { get; set; }
         public DateTime? EndDatum { get; set; }
+    }
+
+    public class CreoleModel
+    {
+        public string Text { get; set; }
     }
 }
