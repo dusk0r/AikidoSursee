@@ -3,6 +3,8 @@
         <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
     </div>
 
+    {{ data | json }}
+
     <div ng-show="data">
         <h2 ng-show="!data.mitteilung.id">Mitteilung hinzufügen:</h2>
         <h2 ng-show="data.mitteilung.id">Mitteilung bearbeiten:</h2>
@@ -38,7 +40,7 @@
                     <div>
                         <h4>Dateien</h4>
 
-                        <span data-bind="visible: $root.Dateien().length <= 0">
+                        <span ng-show="data.dateien.length === 0">
                             <i>Keine Dateien</i>
                         </span>
 
@@ -53,37 +55,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- ko foreach: Dateien -->
-                                <tr>
+                                <tr ng-repeat="datei in data.dateien">
                                     <td></td>
                                     <td>
-                                        <a href="#" data-bind="text: Bezeichnung, attr: { href: link }"></a>
+                                        <a href="/Content/File/{{ datei.id | documentIdPart }}" target="_blank">
+                                            {{ datei.bezeichnung }}
+                                        </a>
                                     </td>
                                     <td>
-                                        <span data-bind="text: DateiName"></span>
+                                        {{ datei.dateiName }}
                                     </td>
                                     <td>
-                                        <span data-bind="text: sizeText"></span>
+                                        {{ datei.size | bytes }}
                                     </td>
                                     <td>
-                                        <a href="#" title="Löschen" class="icon-trash" data-bind="attr: { href: removeLink($root.Mitteilung) }"></a>
+                                        <a href="#" title="Löschen" class="icon-trash" ng-click="deleteFile(datei)"></a>
                                     </td>
                                 </tr>
-
-                                <!-- /ko -->
                             </tbody>
                         </table>
 
-                        using (Html.BeginForm("UploadFile", "Aktuelles", FormMethod.Post, new { enctype = "multipart/form-data" })) {
-                        <input type="file" name="file" />
-                        <input type="text" name="bezeichnung" />
-                        <input type="submit" value="hinzufügen" />
-                        <input type="hidden" name="mitteilungsId" value="Model.Mitteilung.Id" />
-                        }
+                        Datei hochladen:
+                        <input type="file" select-ng-files ng-model="uploadFiles" />
+                        <input type="text" ng-model="uploadFileBezeichnung" placeholder="Beschreibung" />
+                        <input type="button" value="hinzufügen" ng-click="uploadFile()" />
                     </div>
 
                     <h4>Termine</h4>
-
 
                     <table class="table">
                         <thead>
@@ -92,16 +90,16 @@
                                 <th style="width: 170px">Start</th>
                                 <th style="width: 170px">Ende</th>
                                 <th>Text</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- ko foreach: Termine -->
-                            <tr>
+                            <tr ng-repeat="termin in data.termine">
                                 <td>
-                                    <input type="text" data-bind="value: Titel" placeholder="Neuer Termin" />
+                                    <input type="text" ng-model="termin.titel" placeholder="Neuer Termin" />
                                 </td>
                                 <td>
-                                    @*                <input style="width: 120px;" type="datetime" data-bind="value: startDatumString" />*@
+                                    <input style="width: 120px;" type="datetime" ng-model="termin.startDatum" />
                                     <div class="well">
                                         <div class="input-append date datetimepicker" data-bind="datetimepicker: StartDatum">
                                             <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
@@ -112,7 +110,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    @*                <input style="width: 120px;" type="datetime" data-bind="value: endDatumString" />*@
+                                    <input style="width: 120px;" type="datetime" ng-model="termin.endDatum" />
                                     <div class="well">
                                         <div class="input-append date datetimepicker" data-bind="datetimepicker: EndDatum">
                                             <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
@@ -123,15 +121,16 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <textarea rows="2" data-bind="value: Text" style="min-width: 300px"></textarea>
+                                    <textarea rows="2" ng-model="termin.text" style="min-width: 300px"></textarea>
+                                </td>
+                                <td>
+                                    <a href="#" title="Löschen" class="icon-trash" ng-click="deleteTermin(termin)"></a>
                                 </td>
                             </tr>
-                            <!-- /ko -->
-
                         </tbody>
                     </table>
 
-                    <a class="btn" data-bind="click: addTermin">Termin hinzufügen</a>
+                    <a class="btn" ng-click="addTermin()">Termin hinzufügen</a>
                 </div>
                 <div class="tab-pane" id="vorschau">
                     <div class="creole-preview" ng-bind-html="preview"></div>
@@ -146,9 +145,7 @@
             </div>
 
             <br />
-
         </div>
-
 
     </div>
 </div>

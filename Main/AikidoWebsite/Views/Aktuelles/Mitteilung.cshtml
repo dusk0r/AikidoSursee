@@ -6,6 +6,11 @@
 
 <h2>Mitteilung</h2>
 
+@if (User.IsInRole("admin"))
+{
+    <a class="btn" href="/Aktuelles/EditMitteilung?id=@Model.Mitteilung.Id.Split("/")[1]">Mitteilung bearbeiten</a><br />
+}
+
 <h3>@Model.Mitteilung.Titel</h3>
 von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d. MMMM yyyy HH:mm")
 <br /><br />
@@ -22,7 +27,7 @@ von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d.
     <ul>
         @foreach (var datei in Model.Dateien)
         {
-            <li><a href="/Content/File/@datei.Id" title="@datei.DateiName">@datei.Bezeichnung</a></li>
+            <li><a href="/Content/File/@datei.Id.Split("/")[1]" title="@datei.DateiName">@datei.Bezeichnung</a></li>
         }
     </ul>
 
@@ -35,26 +40,26 @@ von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d.
     <ul>
         @foreach (var termin in Model.Termine)
         {
-        <li>
-            @{
-                string terminStr = String.Empty;
-                string timeStr = String.Empty;
-                if (termin.EndDatum == null)
-                {
-                    terminStr = termin.StartDatum.ToShortDateString() + " " + termin.StartDatum.ToShortTimeString();
+            <li>
+                @{
+                    string terminStr = String.Empty;
+                    string timeStr = String.Empty;
+                    if (termin.EndDatum == null)
+                    {
+                        terminStr = termin.StartDatum.ToShortDateString() + " " + termin.StartDatum.ToShortTimeString();
+                    }
+                    else if (termin.StartDatum.Date == termin.EndDatum.Value.Date)
+                    {
+                        terminStr = termin.StartDatum.ToShortDateString();
+                        timeStr = termin.StartDatum.ToShortTimeString() + " bis " + termin.EndDatum.Value.ToShortTimeString();
+                    }
+                    else
+                    {
+                        terminStr = termin.StartDatum.ToShortDateString() + " bis " + termin.EndDatum.Value.ToShortDateString();
+                    }
                 }
-                else if (termin.StartDatum.Date == termin.EndDatum.Value.Date)
-                {
-                    terminStr = termin.StartDatum.ToShortDateString();
-                    timeStr = termin.StartDatum.ToShortTimeString() + " bis " + termin.EndDatum.Value.ToShortTimeString();
-                }
-                else
-                {
-                    terminStr = termin.StartDatum.ToShortDateString() + " bis " + termin.EndDatum.Value.ToShortDateString();
-                }
-            }
-            @terminStr&nbsp;&nbsp;&nbsp;<i>@timeStr</i>&nbsp;&nbsp;&nbsp;<b>@termin.Text</b>
-        </li>
+                @terminStr&nbsp;&nbsp;&nbsp;<i>@timeStr</i>&nbsp;&nbsp;&nbsp;<b>@termin.Text</b>
+            </li>
         }
     </ul>
 
@@ -62,4 +67,3 @@ von @Model.Mitteilung.AutorName, @Model.Mitteilung.ErstelltAm.ToString("dddd, d.
 }
 
 <a href="javascript: window.history.back();" class="btn btn-small btn-primary">Zurück zu den Mitteilungen</a>
-

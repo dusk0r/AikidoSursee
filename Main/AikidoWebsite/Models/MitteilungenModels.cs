@@ -68,11 +68,23 @@ namespace AikidoWebsite.Web.Models
 
     public class DateiModel
     {
+        public string Id { get; set; }
         public string DateiName { get; set; }
         public string Bezeichnung { get; set; }
-        public string Id { get; set; }
         public string ContentType { get; set; }
         public long Size { get; set; }
+
+        public static DateiModel Build(Datei datei)
+        {
+            return new DateiModel
+            {
+                Id = datei.Id,
+                DateiName = datei.Name,
+                Bezeichnung = datei.Beschreibung,
+                ContentType = datei.MimeType,
+                Size = datei.Bytes
+            };
+        }
     }
 
     public class TerminModel

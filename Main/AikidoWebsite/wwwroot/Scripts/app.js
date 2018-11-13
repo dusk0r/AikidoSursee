@@ -27,6 +27,31 @@
             return input.split('/')[1];
         };
     })
+    .filter('bytes', function ()
+    {
+        return function (bytes, precision)
+        {
+            if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+            if (typeof precision === 'undefined') precision = 1;
+            var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'],
+                number = Math.floor(Math.log(bytes) / Math.log(1024));
+            return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+        };
+    })
+    .directive("selectNgFiles", function ()
+    {
+        return {
+            require: "ngModel",
+            link: function postLink(scope, elem, attrs, ngModel)
+            {
+                elem.on("change", function (e)
+                {
+                    var files = elem[0].files;
+                    ngModel.$setViewValue(files);
+                });
+            }
+        };
+    })
     .directive('syntaxHelp', function ()
     {
         return {
@@ -162,6 +187,9 @@
             scope: {},
             controller: ["$scope", "$http", "$location", "$sce", function ($scope, $http, $location, $sce)
             {
+                $scope.uploadFiles = [];
+                $scope.uploadFileBezeichnung = undefined;
+
                 function loadMitteilung(mitteilungId)
                 {
                     $http.get('/Aktuelles/LoadMitteilungEditModel', { params: { id: mitteilungId } }).then(function (resp) 
@@ -175,6 +203,28 @@
                     $http.post('/Aktuelles/ParseCreole', { text: $scope.data.mitteilung.text }).then(function (resp)
                     {
                         $scope.preview = $sce.trustAsHtml(resp.data);
+                    });
+                };
+
+                $scope.uploadFile = function ()
+                {
+                    var fd = new FormData();
+                    fd.append("file", $scope.uploadFiles[0]);
+                    fd.append("bezeichnung", $scope.uploadFileBezeichnung);
+                    $http.post('/Aktuelles/UploadFile', fd, {
+                        transformRequest: angular.identity,
+                        headers: { 'Content-Type': undefined }
+                    }).then(function (resp)
+                    {
+                        console.log($scope.uploadFiles[0]);
+                        $scope.data.dateien.push({
+                            id: resp.data,
+                            dateiName: $scope.uploadFiles[0].name,
+                            bezeichnung: $scope.uploadFileBezeichnung,
+                            contentType: $scope.uploadFiles[0].type,
+                            size: $scope.uploadFiles[0].size
+                        });
+                        $scope.data.mitteilung.dateiIds.push(resp.data);
                     });
                 };
 

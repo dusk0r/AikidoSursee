@@ -108,10 +108,13 @@ namespace AikidoWebsite.Web.Controllers
             }
             else
             {
-                var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
+                var mitteilung = DocumentSession
+                    .Include<Mitteilung>(m => m.TerminIds)
+                    .Include<Datei>(m => m.DateiIds)
+                    .Load(DocumentSession.GetRavenName<Mitteilung>(id));
                 var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
-                model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
-
+                var dateien = CreateDateiModels(mitteilung.DateiIds);
+                model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine, Dateien = dateien };
             }
 
             return Json(model);
@@ -124,18 +127,18 @@ namespace AikidoWebsite.Web.Controllers
             return model?.Text?.CreoleToHtml();
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpGet]
-        public ActionResult EditNews(string id) {
-            var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
-            var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
-            var model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
+        //[Authorize(Roles = "admin")]
+        //[HttpGet]
+        //public ActionResult EditNews(string id) {
+        //    var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
+        //    var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
+        //    var model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
 
-            // Dateien
-            model.Dateien = CreateDateiModels(mitteilung.DateiIds);
+        //    // Dateien
+        //    model.Dateien = CreateDateiModels(mitteilung.DateiIds);
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [Authorize(Roles = "admin")]
         [HttpPost]
@@ -178,12 +181,11 @@ namespace AikidoWebsite.Web.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult UploadFile([FromBody]IFormFile file, [FromBody]string bezeichnung, [FromBody]string mitteilungsId) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(mitteilungsId);
+        public JsonResult UploadFile([FromForm]IFormFile file, [FromForm]string bezeichnung) {
             var key = Guid.NewGuid().ToString();
 
-            // Entity Speichern
             var datei = new Datei {
+                Id = DocumentSession.GetRavenName<Datei>(key),
                 Name = file.FileName,
                 Beschreibung = bezeichnung,
                 MimeType = file.ContentType,
@@ -194,13 +196,11 @@ namespace AikidoWebsite.Web.Controllers
 
             using (var inputStream = file.OpenReadStream())
             {
-                DocumentSession.Advanced.Attachments.Store(datei, file.FileName, inputStream, file.ContentType);
+                DocumentSession.Advanced.Attachments.Store(datei, "datei", inputStream, file.ContentType);
+                DocumentSession.SaveChanges();
             }
 
-            mitteilung.DateiIds.Add(key);
-            DocumentSession.SaveChanges();
-
-            return RedirectToAction("EditNews", new { id = RavenDbHelper.GetPublicName(mitteilungsId) });
+            return Json(datei.Id);
         }
 
         [Authorize(Roles = "admin")]
@@ -315,16 +315,9 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         private IEnumerable<DateiModel> CreateDateiModels(IEnumerable<string> dateiKeys) {
-            return from file in DocumentSession.Load<Datei>(dateiKeys)
-                   where file.Value != null
-                   select new DateiModel
-                   {
-                       Id = file.Key,
-                       Bezeichnung = file.Value.Beschreibung,
-                       ContentType = file.Value.MimeType,
-                       DateiName = file.Value.Name,
-                       Size = file.Value.Bytes
-                   };
+            return DocumentSession.Load<Datei>(dateiKeys)
+                .Where(d => d.Value != null)
+                .Select(d => DateiModel.Build(d.Value));
         }
 
         private IEnumerable<TerminModel> CreateTerminModels(ISet<string> terminIds)
