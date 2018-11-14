@@ -38,6 +38,18 @@
             return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
         };
     })
+    .factory('creoleService', ['$http', function ($http)
+    {
+        return {
+            generatePreview: function (text)
+            {
+                return $http.post('/Aktuelles/ParseCreole', { text: text }).then(function (resp)
+                {
+                    return resp.data;
+                });
+            }
+        };
+    }])
     .directive("selectNgFiles", function ()
     {
         return {
@@ -152,7 +164,7 @@
                 };
                 $scope.deleteMitteilung = function (mitteilung)
                 {
-                    $http.delete('/Aktuelles/DeleteMitteilung/' + encodeURIComponent(mitteilung.id)).then(
+                    $http.delete('/Aktuelles/DeleteNews/' + mitteilung.id.split('/')[1]).then(
                         function () { $scope.getMitteilungen($scope.data.start); },
                         function () { alert("Konnte Mitteilung nicht löschen"); }
                     );
@@ -185,7 +197,7 @@
         return {
             restrict: 'E',
             scope: {},
-            controller: ["$scope", "$http", "$location", "$sce", function ($scope, $http, $location, $sce)
+            controller: ["$scope", "$http", "$location", "$sce", "creoleService", function ($scope, $http, $location, $sce, creoleService)
             {
                 $scope.uploadFiles = [];
                 $scope.uploadFileBezeichnung = undefined;
@@ -195,19 +207,25 @@
                     $http.get('/Aktuelles/LoadMitteilungEditModel', { params: { id: mitteilungId } }).then(function (resp) 
                     {
                         $scope.data = resp.data;
-                        $scope.data.mitteilung.html = $sce.trustAsHtml(resp.data.mitteilung.html);
+                        $scope.originalHtml = $sce.trustAsHtml(resp.data.mitteilung.html);
                     });
                 }
 
-                $scope.generatePreview = function () {
-                    $http.post('/Aktuelles/ParseCreole', { text: $scope.data.mitteilung.text }).then(function (resp)
+                $scope.generatePreview = function ()
+                {
+                    creoleService.generatePreview($scope.data.mitteilung.text).then(function (text)
                     {
-                        $scope.preview = $sce.trustAsHtml(resp.data);
+                        $scope.preview = $sce.trustAsHtml(text);
                     });
                 };
 
                 $scope.uploadFile = function ()
                 {
+                    if ($scope.uploadFiles.length === 0)
+                    {
+                        return;
+                    }
+
                     var fd = new FormData();
                     fd.append("file", $scope.uploadFiles[0]);
                     fd.append("bezeichnung", $scope.uploadFileBezeichnung);
@@ -225,7 +243,63 @@
                             size: $scope.uploadFiles[0].size
                         });
                         $scope.data.mitteilung.dateiIds.push(resp.data);
+                        $scope.uploadFiles = [];
+                        $scope.uploadFileBezeichnung = undefined;
                     });
+                };
+
+                $scope.save = function ()
+                {
+                    $http.post('/Aktuelles/SaveNews', $scope.data).then(function (resp)
+                    {
+                        $scope.data.mitteilung.id = resp.data;
+
+                        // Update Original
+                        creoleService.generatePreview($scope.data.mitteilung.text).then(function (text)
+                        {
+                            console.log(text);
+                            $scope.originalHtml = $sce.trustAsHtml(text);
+                        });
+                    });
+                };
+
+                $scope.discard = function ()
+                {
+                    loadMitteilung($scope.data.mitteilung.id ? $scope.data.mitteilung.id.split('/')[1] : null);
+                };
+
+                $scope.delete = function ()
+                {
+                    $http.delete('/Aktuelles/DeleteNews/' + $scope.data.mitteilung.id.split('/')[1]).then(function ()
+                    {
+                        document.location.href = "/Aktuelles";
+                    });
+                };
+
+                $scope.deleteFile = function (datei)
+                {
+                    $scope.data.mitteilung.dateiIds = $scope.data.mitteilung.dateiIds.filter(function (element)
+                    {
+                        return element !== datei.id;
+                    });
+                    $scope.data.dateien = $scope.data.dateien.filter(function (element)
+                    {
+                        return element.id !== datei.id;
+                    });
+                    $scope.data.deletedDateiIds.push(datei.id);
+                };
+
+                $scope.deleteTermin = function (termin)
+                {
+                    $scope.data.mitteilung.terminIds = $scope.data.mitteilung.terminIds.filter(function (element)
+                    {
+                        return element !== termin.id;
+                    });
+                    $scope.data.termine = $scope.data.termine.filter(function (element)
+                    {
+                        return element.id !== termin.id;
+                    });
+                    $scope.data.deletedTerminIds.push(termin.id);
                 };
 
                 var id = $location.search()['id'];

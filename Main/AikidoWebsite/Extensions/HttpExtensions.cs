@@ -1,10 +1,24 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace AikidoWebsite.Web.Extensions
 {
     public static class HttpExtensions
     {
+        public static string GetEmailAddress(this IIdentity identity)
+        {
+            if (identity is ClaimsIdentity claimsIdentity)
+            {
+                var emailClaim = claimsIdentity.Claims.FirstOrDefault(c => c.Type== "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress");
+                return emailClaim?.Value;
+            }
+
+            return null;
+        }
+
         public static string GetBaseUrl(this HttpContext context)
         {
             var builder = new StringBuilder();

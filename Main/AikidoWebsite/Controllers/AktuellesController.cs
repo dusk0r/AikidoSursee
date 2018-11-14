@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 using AikidoWebsite.Data.Extensions;
+using AikidoWebsite.Data.Index;
+using Raven.Client.Documents.Linq;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -54,25 +56,6 @@ namespace AikidoWebsite.Web.Controllers
             };
 
             return View(model);
-        }
-
-        [HttpDelete]
-        [Authorize(Roles = "admin")]
-        public ActionResult DeleteMitteilung(string id)
-        {
-            // TODO: Bessere Lösung finden
-            id = System.Net.WebUtility.UrlDecode(id);
-            var mitteilung = DocumentSession.Load<Mitteilung>(id);
-            if (mitteilung != null)
-            {
-                DocumentSession.Delete(mitteilung);
-                DocumentSession.SaveChanges();
-                return Json(true);
-            }
-            else
-            {
-                return Json(false);
-            }
         }
 
         [HttpGet]
@@ -127,56 +110,46 @@ namespace AikidoWebsite.Web.Controllers
             return model?.Text?.CreoleToHtml();
         }
 
-        //[Authorize(Roles = "admin")]
-        //[HttpGet]
-        //public ActionResult EditNews(string id) {
-        //    var mitteilung = DocumentSession.Include<Mitteilung>(m => m.TerminIds).Load(DocumentSession.GetRavenName<Mitteilung>(id));
-        //    var termine = DocumentSession.Load<Termin>(mitteilung.TerminIds).Values;
-        //    var model = new EditMitteilungModel { Mitteilung = MitteilungModel.Build(mitteilung), Termine = termine };
-
-        //    // Dateien
-        //    model.Dateien = CreateDateiModels(mitteilung.DateiIds);
-
-        //    return View(model);
-        //}
-
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public JsonResult EditNews(EditMitteilungModel model) {
-            //var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.Name));
+        public JsonResult SaveNews([FromBody] EditMitteilungModel model) {
+            var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.GetEmailAddress()));
 
-            //PersistTermine(model.Termine, benutzer);
+            PersistTermine(model.Termine, model.DeletedTerminIds, benutzer);
+            DeleteUnusedFiles(model.DeletedDateiIds);
 
-            //// TODO, Validate ...
-            //Mitteilung mitteilung = model.Mitteilung;
-            //if (mitteilung.IsNew()) {
-            //    mitteilung.AutorId = benutzer.Id;
-            //    mitteilung.ErstelltAm = Clock.Now;
-            //    mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
+            var mitteilung = model.Mitteilung.Id != null ?
+                DocumentSession.Load<Mitteilung>(model.Mitteilung.Id) :
+                new Mitteilung { ErstelltAm = Clock.Now };
 
-            //    DocumentSession.Store(mitteilung);
-            //    DocumentSession.SaveChanges();
+            mitteilung.AutorId = benutzer.Id;
+            mitteilung.TerminIds = model.Mitteilung.TerminIds;
+            mitteilung.DateiIds = model.Mitteilung.DateiIds;
+            mitteilung.Titel = model.Mitteilung.Titel;
+            mitteilung.Text = model.Mitteilung.Text;
 
-            //    // Auf Index warten
-            //    DocumentSession.Query<Mitteilung>()
-            //        .Customize(c => c.WaitForNonStaleResults())
-            //        .Take(0)
-            //        .ToArray();
+            DocumentSession.Advanced.WaitForIndexesAfterSaveChanges();
+            DocumentSession.Store(mitteilung);
+            DocumentSession.SaveChanges();
 
-            //    return Json(mitteilung.Id);
-            //} else {
-            //    mitteilung = DocumentSession.Load<Mitteilung>(model.Mitteilung.Id);
-            //    mitteilung.AutorId = benutzer.Id;
-            //    mitteilung.Titel = model.Mitteilung.Titel;
-            //    mitteilung.Text = model.Mitteilung.Text;
-            //    mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
+            return Json(mitteilung.Id);
+        }
 
-            //    DocumentSession.Advanced.WaitForIndexesAfterSaveChanges();
-            //    DocumentSession.SaveChanges();
+        [Authorize(Roles = "admin")]
+        [HttpDelete]
+        public JsonResult DeleteNews(string id)
+        {
+            var mitteilung = DocumentSession.Load<Mitteilung>(DocumentSession.GetRavenName<Mitteilung>(id));
 
-            //    return Json(mitteilung.Id);
-            //}
-            return null;
+            foreach (var terminId in mitteilung.TerminIds)
+            {
+                DocumentSession.Delete(terminId);
+            }
+            DeleteUnusedFiles(mitteilung.DateiIds);
+            DocumentSession.Delete(mitteilung);
+            DocumentSession.SaveChanges();
+
+            return Json(true);
         }
 
         [Authorize(Roles = "admin")]
@@ -203,24 +176,7 @@ namespace AikidoWebsite.Web.Controllers
             return Json(datei.Id);
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpGet]
-        public ActionResult DeleteFile(string mitteilungsId, string fileId) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.GetPublicName(mitteilungsId));
-
-            if (mitteilung != null) {
-                mitteilung.DateiIds.Remove(fileId);
-                DocumentSession.SaveChanges();
-            }
-
-            //dbCommands.DeleteAttachment(fileId, null);
-
-            return RedirectToAction("EditNews", new { id = mitteilungsId });
-        }
-
-        private void PersistTermine(IEnumerable<Termin> termine, Benutzer benutzer) {
+        private void PersistTermine(IEnumerable<Termin> termine, IEnumerable<string> deletedTermine, Benutzer benutzer) {
             foreach (var termin in termine) {
                 // TODO, Validate ...
                 if (termin.IsNew()) {
@@ -239,16 +195,10 @@ namespace AikidoWebsite.Web.Controllers
                     existingTermin.Sequnce += 1;
                 }
             }
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "admin")]
-        public ActionResult RemoveNews(string id) {
-            var mitteilung = DocumentSession.Load<Mitteilung>(RavenDbHelper.GetPublicName(id));
-
-            DocumentSession.Delete(mitteilung);
-            DocumentSession.SaveChanges();
-            return Redirect("/Aktuelles");
+            foreach (var deletedTermin in deletedTermine)
+            {
+                DocumentSession.Delete(deletedTermin);
+            }
         }
 
         [HttpGet]
@@ -357,6 +307,22 @@ namespace AikidoWebsite.Web.Controllers
             model.IsAdmin = User.IsInRole("admin");
 
             return model;
+        }
+
+        private void DeleteUnusedFiles(IEnumerable<string> dateiIds)
+        {
+            var attachmentIds = dateiIds.Select(id => id.Split('/')[1]).ToArray();
+
+            // TODO: FileUsageBySource verwenden
+            var filesToDelete = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
+                .Where(fu => fu.Count <= 1)
+                .Where(fu => fu.AttachmentId.In(attachmentIds))
+                .ToList();
+
+            foreach (var file in filesToDelete)
+            {
+                DocumentSession.Delete(DocumentSession.GetRavenName<Datei>(file.AttachmentId));
+            }
         }
 
         private static CalendarEvent CreateEvent(Termin termin) {

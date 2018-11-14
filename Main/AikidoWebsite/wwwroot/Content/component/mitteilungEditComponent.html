@@ -10,9 +10,9 @@
         <h2 ng-show="data.mitteilung.id">Mitteilung bearbeiten:</h2>
 
         <div class="btn-group">
-            <a href="#" class="btn btn-primary" ng-click="save()">Speichern</a>
-            <a href="#" class="btn btn-primary" ng-click="discard()">Verwerfen</a>
-            <a href="#" class="btn btn-primary" ng-click="delete()">Löschen</a>
+            <a class="btn btn-primary" ng-click="save()">Speichern</a>
+            <a class="btn btn-primary" ng-click="discard()">Verwerfen</a>
+            <a class="btn btn-primary" ng-click="delete()" ng-show="data.mitteilung.id">Löschen</a>
         </div>
 
         <div class="control-group" ng-class="{ error: !data.mitteilung.titel }">
@@ -38,7 +38,7 @@
                     </div>
 
                     <div>
-                        <h4>Dateien</h4>
+                        <h4>Angehängte Dateien</h4>
 
                         <span ng-show="data.dateien.length === 0">
                             <i>Keine Dateien</i>
@@ -69,7 +69,7 @@
                                         {{ datei.size | bytes }}
                                     </td>
                                     <td>
-                                        <a href="#" title="Löschen" class="icon-trash" ng-click="deleteFile(datei)"></a>
+                                        <a title="Löschen" class="icon-trash" ng-click="deleteFile(datei)"></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -124,7 +124,7 @@
                                     <textarea rows="2" ng-model="termin.text" style="min-width: 300px"></textarea>
                                 </td>
                                 <td>
-                                    <a href="#" title="Löschen" class="icon-trash" ng-click="deleteTermin(termin)"></a>
+                                    <a title="Löschen" class="icon-trash" ng-click="deleteTermin(termin)"></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -136,7 +136,7 @@
                     <div class="creole-preview" ng-bind-html="preview"></div>
                 </div>
                 <div class="tab-pane" id="currentV">
-                    <div class="creole-preview" ng-bind-html="data.mitteilung.html">
+                    <div class="creole-preview" ng-bind-html="originalHtml">
                     </div>
                 </div>
                 <div class="tab-pane" id="creole">

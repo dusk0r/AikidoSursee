@@ -30,8 +30,8 @@ namespace AikidoWebsite.Web.Models
         public string AutorName { get; set; }
         public string AutorEmail { get; set; }
         public string Text { get; set; }
-        public ISet<string> TerminIds { get; set; }
-        public ISet<string> DateiIds { get; set; }
+        public ISet<string> TerminIds { get; set; } = new HashSet<string>();
+        public ISet<string> DateiIds { get; set; } = new HashSet<string>();
         public string Html { get; set; }
 
         public static MitteilungModel Build(Mitteilung mitteilung, Benutzer benutzer = null)
@@ -57,12 +57,16 @@ namespace AikidoWebsite.Web.Models
         public MitteilungModel Mitteilung { get; set; }
         public IEnumerable<Termin> Termine { get; set; }
         public IEnumerable<DateiModel> Dateien { get; set; }
+        public IList<string> DeletedDateiIds { get; set; }
+        public IList<string> DeletedTerminIds { get; set; }
 
         public EditMitteilungModel()
         {
             this.Mitteilung = new MitteilungModel();
-            this.Termine = new List<Termin>();
+            this.Termine =  new List<Termin>();
             this.Dateien = new List<DateiModel>();
+            this.DeletedDateiIds = new List<string>();
+            this.DeletedTerminIds = new List<string>();
         }
     }
 
