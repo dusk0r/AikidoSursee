@@ -54,7 +54,7 @@
     {
         return {
             require: "ngModel",
-            link: function postLink(scope, elem, attrs, ngModel)
+            link: function (scope, elem, attrs, ngModel)
             {
                 elem.on("change", function (e)
                 {
@@ -62,6 +62,55 @@
                     ngModel.$setViewValue(files);
                 });
             }
+        };
+    })
+    .directive('dateTimePicker', function ()
+    {
+        return {
+            restrict: 'E',
+            scope: {
+                datum: '=datum'
+            },
+            controller: ["$scope", "$element", "$timeout", function ($scope, $element, $timeout)
+            {
+                var parsedDate = moment($scope.datum);
+                $scope.datumInternal = parsedDate.isValid() ? parsedDate.format("DD.MM.YYYY HH:mm:ss") : undefined;
+
+                var pickerDomElement = $($element[0].children[0]);
+                pickerDomElement.datetimepicker({
+                    locale: 'de-ch',
+                    format: 'dd.MM.yyyy hh:mm:ss',
+                    useCurrent: false
+                });
+                var picker = pickerDomElement.data('datetimepicker');
+                picker.setLocalDate(parsedDate.toDate());
+
+                pickerDomElement.on('changeDate', function (evt)
+                {
+                    $timeout(function ()
+                    {
+                        $scope.datum = evt.date.toISOString();
+                    });
+                });
+
+                $scope.$watch('datumInternal', function (newValue, oldValue)
+                {
+                    if (newValue !== oldValue)
+                    {
+                        var newDate = moment(newValue, "DD.MM.YYYY HH:mm:ss");
+                        if (newDate.isValid())
+                        {
+                            console.log(newDate.toString());
+                            $scope.datum = newDate.toISOString();
+                        } else
+                        {
+                            $scope.datum = undefined;
+                        }
+                    }
+                });
+            }],
+            templateUrl: '/Content/component/dateTimePicker.html',
+            replace: true
         };
     })
     .directive('syntaxHelp', function ()

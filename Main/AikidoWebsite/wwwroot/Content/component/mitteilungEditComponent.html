@@ -99,26 +99,10 @@
                                     <input type="text" ng-model="termin.titel" placeholder="Neuer Termin" />
                                 </td>
                                 <td>
-                                    <input style="width: 120px;" type="datetime" ng-model="termin.startDatum" />
-                                    <div class="well">
-                                        <div class="input-append date datetimepicker" data-bind="datetimepicker: StartDatum">
-                                            <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
-                                            <span class="add-on">
-                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <date-time-picker datum="termin.startDatum"></date-time-picker>
                                 </td>
                                 <td>
-                                    <input style="width: 120px;" type="datetime" ng-model="termin.endDatum" />
-                                    <div class="well">
-                                        <div class="input-append date datetimepicker" data-bind="datetimepicker: EndDatum">
-                                            <input data-format="dd.MM.yyyy hh:mm:ss" type="text" style="width: 150px" />
-                                            <span class="add-on">
-                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <date-time-picker datum="termin.endDatum"></date-time-picker>
                                 </td>
                                 <td>
                                     <textarea rows="2" ng-model="termin.text" style="min-width: 300px"></textarea>
