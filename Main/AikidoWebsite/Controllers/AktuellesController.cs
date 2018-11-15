@@ -123,7 +123,7 @@ namespace AikidoWebsite.Web.Controllers
                 new Mitteilung { ErstelltAm = Clock.Now };
 
             mitteilung.AutorId = benutzer.Id;
-            mitteilung.TerminIds = model.Mitteilung.TerminIds;
+            mitteilung.TerminIds = model.Termine.Select(t => t.Id).ToSet();
             mitteilung.DateiIds = model.Mitteilung.DateiIds;
             mitteilung.Titel = model.Mitteilung.Titel;
             mitteilung.Text = model.Mitteilung.Text;
@@ -183,6 +183,7 @@ namespace AikidoWebsite.Web.Controllers
                     termin.ErstellungsDatum = Clock.Now;
                     termin.AutorId = benutzer.Id;
                     termin.AutorName = benutzer.Name;
+                    termin.Titel = termin.Titel.Trim().RemoveNewlines();
 
                     DocumentSession.Store(termin);
                 } else {
@@ -191,7 +192,6 @@ namespace AikidoWebsite.Web.Controllers
                     existingTermin.Text = termin.Text;
                     existingTermin.StartDatum = termin.StartDatum;
                     existingTermin.EndDatum = termin.EndDatum;
-                    existingTermin.Ort = termin.Ort;
                     existingTermin.Sequnce += 1;
                 }
             }
@@ -333,9 +333,8 @@ namespace AikidoWebsite.Web.Controllers
                 Endtime = termin.EndDatum ?? termin.StartDatum.AddHours(1),
                 Organizer = new Organizer(termin.AutorName, "info@aikido-sursee.ch"),
                 Summary = termin.Text ?? termin.Titel,
-                Location = termin.Ort,
-                URL = termin.URL,
-                Sequnce = termin.Sequnce
+                Sequnce = termin.Sequnce,
+                //URL TODO: URL
             };
         }
     }

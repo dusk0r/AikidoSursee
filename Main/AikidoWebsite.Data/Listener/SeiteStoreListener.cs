@@ -9,8 +9,8 @@ namespace AikidoWebsite.Data.Listener
 
     public static class SeiteStoreListener
     {
-        private static readonly Regex CreoleLink = new Regex(@"\[\[(.*\/)(.*)\]\]");
-        private static readonly Regex CreoleImage = new Regex(@"{{(.*\/)(.*)}}");
+        private static readonly Regex CreoleLink = new Regex(@"\[\[(.*\/)(.*)\]\]", RegexOptions.Compiled);
+        private static readonly Regex CreoleImage = new Regex(@"{{(.*\/)(.*)}}", RegexOptions.Compiled);
 
         public static void BeforeStore(object sender, BeforeStoreEventArgs e)
         {

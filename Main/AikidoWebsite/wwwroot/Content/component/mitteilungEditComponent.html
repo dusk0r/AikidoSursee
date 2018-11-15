@@ -3,8 +3,6 @@
         <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
     </div>
 
-    {{ data | json }}
-
     <div ng-show="data">
         <h2 ng-show="!data.mitteilung.id">Mitteilung hinzufügen:</h2>
         <h2 ng-show="data.mitteilung.id">Mitteilung bearbeiten:</h2>
@@ -69,7 +67,7 @@
                                         {{ datei.size | bytes }}
                                     </td>
                                     <td>
-                                        <a title="Löschen" class="icon-trash" ng-click="deleteFile(datei)"></a>
+                                        <button class="btn" title="Löschen" ng-click="deleteFile(datei)" tooltip><i class="icon-trash"></i></button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -108,7 +106,7 @@
                                     <textarea rows="2" ng-model="termin.text" style="min-width: 300px"></textarea>
                                 </td>
                                 <td>
-                                    <a title="Löschen" class="icon-trash" ng-click="deleteTermin(termin)"></a>
+                                    <button class="btn" title="Löschen" ng-click="deleteTermin(termin)" tooltip><i class="icon-trash"></i></button>
                                 </td>
                             </tr>
                         </tbody>

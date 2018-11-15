@@ -73,6 +73,16 @@
             },
             controller: ["$scope", "$element", "$timeout", function ($scope, $element, $timeout)
             {
+                function removeTimezone(isoDateString) // TODO: in Service auslagern
+                {
+                    if (isoDateString && isoDateString.endsWith("Z"))
+                    {
+                        return isoDateString.substring(0, isoDateString.length - 2);
+                    }
+
+                    return isoDateString;
+                }
+
                 var parsedDate = moment($scope.datum);
                 $scope.datumInternal = parsedDate.isValid() ? parsedDate.format("DD.MM.YYYY HH:mm:ss") : undefined;
 
@@ -89,7 +99,7 @@
                 {
                     $timeout(function ()
                     {
-                        $scope.datum = evt.date.toISOString();
+                        $scope.datum = removeTimezone(evt.date.toISOString());
                     });
                 });
 
@@ -100,8 +110,7 @@
                         var newDate = moment(newValue, "DD.MM.YYYY HH:mm:ss");
                         if (newDate.isValid())
                         {
-                            console.log(newDate.toString());
-                            $scope.datum = newDate.toISOString();
+                            $scope.datum = removeTimezone(newDate.toISOString());
                         } else
                         {
                             $scope.datum = undefined;
@@ -260,6 +269,16 @@
                     });
                 }
 
+                function removeTimezone(isoDateString) // TODO: in Service auslagern
+                {
+                    if (isoDateString && isoDateString.endsWith("Z"))
+                    {
+                        return isoDateString.substring(0, isoDateString.length - 2);
+                    }
+
+                    return isoDateString;
+                }
+
                 $scope.generatePreview = function ()
                 {
                     creoleService.generatePreview($scope.data.mitteilung.text).then(function (text)
@@ -336,6 +355,16 @@
                         return element.id !== datei.id;
                     });
                     $scope.data.deletedDateiIds.push(datei.id);
+                };
+
+                $scope.addTermin = function ()
+                {
+                    $scope.data.termine.push({
+                        titel: $scope.data.mitteilung.titel,
+                        startDatum: removeTimezone(new Date().toISOString()),
+                        endDatum: null,
+                        text: $scope.data.mitteilung.titel
+                    });
                 };
 
                 $scope.deleteTermin = function (termin)
