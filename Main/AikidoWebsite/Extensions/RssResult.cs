@@ -11,7 +11,7 @@ namespace AikidoWebsite.Web.Extensions
         private XDocument rssXml;
         private XElement channel;
 
-        private static readonly XNamespace namespaceAtom = "atom";
+        private static readonly XNamespace namespaceAtom = @"http://www.w3.org/2005/Atom";
 
         public RssResult(string title, string link, string description) {
             rssXml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
@@ -21,15 +21,15 @@ namespace AikidoWebsite.Web.Extensions
                 new XElement("link", link),
                 new XElement("description", description),
                 new XElement("pubDate", FormatDate(DateTime.Now)),
-                new XElement(namespaceAtom + "link", 
-                    new XAttribute("href", @"http://dallas.example.com/rss.xml"), 
-                    new XAttribute("rel", "self"), 
+                new XElement(namespaceAtom + "link",
+                    new XAttribute("href", @"https://www.aikido-sursee.ch/Aktuelles/RSS"),
+                    new XAttribute("rel", "self"),
                     new XAttribute("type", "application/rss+xml"))
             );
 
             rssXml.Add(new XElement("rss", 
                 new XAttribute("version", "2.0"), 
-                new XAttribute(XNamespace.Xmlns + "atom", @"http://www.w3.org/2005/Atom"),
+                new XAttribute(XNamespace.Xmlns + "atom", namespaceAtom),
                 channel)
             );
         }
@@ -37,6 +37,7 @@ namespace AikidoWebsite.Web.Extensions
         public override async Task ExecuteResultAsync(ActionContext context) {
             context.HttpContext.Response.Clear();
             context.HttpContext.Response.ContentType = "application/rss+xml";
+            await context.HttpContext.Response.WriteAsync("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n\r\n");
             await context.HttpContext.Response.WriteAsync(rssXml.ToString());
         }
 
@@ -71,6 +72,11 @@ namespace AikidoWebsite.Web.Extensions
         }
 
         private string FormatDate(DateTime date) {
+            if (date.Kind == DateTimeKind.Unspecified)
+            {
+                date = DateTime.SpecifyKind(date, DateTimeKind.Local);
+            }
+
             return date.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.InvariantCulture)
                  + " "
                  + date.ToString("%K", CultureInfo.InvariantCulture).Replace(":","");
