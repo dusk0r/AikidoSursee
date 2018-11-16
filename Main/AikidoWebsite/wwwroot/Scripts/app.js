@@ -43,7 +43,7 @@
         return {
             generatePreview: function (text)
             {
-                return $http.post('/Aktuelles/ParseCreole', { text: text }).then(function (resp)
+                return $http.post('/Content/ParseCreole', { text: text }).then(function (resp)
                 {
                     return resp.data;
                 });
@@ -555,4 +555,49 @@
             templateUrl: '/Content/component/albumComponent.html',
             replace: true
         };
-    });
+    })
+.directive('seiteEdit', function ()
+{
+    return {
+        restrict: 'E',
+        scope: {},
+        controller: ["$scope", "$http", "$location", "$sce", "creoleService", function ($scope, $http, $location, $sce, creoleService)
+        {
+            function loadSeite(seiteId)
+            {
+                $http.get('/Content/LoadSeiteEditModel', { params: { id: seiteId } }).then(function (resp)
+                {
+                    $scope.seite = resp.data;
+                    $scope.html = $sce.trustAsHtml(resp.data.html);
+                    $scope.generatePreview();
+                });
+            }
+
+            $scope.save = function ()
+            {
+                $http.post('/Content/Edit', $scope.seite).then(function (resp)
+                {
+                    $scope.seite.revision = resp.data;
+                    creoleService.generatePreview($scope.seite.text).then(function (text)
+                    {
+                        $scope.html = $sce.trustAsHtml(text);
+                    });
+                });
+            };
+
+            $scope.generatePreview = function ()
+            {
+                creoleService.generatePreview($scope.seite.text).then(function (text)
+                {
+                    $scope.preview = $sce.trustAsHtml(text);
+                });
+            };
+
+            var id = $location.search()['id'];
+            loadSeite(id);
+
+        }],
+        templateUrl: '/Content/component/siteEditComponent.html',
+        replace: true
+    };
+});

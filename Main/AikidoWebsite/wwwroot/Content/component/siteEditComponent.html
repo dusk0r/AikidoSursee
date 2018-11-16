@@ -1,0 +1,59 @@
+﻿<div>
+    <div class="btn-group">
+        <button class="btn btn-primary" ng-show="seite.revision === -1" ng-click="save()">erstellen</button>
+        <button class="btn btn-primary" ng-show="seite.revision >= 0" ng-click="save()">speichern</button>
+        <span class="btn disabled"><b>Revision:</b> {{ seite.revision >= 0 ? seite.revision : 'neu' }}</span>
+    </div>
+
+    <br /><br />
+
+    <div class="wmd-panel">
+        <div id="wmd-button-bar"></div>
+        <textarea class="creole-input" id="creole-input" wrap="soft" ng-model="seite.text" ng-change="generatePreview()" ng-model-options="{ debounce: 400 }"></textarea>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
+        <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
+        <li><a href="#dateien" data-toggle="tab">Dateien</a></li>
+        <li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane renderContent active" id="vorschau">
+            <div ng-bind-html="preview"></div>
+            <br />
+            <!--<div class="alert alert-warning" role="alert">
+                Noch nicht gespeichert
+            </div>-->
+        </div>
+        <div class="tab-pane renderContent" id="currentV">
+            <div ng-bind-html="html"></div>
+            <br />
+        </div>
+        <div class="tab-pane" id="creole">
+            <syntax-help></syntax-help>
+        </div>
+        <div class="tab-pane" id="dateien">
+            <!--<table class="filesTable table">
+                <tr>
+                    <th>Beschreibung</th>
+                    <th>Link</th>
+                    <th></th>
+                </tr>
+                foreach (var file in files) {
+                <tr>
+                    <td>file.Beschreibung</td>
+                    <td>/Content/File/file.AttachmentId</td>
+                    {
+                    var textToInsert = file.IsImage ? "/Content/File/" + file.AttachmentId + "" : "[[/Content/File/" + file.AttachmentId + "]]";
+                    }
+                    <td><a href="javascript:insertText('textToInsert')">Einfügen</a></td>
+                </tr>
+                }
+            </table>-->
+
+        </div>
+    </div>
+</div>

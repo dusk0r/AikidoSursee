@@ -7,5 +7,5 @@
 <h2><span style="color: red;">404</span> Seite nicht gefunden: @Model</h2>
 
 @if (User.IsInRole("admin")) {
-    @Html.ActionLink("Seite erstellen", "Edit", new { id = Model});
+    <a href="/Content/Edit?id=@Model">Seite erstellen</a>
 }

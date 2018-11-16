@@ -1,10 +1,4 @@
-﻿model AikidoWebsite.Web.Models.SeiteModel
-{
-    ViewBag.Title = "Bearbeiten";
-    var files = ViewData["Files"] as IList<Datei>;
-}
-
-<style type="text/css">
+﻿<style type="text/css">
     .creole-input {
         width: 800px;
         height: 400px;
@@ -22,133 +16,91 @@
     }
 </style>
 
-<h2>Seite 'Model.Name' bearbeiten</h2>
+<h2>Seite bearbeiten</h2>
 
-using (Html.BeginForm("Edit", "Content", FormMethod.Post, new { id = "contentForm" })) {
+<seite-edit></seite-edit>
 
-    <div class="btn-group">
-        @*<input type="submit" value="speichern" class="btn btn-primary" />*@
-        <button class="btn btn-primary" onclick="save(); return false;">speichern</button>
-        <span class="btn disabled"><b>Revision:</b> @Model.Revision</span>
-    </div>
+@*using (Html.BeginForm("Edit", "Content", FormMethod.Post, new { id = "contentForm" })) {
 
-    <br /><br />
 
-    <div class="wmd-panel">
-        <div id="wmd-button-bar"></div>
-        Html.TextAreaFor(x => x.Markdown, new { clazz = "creole-input", id = "creole-input", wrap = "off" })
-    </div>
 
-    Html.HiddenFor(x => x.Name)
+    @section Footer {
+        <script type="text/javascript">
+            $(function ()
+            {
+                // Creole Preview aktivieren
+                var input = document.getElementById("creole-input");
+                var preview = document.getElementById("creole-preview");
+                var creole = new Parse.Simple.Creole({
+                    forIE: document.all,
+                    interwiki: {},
+                    linkFormat: ''
+                });
 
-}
+                var render = function ()
+                {
+                    preview.innerHTML = "";
+                    creole.parse(preview, input.value);
+                };
 
-<ul class="nav nav-tabs">
-    <li class="active"><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
-    <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
-    <li><a href="#dateien" data-toggle="tab">Dateien</a></li>
-    <li><a href="#creole" data-toggle="tab">Creole Hilfe</a></li>
-</ul>
+                input.onkeyup = function () { render(); }
 
-<div class="tab-content">
-
-    <div class="tab-pane active" id="vorschau">
-        <div id="creole-preview" class="creole-preview renderContent"></div>
-    </div>
-    <div class="tab-pane renderContent" id="currentV">
-        Html.Raw(Model.Html)
-    </div>
-    <div class="tab-pane" id="creole">
-        Html.Partial("CreoleHelp")
-    </div>
-    <div class="tab-pane" id="dateien">
-        <table class="filesTable table">
-            <tr>
-                <th>Beschreibung</th>
-                <th>Link</th>
-                <th></th>
-            </tr>
-            foreach (var file in files) {
-    <tr>
-        <td>file.Beschreibung</td>
-        <td>/Content/File/file.AttachmentId</td>
-        {
-                var textToInsert = file.IsImage ? "{{/Content/File/" + file.AttachmentId + "}}" : "[[/Content/File/" + file.AttachmentId + "]]";
-        }
-        <td><a href="javascript:insertText('textToInsert')">Einfügen</a></td>
-    </tr>
-}
-        </table>
-
-    </div>
-</div>
-
-@section Footer {
-    <script type="text/javascript">
-        $(function () {
-            // Creole Preview aktivieren
-            var input = document.getElementById("creole-input");
-            var preview = document.getElementById("creole-preview");
-            var creole = new Parse.Simple.Creole({
-                forIE: document.all,
-                interwiki: {},
-                linkFormat: ''
+                render();
             });
 
-            var render = function () {
-                preview.innerHTML = "";
-                creole.parse(preview, input.value);
-            };
-
-            input.onkeyup = function () { render(); }
-
-            render();
-        });
-
-        function save() {
-            var data = { Name: 'Model.Name', Markdown: $("Markdown").value };
-            $.post("/Content/Edit", $("#contentForm").serialize())
-            .done(function (data) {
-                location.href = window.location.href.split('?')[0] + "?saved=true";
-                //location.reload(true);
-            })
-            .fail(function () { });
-
-        }
-
-        function insertText(text) {
-            $("#creole-input").insertAtCaret(text);
-        }
-
-        $(document).ready(function() {
-            // On Insert
-            jQuery.fn.extend({
-                insertAtCaret: function (myValue) {
-                    return this.each(function (i) {
-                        if (document.selection) {
-                            //For browsers like Internet Explorer
-                            this.focus();
-                            sel = document.selection.createRange();
-                            sel.text = myValue;
-                            this.focus();
-                        }
-                        else if (this.selectionStart || this.selectionStart == '0') {
-                            //For browsers like Firefox and Webkit based
-                            var startPos = this.selectionStart;
-                            var endPos = this.selectionEnd;
-                            var scrollTop = this.scrollTop;
-                            this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos, this.value.length);
-                            this.focus();
-                            this.selectionStart = startPos + myValue.length;
-                            this.selectionEnd = startPos + myValue.length;
-                            this.scrollTop = scrollTop;
-                        } else {
-                            this.value += myValue;
-                            this.focus();
-                        }
+            function save()
+            {
+                var data = { Name: 'Model.Name', Markdown: $("Markdown").value };
+                $.post("/Content/Edit", $("#contentForm").serialize())
+                    .done(function (data)
+                    {
+                        location.href = window.location.href.split('?')[0] + "?saved=true";
+                        //location.reload(true);
                     })
-                }
+                    .fail(function () { });
+
+            }
+
+            function insertText(text)
+            {
+                $("#creole-input").insertAtCaret(text);
+            }
+
+            $(document).ready(function ()
+            {
+                // On Insert
+                jQuery.fn.extend({
+                    insertAtCaret: function (myValue)
+                    {
+                        return this.each(function (i)
+                        {
+                            if (document.selection)
+                            {
+                                //For browsers like Internet Explorer
+                                this.focus();
+                                sel = document.selection.createRange();
+                                sel.text = myValue;
+                                this.focus();
+                            }
+                            else if (this.selectionStart || this.selectionStart == '0')
+                            {
+                                //For browsers like Firefox and Webkit based
+                                var startPos = this.selectionStart;
+                                var endPos = this.selectionEnd;
+                                var scrollTop = this.scrollTop;
+                                this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos, this.value.length);
+                                this.focus();
+                                this.selectionStart = startPos + myValue.length;
+                                this.selectionEnd = startPos + myValue.length;
+                                this.scrollTop = scrollTop;
+                            } else
+                            {
+                                this.value += myValue;
+                                this.focus();
+                            }
+                        })
+                    }
+                });
             });
-        });
-    </script>
-}
+        </script>
+    }*@

@@ -5,16 +5,15 @@ using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
 using AikidoWebsite.Data;
 using AikidoWebsite.Data.Entities;
+using AikidoWebsite.Data.Index;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
-using Raven.Client.Documents.Session;
-using AikidoWebsite.Data.Extensions;
-using AikidoWebsite.Data.Index;
 using Raven.Client.Documents.Linq;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -101,13 +100,6 @@ namespace AikidoWebsite.Web.Controllers
             }
 
             return Json(model);
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public string ParseCreole([FromBody] CreoleModel model)
-        {
-            return model?.Text?.CreoleToHtml();
         }
 
         [Authorize(Roles = "admin")]

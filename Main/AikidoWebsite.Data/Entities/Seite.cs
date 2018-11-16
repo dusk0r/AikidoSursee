@@ -9,7 +9,7 @@ namespace AikidoWebsite.Data.Entities
         public string Id { get; set; }
         public string Name { get; set; }
         public DateTime ErstellungsDatum { get; set; }
-        public string Autor { get; set; }
+        public string Autor { get; set; } // TODO: AutorId verwenden
         public int Revision { get; set; }
         public string WikiCreole { get; set; }
 
