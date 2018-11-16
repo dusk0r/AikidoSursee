@@ -222,7 +222,7 @@
                 };
                 $scope.deleteMitteilung = function (mitteilung)
                 {
-                    $http.delete('/Aktuelles/DeleteNews/' + mitteilung.id.split('/')[1]).then(
+                    $http.delete('/Aktuelles/DeleteMitteilung/' + mitteilung.id.split('/')[1]).then(
                         function () { $scope.getMitteilungen($scope.data.start); },
                         function () { alert("Konnte Mitteilung nicht löschen"); }
                     );
@@ -318,7 +318,7 @@
 
                 $scope.save = function ()
                 {
-                    $http.post('/Aktuelles/SaveNews', $scope.data).then(function (resp)
+                    $http.post('/Aktuelles/SaveMitteilung', $scope.data).then(function (resp)
                     {
                         $scope.data.mitteilung.id = resp.data;
 
@@ -338,7 +338,7 @@
 
                 $scope.delete = function ()
                 {
-                    $http.delete('/Aktuelles/DeleteNews/' + $scope.data.mitteilung.id.split('/')[1]).then(function ()
+                    $http.delete('/Aktuelles/DeleteMitteilung/' + $scope.data.mitteilung.id.split('/')[1]).then(function ()
                     {
                         document.location.href = "/Aktuelles";
                     });
@@ -471,6 +471,17 @@
             scope: {},
             controller: ["$scope", "$http", function ($scope, $http)
             {
+                // Perload zum schnelleren Anzeigen
+                $scope.albums = [{
+                    thumbnailUrl: "/Content/images/dojo/dojo3p.jpg",
+                    beschreibung: "Bilder vom Dojo Sursee",
+                    titel: "Das Dojo",
+                    photosetId: "sursee",
+                    creationDate: "2012-11-17T00:00:00",
+                    link: "/Dojo/Bilder"
+                }];
+                $scope.currentAlbum = $scope.albums[0];
+
                 function loadAlbums()
                 {
                     $http.get('/Dojo/ListAlbums').then(function (resp) 

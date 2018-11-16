@@ -68,23 +68,23 @@ namespace AikidoWebsite.Common.VCalendar
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("BEGIN:VEVENT");
-            sb.AppendLine("UID:" + UID);
-            sb.AppendLine("SEQUENCE:" + Sequnce);
-            sb.AppendLine("DTSTAMP:" + FormatDateTime(Timestamp));
-            sb.AppendLine(Organizer.ToString());
-            sb.AppendLine("DTSTART:" + FormatDateTime(Starttime));
-            sb.AppendLine("DTEND:" + FormatDateTime(Endtime));
-            sb.AppendLine("SUMMARY:" + FormatText(Summary));
+            sb.Append("BEGIN:VEVENT\r\n");
+            sb.Append("UID:" + UID + "\r\n");
+            sb.Append("SEQUENCE:" + Sequnce + "\r\n");
+            sb.Append("DTSTAMP:" + FormatDateTime(Timestamp) + "\r\n");
+            sb.Append(Organizer.ToString() + "\r\n");
+            sb.Append("DTSTART:" + FormatDateTime(Starttime) + "\r\n");
+            sb.Append("DTEND:" + FormatDateTime(Endtime) + "\r\n");
+            sb.Append("SUMMARY:" + FormatText(Summary) + "\r\n");
             if (!String.IsNullOrWhiteSpace(URL))
             {
-                sb.AppendLine("URL:" + URL);
+                sb.Append("URL:" + URL + "\r\n");
             }
             if (!String.IsNullOrWhiteSpace(Location))
             {
-                sb.AppendLine("LOCATION:" + FormatText(Location));
+                sb.Append("LOCATION:" + FormatText(Location) + "\r\n");
             }
-            sb.AppendLine("END:VEVENT");
+            sb.Append("END:VEVENT" + "\r\n");
 
             return sb.ToString();
         }

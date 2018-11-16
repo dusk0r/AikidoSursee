@@ -15,16 +15,16 @@ namespace AikidoWebsite.Common.VCalendar
 
         public override string ToString() {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("BEGIN:VCALENDAR");
-            sb.AppendLine("VERSION:2.0");
-            sb.AppendLine("CALSCALE:GREGORIAN");
-            sb.AppendLine("PRODID:-//AmigoOnline//NONSGML AikidoWebsite//DE");
+            sb.Append("BEGIN:VCALENDAR\r\n");
+            sb.Append("VERSION:2.0\r\n");
+            sb.Append("CALSCALE:GREGORIAN\r\n");
+            sb.Append("PRODID:-//AmigoOnline//NONSGML AikidoWebsite//DE\r\n");
 
             foreach (var calendarEvent in Events.Where(e => e.Summary != null)) {
                 sb.Append(calendarEvent.ToString());
             }
 
-            sb.AppendLine("END:VCALENDAR");
+            sb.Append("END:VCALENDAR\r\n");
 
             return sb.ToString();
         }

@@ -38,7 +38,6 @@
     </style>
 
     <h3>{{ album.titel }}</h3>
-    {{ album.creationDate | date:'dd.MM.yyyy' }} | {{ album.beschreibung || '-' }}
 
     <div ng-show="!currentImage">
         <i class="icon-spinner icon-spin" style="font-size:16px"></i> Lade ....
@@ -47,7 +46,7 @@
     <br />
 
     <div ng-show="currentImage">
-        <div style="position: absolute; background: rgb(230, 230, 230)">
+        <div style="position: absolute;">
             <img src="{{ currentImage.imageURL }}" />
             <div class="back" ng-click="prevImage()">
                 <span class="icon-arrow-left"></span>
@@ -55,10 +54,15 @@
             <div class="forward" ng-click="nextImage()">
                 <span class="icon-arrow-right"></span>
             </div>
+
+            <div style="position: relative">
+                <br />
+                Album Beschreibung: {{ album.beschreibung || '-' }}<br />
+                Album erstellt am: {{ album.creationDate | date:'dd.MM.yyyy' }}<br />
+                URL zum Album: <a href="{{ album.link }}" target="_blank">{{ album.link }}</a>
+            </div>
         </div>
 
-        <br />
 
-        URL zum Album: <a href="{{ album.link }}" target="_blank">{{ album.link }}</a>
     </div>
 </div>

@@ -112,7 +112,7 @@ namespace AikidoWebsite.Web.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public JsonResult SaveNews([FromBody] EditMitteilungModel model) {
+        public JsonResult SaveMitteilung([FromBody] EditMitteilungModel model) {
             var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.GetEmailAddress()));
 
             PersistTermine(model.Termine, model.DeletedTerminIds, benutzer);
@@ -137,7 +137,7 @@ namespace AikidoWebsite.Web.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpDelete]
-        public JsonResult DeleteNews(string id)
+        public JsonResult DeleteMitteilung(string id)
         {
             var mitteilung = DocumentSession.Load<Mitteilung>(DocumentSession.GetRavenName<Mitteilung>(id));
 
