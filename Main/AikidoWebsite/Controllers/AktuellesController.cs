@@ -279,6 +279,7 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         private ListMitteilungenModel CreateListMittelungenModel(int start = 0, int perPage = 5) {
+            perPage = perPage > 20 ? 5 : perPage;
             var model = new ListMitteilungenModel();
 
             QueryStatistics stats;

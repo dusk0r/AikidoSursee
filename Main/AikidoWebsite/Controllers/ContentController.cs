@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Raven.Client.Documents.Session;
+using Raven.Client.Documents.Linq;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -119,112 +120,117 @@ namespace AikidoWebsite.Web.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        [ResponseCache(NoStore = true)]
         [HttpGet]
-        public ActionResult Files() {
-            // Todo: Paging
+        public JsonResult ListFiles(int start = 0, int perPage = 10) {
+            perPage = perPage > 20 ? 10 : perPage;
             QueryStatistics stats = null;
-            var files = DocumentSession.Query<Datei>()
-                .Customize(x => x.WaitForNonStaleResults())
-                .Statistics(out stats)
-                .ToList();
 
-            var fileUsage = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
-                //.Where(x => x.AttachmentId.In(files.Select(f => f.AttachmentId))) // TODO: Implementieren
-                .ToDictionary(x => x.AttachmentId, x => x.Count);
+            var files = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
+                .Where(x => x.Name != null)
+                .Statistics(out stats)
+                .OrderByDescending(x => x.Count)
+                .Skip(start)
+                .Take(perPage)
+                .ToList();
 
             var model = new StoredDateiModel {
                 TotalCount = stats.TotalResults,
                 Start = 0,
                 Count = files.Count,
                 Dateien = files.Select(x => new StoredDateiEintragModel {
-                    Id = x.Id,
+                    Id = x.AttachmentId,
                     MimeType = x.MimeType,
-                    AttachmentId = x.AttachmentId,
                     Name = x.Name,
                     Beschreibung = x.Beschreibung,
                     Bytes = x.Bytes,
-                    UseCount = fileUsage[x.AttachmentId]
-                }).OrderByDescending(x => x.UseCount)
+                    UseCount = x.Count
+                })
             };
 
-            return View(model);
-        }
-
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public ActionResult Files(FileUploadModel model) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-
-            if (model.File != null) {
-                var key = Guid.NewGuid().ToString();
-
-                // Entity Speichern
-                var datei = new Datei {
-                    Name = model.File.FileName,
-                    Beschreibung = model.Beschreibung,
-                    MimeType = model.File.ContentType,
-                    Bytes = model.File.Length,
-                    AttachmentId = key
-                };
-
-                DocumentSession.Store(datei);
-
-                var metadata = new JObject();
-                metadata["OriginalDateiName"] = model.File.FileName;
-                metadata["ContentType"] = model.File.ContentType;
-                //dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
-
-                DocumentSession.SaveChanges();
-
-                DocumentSession.Query<Datei>()
-                    .Customize(c => c.WaitForNonStaleResults())
-                    .Take(0)
-                    .ToArray();
-
-                return RedirectToAction("Files");
-            }
-
-            return Json(null);
+            return Json(model);
         }
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public ActionResult Delete(string id) {
-            var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
-            if (datei == null) {
-                return StatusCode((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
-            }
-
-            var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
-                .Where(x => x.AttachmentId == datei.AttachmentId)
-                .ToList();
-
-            var model = new FileDeleteModel {
-                Id = id,
-                Name = datei.Name,
-                Usages = usage.Select(u => new FileUsageModel { 
-                    DocumentId = u.AttachmentId,
-                    DocumentName = u.DocumentName,
-                    DocumentUrl = CreateUrl(u)
-                }).ToList()
-            };
-
-            return View(model);
+        public ActionResult Files()
+        {
+            return View();
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public ActionResult DeleteConfirmed(string id) {
-            //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+        //[Authorize(Roles = "admin")]
+        //[HttpPost]
+        //public ActionResult Files(FileUploadModel model) {
+        //    //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
 
-            var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
-            //dbCommands.DeleteAttachment(datei.AttachmentId, null); // TODO: Implementieren
-            DocumentSession.Delete(datei);
-            DocumentSession.SaveChanges();
+            //    if (model.File != null) {
+            //        var key = Guid.NewGuid().ToString();
 
-            return RedirectToAction("Files");
-        }
+            //        // Entity Speichern
+            //        var datei = new Datei {
+            //            Name = model.File.FileName,
+            //            Beschreibung = model.Beschreibung,
+            //            MimeType = model.File.ContentType,
+            //            Bytes = model.File.Length,
+            //            AttachmentId = key
+            //        };
+
+            //        DocumentSession.Store(datei);
+
+            //        var metadata = new JObject();
+            //        metadata["OriginalDateiName"] = model.File.FileName;
+            //        metadata["ContentType"] = model.File.ContentType;
+            //        //dbCommands.PutAttachment(key, null, model.File.InputStream, metadata);
+
+            //        DocumentSession.SaveChanges();
+
+            //        DocumentSession.Query<Datei>()
+            //            .Customize(c => c.WaitForNonStaleResults())
+            //            .Take(0)
+            //            .ToArray();
+
+            //        return RedirectToAction("Files");
+            //    }
+
+            //    return Json(null);
+            //}
+
+            //[Authorize(Roles = "admin")]
+            //[HttpGet]
+            //public ActionResult Delete(string id) {
+            //    var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
+            //    if (datei == null) {
+            //        return StatusCode((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
+            //    }
+
+            //    var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
+            //        .Where(x => x.AttachmentId == datei.AttachmentId)
+            //        .ToList();
+
+            //    var model = new FileDeleteModel {
+            //        Id = id,
+            //        Name = datei.Name,
+            //        Usages = usage.Select(u => new FileUsageModel { 
+            //            DocumentId = u.AttachmentId,
+            //            DocumentName = u.DocumentName,
+            //            DocumentUrl = CreateUrl(u)
+            //        }).ToList()
+            //    };
+
+            //    return View(model);
+            //}
+
+            //[Authorize(Roles = "admin")]
+            //[HttpPost]
+            //public ActionResult DeleteConfirmed(string id) {
+            //    //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
+
+            //    var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
+            //    //dbCommands.DeleteAttachment(datei.AttachmentId, null); // TODO: Implementieren
+            //    DocumentSession.Delete(datei);
+            //    DocumentSession.SaveChanges();
+
+            //    return RedirectToAction("Files");
+            //}
 
         [Authorize(Roles = "admin")]
         [HttpPost]

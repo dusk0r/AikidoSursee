@@ -26,40 +26,6 @@
 
     @section Footer {
         <script type="text/javascript">
-            $(function ()
-            {
-                // Creole Preview aktivieren
-                var input = document.getElementById("creole-input");
-                var preview = document.getElementById("creole-preview");
-                var creole = new Parse.Simple.Creole({
-                    forIE: document.all,
-                    interwiki: {},
-                    linkFormat: ''
-                });
-
-                var render = function ()
-                {
-                    preview.innerHTML = "";
-                    creole.parse(preview, input.value);
-                };
-
-                input.onkeyup = function () { render(); }
-
-                render();
-            });
-
-            function save()
-            {
-                var data = { Name: 'Model.Name', Markdown: $("Markdown").value };
-                $.post("/Content/Edit", $("#contentForm").serialize())
-                    .done(function (data)
-                    {
-                        location.href = window.location.href.split('?')[0] + "?saved=true";
-                        //location.reload(true);
-                    })
-                    .fail(function () { });
-
-            }
 
             function insertText(text)
             {

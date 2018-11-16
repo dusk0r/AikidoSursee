@@ -1,0 +1,26 @@
+﻿<div>
+    <table class="filesTable table">
+        <tr>
+            <th>Name</th>
+            <th>Beschreibung</th>
+            <th>Link</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="datei in data.dateien">
+            <td>
+                <a href="/Content/File/{{ datei.id }}" target="_blank">
+                    {{ datei.name }}
+                </a>
+            </td>
+            <td>
+                {{ datei.beschreibung }}
+            </td>
+            <td>
+                {{ createLink(datei) }}
+            </td>
+            <td>
+                <a ng-click="insertLink(datei)">Einfügen</a>
+            </td>
+        </tr>
+    </table>
+</div>

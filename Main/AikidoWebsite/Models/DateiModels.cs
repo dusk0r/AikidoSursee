@@ -19,7 +19,6 @@ namespace AikidoWebsite.Web.Models {
 
     public class StoredDateiEintragModel {
         public string Id { get; set; }
-        public string AttachmentId { get; set; }
         public DateTime ErstelltAm { get; set; }
         public string MimeType { get; set; }
         public string Name { get; set; }

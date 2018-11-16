@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Linq;
 using AikidoWebsite.Data.Entities;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Data.Migration
 {
@@ -17,6 +19,9 @@ namespace AikidoWebsite.Data.Migration
                     goto case 1;
                 case 1:
                     DoMigrationTo2(store);
+                    break;
+                case 2:
+                    DoMigrationTo3(store);
                     break;
             }
         }
@@ -87,6 +92,29 @@ namespace AikidoWebsite.Data.Migration
 
                 var version = session.Load<DatabaseVersion>("version");
                 version.Version = 2;
+                session.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Metadaten aktualisieren
+        /// </summary>
+        private static void DoMigrationTo3(IDocumentStore store)
+        {
+            using (var session = store.OpenSession())
+            {
+                foreach (var seite in session.Query<Seite>().ToList())
+                {
+                    var metadata = session.Advanced.GetMetadataFor(seite);
+                    metadata["forceUpdate"] = 1.ToString();
+                }
+                foreach (var mitteilung in session.Query<Mitteilung>().ToList())
+                {
+                    var metadata = session.Advanced.GetMetadataFor(mitteilung);
+                    metadata["forceUpdate"] = 1.ToString();
+                }
+
+                session.Store(new DatabaseVersion { Version = 3 });
                 session.SaveChanges();
             }
         }

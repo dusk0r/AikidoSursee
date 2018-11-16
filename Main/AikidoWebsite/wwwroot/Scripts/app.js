@@ -600,4 +600,41 @@
         templateUrl: '/Content/component/siteEditComponent.html',
         replace: true
     };
+})
+.directive('dateien', function ()
+{
+    return {
+        restrict: 'E',
+        scope: {
+            onLinkInsert: '&'
+        },
+        controller: ["$scope", "$http", function ($scope, $http)
+        {
+            $scope.getDateien = function (start)
+            {
+                $scope.data = null;
+                $http.get('/Content/ListFiles', { params: { start: start || 0 } }).then(function (resp) 
+                {
+                    $scope.data = resp.data;
+                });
+            };
+
+            $scope.createLink = function (datei)
+            {
+                return datei.mimeType.startsWith("image") ?
+                    "{{/Content/File/" + datei.id + "|" + datei.beschreibung || datei.name + "}}" :
+                    "[[/Content/File/" + datei.id + "|" + datei.beschreibung || datei.name + "]]";
+            };
+
+            $scope.insertLink = function (datei)
+            {
+                var link = $scope.createLink(datei);
+                $scope.onLinkInsert(link);
+            };
+
+            $scope.getDateien();
+        }],
+        templateUrl: '/Content/component/dateienComponent.html',
+        replace: true
+    };
 });

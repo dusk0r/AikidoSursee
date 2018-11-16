@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AikidoWebsite.Data.Entities;
@@ -38,7 +39,7 @@ namespace AikidoWebsite.Data.Listener
             var links = linkMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value).Select(StripLinkId);
             var images = imageMatches.Cast<Match>().Where(m => m.Success).Select(m => m.Groups[2]).Select(g => g.Value);
 
-            return links.Concat(images);
+            return links.Concat(images).Where(x => Guid.TryParse(x, out var _));
         }
 
         private static string StripLinkId(string link)
