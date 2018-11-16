@@ -13,16 +13,16 @@ namespace AikidoWebsite.Web.Extensions
 
         private static readonly XNamespace namespaceAtom = @"http://www.w3.org/2005/Atom";
 
-        public RssResult(string title, string link, string description) {
+        public RssResult(string title, string baseUrl, string description) {
             rssXml = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
             channel = new XElement("channel",
                 new XElement("title", title),
-                new XElement("link", link),
+                new XElement("link", baseUrl),
                 new XElement("description", description),
                 new XElement("pubDate", FormatDate(DateTime.Now)),
                 new XElement(namespaceAtom + "link",
-                    new XAttribute("href", @"https://www.aikido-sursee.ch/Aktuelles/RSS"),
+                    new XAttribute("href", $@"{baseUrl}Aktuelles/RSS"),
                     new XAttribute("rel", "self"),
                     new XAttribute("type", "application/rss+xml"))
             );
