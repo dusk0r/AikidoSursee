@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Extensions;
@@ -10,9 +8,9 @@ using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using Raven.Client.Documents.Session;
+using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
+using Raven.Client.Documents.Session;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -121,13 +119,23 @@ namespace AikidoWebsite.Web.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public JsonResult ListFiles(int start = 0, int perPage = 10) {
+        public JsonResult ListFiles(int start = 0, int perPage = 10, string search = null) {
             perPage = perPage > 20 ? 10 : perPage;
             QueryStatistics stats = null;
 
-            var files = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
-                .Where(x => x.Name != null)
-                .Statistics(out stats)
+            var query = DocumentSession.Query<FileUsageCountIndex.Result, FileUsageCountIndex>()
+                .Where(x => x.Name != null);
+            if (!String.IsNullOrEmpty(search))
+            {
+
+                foreach (var term in search.Split(' '))
+                {
+                    // TODO: Beschreibung
+                    var queryTerm = $"*{term}*";
+                    query = query.Search(x => x.Name, queryTerm, options: SearchOptions.And);
+                }
+            };
+            var files = query.Statistics(out stats)
                 .OrderByDescending(x => x.Count)
                 .Skip(start)
                 .Take(perPage)
@@ -135,7 +143,7 @@ namespace AikidoWebsite.Web.Controllers
 
             var model = new StoredDateiModel {
                 TotalCount = stats.TotalResults,
-                Start = 0,
+                Start = start,
                 Count = files.Count,
                 Dateien = files.Select(x => new StoredDateiEintragModel {
                     Id = x.AttachmentId,

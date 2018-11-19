@@ -563,6 +563,8 @@
         scope: {},
         controller: ["$scope", "$http", "$location", "$sce", "creoleService", function ($scope, $http, $location, $sce, creoleService)
         {
+            var textArea = document.getElementById("site-text");
+
             function loadSeite(seiteId)
             {
                 $http.get('/Content/LoadSeiteEditModel', { params: { id: seiteId } }).then(function (resp)
@@ -593,6 +595,43 @@
                 });
             };
 
+            $scope.insert = function (text)
+            {
+                // https://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+                var strPos = 0;
+                var br = ((textArea.selectionStart || textArea.selectionStart === '0') ?
+                    "ff" : (document.selection ? "ie" : false));
+                if (br === "ie")
+                {
+                    textArea.focus();
+                    var range = document.selection.createRange();
+                    range.moveStart('character', -textArea.value.length);
+                    strPos = range.text.length;
+                } else if (br === "ff")
+                {
+                    strPos = textArea.selectionStart;
+                }
+
+                var front = (textArea.value).substring(0, strPos);
+                var back = (textArea.value).substring(strPos, textArea.value.length);
+                textArea.value = front + text + back;
+                strPos = strPos + text.length;
+                if (br === "ie")
+                {
+                    textArea.focus();
+                    var ieRange = document.selection.createRange();
+                    ieRange.moveStart('character', -textArea.value.length);
+                    ieRange.moveStart('character', strPos);
+                    ieRange.moveEnd('character', 0);
+                    ieRange.select();
+                } else if (br === "ff")
+                {
+                    textArea.selectionStart = strPos;
+                    textArea.selectionEnd = strPos;
+                    textArea.focus();
+                }
+            };
+
             var id = $location.search()['id'];
             loadSeite(id);
 
@@ -610,26 +649,32 @@
         },
         controller: ["$scope", "$http", function ($scope, $http)
         {
-            $scope.getDateien = function (start)
+            $scope.getDateien = function (start, filter)
             {
                 $scope.data = null;
-                $http.get('/Content/ListFiles', { params: { start: start || 0 } }).then(function (resp) 
+                $http.get('/Content/ListFiles', { params: { start: start || 0, search: filter } }).then(function (resp) 
                 {
                     $scope.data = resp.data;
+                    $scope.numberAdditional = resp.data.totalCount - resp.data.count;
                 });
             };
 
             $scope.createLink = function (datei)
             {
                 return datei.mimeType.startsWith("image") ?
-                    "{{/Content/File/" + datei.id + "|" + datei.beschreibung || datei.name + "}}" :
-                    "[[/Content/File/" + datei.id + "|" + datei.beschreibung || datei.name + "]]";
+                    "{{/Content/File/" + datei.id + "|" + (datei.beschreibung || datei.name) + "}}" :
+                    "[[/Content/File/" + datei.id + "|" + (datei.beschreibung || datei.name) + "]]";
             };
 
             $scope.insertLink = function (datei)
             {
                 var link = $scope.createLink(datei);
-                $scope.onLinkInsert(link);
+                $scope.onLinkInsert({ link: link });
+            };
+
+            $scope.filter = function ()
+            {
+                $scope.getDateien(0, $scope.search);
             };
 
             $scope.getDateien();

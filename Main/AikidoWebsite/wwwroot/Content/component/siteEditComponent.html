@@ -8,11 +8,11 @@
     <br /><br />
 
     <div>
-        <textarea class="creole-input" id="creole-input" wrap="soft" ng-model="seite.text" ng-change="generatePreview()" ng-model-options="{ debounce: 400 }"></textarea>
+        <textarea class="creole-input" id="site-text" wrap="soft" ng-model="seite.text" ng-change="generatePreview()" ng-model-options="{ debounce: 400 }"></textarea>
     </div>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#vorschau" data-toggle="tab">Vorschau</a></li>
+        <li class="active"><a href="#vorschau" data-toggle="tab" ng-click="generatePreview()">Vorschau</a></li>
         <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
         <li><a href="#dateien" data-toggle="tab">Dateien</a></li>
         <li><a href="#creole" data-toggle="tab">Syntax Hilfe</a></li>
@@ -34,7 +34,7 @@
             <syntax-help></syntax-help>
         </div>
         <div class="tab-pane" id="dateien">
-            <dateien></dateien>
+            <dateien on-link-insert="insert(link)"></dateien>
         </div>
     </div>
 </div>

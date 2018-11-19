@@ -1,4 +1,6 @@
 ﻿<div>
+    <input type="text" class="input" placeholder="suchen" ng-model="search" ng-model-options="{ 'debounce': 400 }" ng-change="filter()" />
+
     <table class="filesTable table">
         <tr>
             <th>Name</th>
@@ -19,7 +21,12 @@
                 {{ createLink(datei) }}
             </td>
             <td>
-                <a ng-click="insertLink(datei)">Einfügen</a>
+                <a ng-click="insertLink(datei)" style="cursor: pointer">Einfügen</a>
+            </td>
+        </tr>
+        <tr ng-if="numberAdditional > 0">
+            <td colspan="4">
+                ... und {{ numberAdditional }} weitere
             </td>
         </tr>
     </table>
