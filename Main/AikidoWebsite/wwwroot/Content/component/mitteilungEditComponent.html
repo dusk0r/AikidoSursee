@@ -26,13 +26,14 @@
                 <li class="active"><a href="#text" data-toggle="tab">Bearbeiten</a></li>
                 <li><a href="#vorschau" data-toggle="tab" ng-click="generatePreview()">Vorschau</a></li>
                 <li><a href="#currentV" data-toggle="tab">Aktuelle Version</a></li>
+                <li><a href="#dateien" data-toggle="tab">Dateien</a></li>
                 <li><a href="#creole" data-toggle="tab">Syntax Hilfe</a></li>
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane active" id="text">
                     <div class="controls">
-                        <textarea class="span10" rows="5" id="creole-input" ng-model="data.mitteilung.text"></textarea>
+                        <textarea class="span10" rows="5" id="mitteilung-text" ng-model="data.mitteilung.text"></textarea>
                     </div>
 
                     <div>
@@ -56,7 +57,7 @@
                                 <tr ng-repeat="datei in data.dateien">
                                     <td></td>
                                     <td>
-                                        <a href="/Content/File/{{ datei.id | documentIdPart }}" target="_blank">
+                                        <a href="/Content/File/{{ datei.id | documentIdPart }}" target="_blank" rel="noopener">
                                             {{ datei.bezeichnung }}
                                         </a>
                                     </td>
@@ -120,6 +121,9 @@
                 <div class="tab-pane" id="currentV">
                     <div class="creole-preview" ng-bind-html="originalHtml">
                     </div>
+                </div>
+                <div class="tab-pane" id="dateien">
+                    <dateien on-link-insert="insert(link)"></dateien>
                 </div>
                 <div class="tab-pane" id="creole">
                     <syntax-help></syntax-help>

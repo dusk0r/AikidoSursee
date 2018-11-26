@@ -257,6 +257,7 @@
             scope: {},
             controller: ["$scope", "$http", "$location", "$sce", "creoleService", function ($scope, $http, $location, $sce, creoleService)
             {
+                var textArea = document.getElementById("mitteilung-text");
                 $scope.uploadFiles = [];
                 $scope.uploadFileBezeichnung = undefined;
 
@@ -297,12 +298,11 @@
                     var fd = new FormData();
                     fd.append("file", $scope.uploadFiles[0]);
                     fd.append("bezeichnung", $scope.uploadFileBezeichnung);
-                    $http.post('/Aktuelles/UploadFile', fd, {
+                    $http.post('/Content/UploadFile', fd, {
                         transformRequest: angular.identity,
                         headers: { 'Content-Type': undefined }
                     }).then(function (resp)
                     {
-                        console.log($scope.uploadFiles[0]);
                         $scope.data.dateien.push({
                             id: resp.data,
                             dateiName: $scope.uploadFiles[0].name,
@@ -325,7 +325,6 @@
                         // Update Original
                         creoleService.generatePreview($scope.data.mitteilung.text).then(function (text)
                         {
-                            console.log(text);
                             $scope.originalHtml = $sce.trustAsHtml(text);
                         });
                     });
@@ -378,6 +377,44 @@
                         return element.id !== termin.id;
                     });
                     $scope.data.deletedTerminIds.push(termin.id);
+                };
+
+                // TODO: In Service auslagern
+                $scope.insert = function (text)
+                {
+                    // https://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+                    var strPos = 0;
+                    var br = ((textArea.selectionStart || textArea.selectionStart === '0') ?
+                        "ff" : (document.selection ? "ie" : false));
+                    if (br === "ie")
+                    {
+                        textArea.focus();
+                        var range = document.selection.createRange();
+                        range.moveStart('character', -textArea.value.length);
+                        strPos = range.text.length;
+                    } else if (br === "ff")
+                    {
+                        strPos = textArea.selectionStart;
+                    }
+
+                    var front = (textArea.value).substring(0, strPos);
+                    var back = (textArea.value).substring(strPos, textArea.value.length);
+                    textArea.value = front + text + back;
+                    strPos = strPos + text.length;
+                    if (br === "ie")
+                    {
+                        textArea.focus();
+                        var ieRange = document.selection.createRange();
+                        ieRange.moveStart('character', -textArea.value.length);
+                        ieRange.moveStart('character', strPos);
+                        ieRange.moveEnd('character', 0);
+                        ieRange.select();
+                    } else if (br === "ff")
+                    {
+                        textArea.selectionStart = strPos;
+                        textArea.selectionEnd = strPos;
+                        textArea.focus();
+                    }
                 };
 
                 var id = $location.search()['id'];
@@ -595,6 +632,7 @@
                 });
             };
 
+            // TODO: In Service auslagern
             $scope.insert = function (text)
             {
                 // https://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
@@ -649,6 +687,9 @@
         },
         controller: ["$scope", "$http", function ($scope, $http)
         {
+            $scope.uploadFiles = [];
+            $scope.uploadFileBezeichnung = undefined;
+
             $scope.getDateien = function (start, filter)
             {
                 $scope.data = null;
@@ -675,6 +716,27 @@
             $scope.filter = function ()
             {
                 $scope.getDateien(0, $scope.search);
+            };
+
+            $scope.uploadFile = function ()
+            {
+                if ($scope.uploadFiles.length === 0)
+                {
+                    return;
+                }
+
+                var fd = new FormData();
+                fd.append("file", $scope.uploadFiles[0]);
+                fd.append("bezeichnung", $scope.uploadFileBezeichnung);
+                $http.post('/Content/UploadFile', fd, {
+                    transformRequest: angular.identity,
+                    headers: { 'Content-Type': undefined }
+                }).then(function (resp)
+                {
+                    $scope.getDateien(0);
+                    $scope.uploadFiles = [];
+                    $scope.uploadFileBezeichnung = undefined;
+                });
             };
 
             $scope.getDateien();

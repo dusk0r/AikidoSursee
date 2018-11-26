@@ -21,6 +21,7 @@ namespace AikidoWebsite.Data.Index
             public string MimeType { get; set; }
             public long Bytes { get; set; }
             public int Count { get; set; }
+            public DateTime UploadDate { get; set; }
         }
 
         public FileUsageCountIndex()
@@ -33,6 +34,7 @@ namespace AikidoWebsite.Data.Index
                                          Beschreibung = datei.Beschreibung,
                                          MimeType = datei.MimeType,
                                          Bytes = datei.Bytes,
+                                         UploadDate = datei.UploadDate,
                                          Count = 0
                                      });
 
@@ -45,6 +47,7 @@ namespace AikidoWebsite.Data.Index
                                                    Beschreibung = default(string),
                                                    MimeType = default(string),
                                                    Bytes = 0,
+                                                   UploadDate = DateTime.MinValue,
                                                    Count = 1
                                                });
 
@@ -57,6 +60,7 @@ namespace AikidoWebsite.Data.Index
                                                    Beschreibung = default(string),
                                                    MimeType = default(string),
                                                    Bytes = 0,
+                                                   UploadDate = DateTime.MinValue,
                                                    Count = 1
                                                });
 
@@ -69,19 +73,21 @@ namespace AikidoWebsite.Data.Index
                                         Beschreibung = default(string),
                                         MimeType = default(string),
                                         Bytes = 0,
+                                        UploadDate = DateTime.MinValue,
                                         Count = 1
                                     });
 
             Reduce = results => from result in results
                                 group result by result.AttachmentId into g
-                                let datei = g.First(x => x.Name != null)
+                                let datei = g.FirstOrDefault(x => x.Name != null)
                                 select new
                                 {
                                     AttachmentId = g.Key,
-                                    Name = datei.Name,
-                                    Beschreibung = datei.Beschreibung,
-                                    MimeType = datei.MimeType,
-                                    Bytes = datei.Bytes,
+                                    Name = (datei != null) ? datei.Name : default(string),
+                                    Beschreibung = (datei != null) ? datei.Beschreibung : default(string),
+                                    MimeType = (datei != null) ? datei.MimeType : default(string),
+                                    Bytes = g.Sum(x => x.Bytes),
+                                    UploadDate = g.Max(x => x.UploadDate),
                                     Count = g.Sum(x => x.Count)
                                 };
         }

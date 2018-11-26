@@ -13,7 +13,7 @@
         @:In folgenden Mitteilungen/Seiten wird die Datei verwendet:
         <ul>
             @foreach (var usage in Model.Usages) {
-                <li>@usage.DocumentName <a href="@usage.DocumentUrl" target="_blank">Link</a></li>
+                <li>@usage.DocumentName <a href="@usage.DocumentUrl" target="_blank" rel="noopener">Link</a></li>
             }
         </ul>
     }

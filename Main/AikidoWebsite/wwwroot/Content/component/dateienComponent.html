@@ -10,7 +10,7 @@
         </tr>
         <tr ng-repeat="datei in data.dateien">
             <td>
-                <a href="/Content/File/{{ datei.id }}" target="_blank">
+                <a href="/Content/File/{{ datei.id }}" target="_blank" rel="noopener">
                     {{ datei.name }}
                 </a>
             </td>
@@ -30,4 +30,9 @@
             </td>
         </tr>
     </table>
+
+    Datei hochladen:
+    <input type="file" select-ng-files ng-model="uploadFiles" />
+    <input type="text" ng-model="uploadFileBezeichnung" placeholder="Beschreibung" />
+    <input type="button" value="hinzufügen" ng-click="uploadFile()" />
 </div>

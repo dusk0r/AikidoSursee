@@ -59,7 +59,7 @@
                 <br />
                 Album Beschreibung: {{ album.beschreibung || '-' }}<br />
                 Album erstellt am: {{ album.creationDate | date:'dd.MM.yyyy' }}<br />
-                URL zum Album: <a href="{{ album.link }}" target="_blank">{{ album.link }}</a>
+                URL zum Album: <a href="{{ album.link }}" target="_blank" rel="noopener">{{ album.link }}</a>
             </div>
         </div>
 

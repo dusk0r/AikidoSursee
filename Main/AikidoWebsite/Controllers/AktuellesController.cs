@@ -144,30 +144,6 @@ namespace AikidoWebsite.Web.Controllers
             return Json(true);
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpPost]
-        public JsonResult UploadFile([FromForm]IFormFile file, [FromForm]string bezeichnung) {
-            var key = Guid.NewGuid().ToString();
-
-            var datei = new Datei {
-                Id = DocumentSession.GetRavenName<Datei>(key),
-                Name = file.FileName,
-                Beschreibung = bezeichnung,
-                MimeType = file.ContentType,
-                Bytes = file.Length,
-                AttachmentId = key
-            };
-            DocumentSession.Store(datei);
-
-            using (var inputStream = file.OpenReadStream())
-            {
-                DocumentSession.Advanced.Attachments.Store(datei, "datei", inputStream, file.ContentType);
-                DocumentSession.SaveChanges();
-            }
-
-            return Json(datei.Id);
-        }
-
         private void PersistTermine(IEnumerable<Termin> termine, IEnumerable<string> deletedTermine, Benutzer benutzer) {
             foreach (var termin in termine) {
                 // TODO, Validate ...
@@ -203,9 +179,10 @@ namespace AikidoWebsite.Web.Controllers
         [HttpGet]
         public ActionResult GetTermine()
         {
+            var now = Clock.Now;
             int numberToShow = 30;
             var termine = DocumentSession.Query<Termin>()
-                .Where(t => (t.EndDatum != null && t.EndDatum > Clock.Now.AddDays(-1)) || t.StartDatum > Clock.Now.AddDays(-1))
+                .Where(t => (t.EndDatum != null && t.EndDatum > now.AddDays(-1)) || t.StartDatum > now.AddDays(-1))
                 .OrderBy(t => t.StartDatum)
                 .Take(numberToShow + 1)
                 .ToList();
