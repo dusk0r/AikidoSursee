@@ -1,17 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using AikidoWebsite.Common;
 using AikidoWebsite.Data.Entities;
 using AikidoWebsite.Data.Extensions;
 using AikidoWebsite.Data.Index;
 using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
+using AikidoWebsite.Web.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using Raven.Client.Documents.Session;
+using Raven.Client.Documents.Smuggler;
 
 namespace AikidoWebsite.Web.Controllers
 {
@@ -20,11 +25,13 @@ namespace AikidoWebsite.Web.Controllers
 
         private IDocumentSession DocumentSession { get; }
         private IClock Clock { get; }
+        private BackupTokenService BackupTokenService { get; }
 
-        public ContentController(IDocumentSession documentSession, IClock clock)
+        public ContentController(IDocumentSession documentSession, IClock clock, BackupTokenService backupTokenService)
         {
             DocumentSession = documentSession;
             Clock = clock;
+            BackupTokenService = backupTokenService;
         }
 
         [HttpGet]
@@ -236,6 +243,26 @@ namespace AikidoWebsite.Web.Controllers
         public string ParseCreole([FromBody] CreoleModel model)
         {
             return model?.Text?.CreoleToHtml();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> DownloadBackup(string secret)
+        {
+            if (!BackupTokenService.CheckToken(secret))
+            {
+                return new StatusCodeResult((int)HttpStatusCode.Forbidden);
+            }
+
+            var path = Path.GetTempFileName();
+            var operation = await DocumentSession.Advanced.DocumentStore.Smuggler.ExportAsync(new DatabaseSmugglerExportOptions
+            {
+                OperateOnTypes = DatabaseItemType.Documents
+            }, path);
+            await operation.WaitForCompletionAsync();
+
+            var filename = $"Backup-Aikido-{Clock.Now.ToString("yyyy-MM-dd")}.ravendb";
+            var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+            return File(fileStream: fs, contentType: System.Net.Mime.MediaTypeNames.Application.Octet, fileDownloadName: filename);
         }
 
         private string CreateUrl(FileUsageBySource.Result usage) {

@@ -125,6 +125,7 @@ namespace AikidoWebsite.Web
             services.AddClock();
             services.AddFlickr(Configuration["Flickr:ApiKey"]);
             services.AddTwitter(Configuration["Twitter:ConsumerKey"], Configuration["Twitter:ConsumerSecret"], Configuration["Twitter:AccessToken"], Configuration["Twitter:AccessSecret"]);
+            services.AddBackupToken(Configuration["Backup:Secret"]);
 
             services.AddAntiforgery();
             services.AddMvc();
@@ -193,6 +194,11 @@ namespace AikidoWebsite.Web
         public static void AddTwitter(this IServiceCollection services, string consumerKey, string consumerSecret, string userAccessToken, string userAccessSecret)
         {
             services.AddSingleton(new TwitterService(consumerKey, consumerSecret, userAccessToken, userAccessSecret));
+        }
+
+        public static void AddBackupToken(this IServiceCollection services, string secret)
+        {
+            services.AddSingleton(new BackupTokenService(secret, new Clock()));
         }
     }
 }
