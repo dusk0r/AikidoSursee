@@ -57,13 +57,13 @@ namespace AikidoWebsite.Web.Security
         {
             using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
             {
-                return await asyncDocumentSession.Query<Benutzer>().FirstOrDefaultAsync(b => b.Username == normalizedUserName);
+                return await asyncDocumentSession.Query<Benutzer>().FirstOrDefaultAsync(b => b.EMail == normalizedUserName);
             }
         }
 
         public Task<string> GetNormalizedUserNameAsync(Benutzer user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Username);
+            return Task.FromResult(user.EMail);
         }
 
         public Task<string> GetUserIdAsync(Benutzer user, CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ namespace AikidoWebsite.Web.Security
 
         public Task<string> GetUserNameAsync(Benutzer user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Username);
+            return Task.FromResult(user.EMail);
         }
 
         public async Task SetNormalizedUserNameAsync(Benutzer user, string normalizedName, CancellationToken cancellationToken)
@@ -81,7 +81,7 @@ namespace AikidoWebsite.Web.Security
             using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
             {
                 var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
-                loaded.Username = normalizedName;
+                loaded.EMail = normalizedName;
                 await asyncDocumentSession.SaveChangesAsync();
             }
         }
@@ -91,7 +91,7 @@ namespace AikidoWebsite.Web.Security
             using (var asyncDocumentSession = DocumentStore.OpenAsyncSession())
             {
                 var loaded = await asyncDocumentSession.LoadAsync<Benutzer>(user.Id);
-                loaded.Username = userName;
+                loaded.EMail = userName;
                 await asyncDocumentSession.SaveChangesAsync();
             }
         }

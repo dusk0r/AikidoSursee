@@ -82,7 +82,7 @@ namespace AikidoWebsite.Web
                                     ctx.Identity.RemoveClaim(claim);
                                 }
                                 var claims = new List<Claim> {
-                                    new Claim(ClaimTypes.NameIdentifier, benutzer.Username),
+                                    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
                                     new Claim(ClaimTypes.Name, benutzer.Name),
                                     new Claim(ClaimTypes.Email, benutzer.EMail)
                                 };

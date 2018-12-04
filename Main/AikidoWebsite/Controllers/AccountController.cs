@@ -4,8 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AikidoWebsite.Data.Entities;
-using AikidoWebsite.Data.ValueObjects;
 using AikidoWebsite.Models;
+using AikidoWebsite.Web.Extensions;
 using AikidoWebsite.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -51,12 +51,12 @@ namespace AikidoWebsite.Controllers
         [HttpPost]
         public async Task<ActionResult> LogOn([FromForm]LogOnModel model) {
             var benutzer = DocumentSession.Query<Benutzer>()
-                .FirstOrDefault(b => b.Username == model.UserName);
+                .FirstOrDefault(b => b.EMail == model.UserName);
 
             if (benutzer != null && benutzer.IstAktiv && benutzer.CheckPassword(model.Password))
             {
                 var claims = new List<Claim> {
-                    new Claim(ClaimTypes.NameIdentifier, benutzer.Username),
+                    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
                     new Claim(ClaimTypes.Name, benutzer.Name),
                     new Claim(ClaimTypes.Email, benutzer.EMail)
                 };
@@ -71,6 +71,8 @@ namespace AikidoWebsite.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+
+            ModelState.AddModelError("UserName", "Benutzer nicht gefunden oder Passwort falsch");
 
             return View(model);
         }
@@ -89,23 +91,23 @@ namespace AikidoWebsite.Controllers
         [Authorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model) {
-            // TODO: Implementieren
-            //if (ModelState.IsValid) {
+            var benutzer = DocumentSession.Query<Benutzer>().First(b => b.EMail.Equals(User.Identity.GetEmailAddress()));
 
-            //    bool changePasswordSucceeded;
-            //    try {
-            //        MembershipUser currentUser = Membership.GetUser(User.Identity.Name, true /* userIsOnline */);
-            //        changePasswordSucceeded = currentUser.ChangePassword(null, model.NewPassword);
-            //    } catch (Exception) {
-            //        changePasswordSucceeded = false;
-            //    }
-
-            //    if (changePasswordSucceeded) {
-            //        return RedirectToAction("ChangePasswordSuccess");
-            //    } else {
-            //        ModelState.AddModelError("", "Konnte das Passwort nicht ändern.");
-            //    }
-            //}
+            if (!benutzer.CheckPassword(model.CurrentPassword))
+            {
+                ModelState.AddModelError("CurrentPassword", "Altes Passwort ist falsch");
+            } else if (!String.Equals(model.NewPassword, model.ConfirmPassword))
+            {
+                ModelState.AddModelError("ConfirmPassword", "Passwörter stimmen nicht überein");
+            } else if (String.IsNullOrEmpty(model.NewPassword) || model.NewPassword.Length < 8)
+            {
+                ModelState.AddModelError("NewPassword", "Passwort ist zu kurz");
+            } else
+            {
+                benutzer.SetPassword(model.NewPassword);
+                DocumentSession.SaveChanges();
+                return RedirectToAction("ChangePasswordSuccess");
+            }
 
             return View(model);
         }
@@ -123,14 +125,5 @@ namespace AikidoWebsite.Controllers
 
             return View(benutzer);
         }
-
-        //[Authorize(Roles = "Admin")]
-        //public ActionResult AddUser(NewAccountModel newAccount) {
-        //    if (ModelState.IsValid) {
-
-        //    }
-
-        //    return View();
-        //}
     }
 }
