@@ -165,6 +165,7 @@ namespace AikidoWebsite.Web
                 app.UseRollbarMiddleware();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvcWithDefaultRoute();
