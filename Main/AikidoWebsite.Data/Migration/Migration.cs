@@ -61,7 +61,7 @@ namespace AikidoWebsite.Data.Migration
         /// </summary>
         private static void DoMigrationTo2(IDocumentStore store)
         {
-            string attachmentDir = @"C:\Temp\Aikido-Backup-18-08-09";
+            string attachmentDir = @"C:\Temp\Aikdo-Backup-Restore\Aikido-Backup-18-12-10";
 
             using (var session = store.OpenSession())
             {

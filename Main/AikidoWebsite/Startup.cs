@@ -46,7 +46,7 @@ namespace AikidoWebsite.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var documentStore = services.AddRavenDB(Configuration["dbURL"], Configuration["dbName"]);
+            var documentStore = services.AddRavenDB(Configuration["DB:Url"], Configuration["DB:Name"]);
 
             //services.AddIdentity<Benutzer, Role>()
             //.AddRoleManager
@@ -92,8 +92,6 @@ namespace AikidoWebsite.Web
                                 }
                                 ctx.Identity.AddClaims(claims);
                             }
-
-
                         }
                     };
                 })
@@ -106,6 +104,29 @@ namespace AikidoWebsite.Web
                     options.Events.OnCreatingTicket = async ctx =>
                     {
                         await baseOnCreatingTicket(ctx);
+                        var id = ctx.UserId;
+
+                        using (var documentSession = documentStore.OpenSession()) {
+                            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.TwitterLogin == id && b.IstAktiv);
+
+                            if (benutzer != null) {
+                                if (ctx.Principal != null) {
+                                    //foreach (var claim in ctx.Principal.Claims.ToList()) {
+                                    //    ctx.Principal. .Claims.RemoveClaim(claim);
+                                    //}
+                                }
+
+                                //var claims = new List<Claim> {
+                                //    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
+                                //    new Claim(ClaimTypes.Name, benutzer.Name),
+                                //    new Claim(ClaimTypes.Email, benutzer.EMail)
+                                //};
+                                //foreach (var role in benutzer.Gruppen) {
+                                //    claims.Add(new Claim(ClaimTypes.Role, role));
+                                //}
+                                //ctx.Identity.AddClaims(claims);
+                            }
+                        }
                     };
                 });
 

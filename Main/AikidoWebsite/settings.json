@@ -1,4 +1,4 @@
 ﻿{
-    "dbURL": "http://localhost:8080",
-    "dbName": "AikidoSursee"
+    "DB:Url": "http://localhost:8080",
+    "DB:Name": "AikidoSursee2"
 }
