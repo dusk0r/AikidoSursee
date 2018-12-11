@@ -9,6 +9,7 @@ namespace AikidoWebsite.Web
         {
             var host = new WebHostBuilder()
                 .UseStartup<Startup>()
+                .UseSentry()
                 .UseKestrel(o => o.AddServerHeader = false)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .Build();
