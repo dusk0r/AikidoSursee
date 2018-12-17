@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using AikidoWebsite.Common;
 using AikidoWebsite.Common.VCalendar;
 using AikidoWebsite.Data;
@@ -43,18 +44,27 @@ namespace AikidoWebsite.Web.Controllers
 
         [HttpGet]
         public ActionResult Mitteilung(string id) {
+            // TODO: für den Übergang, wieder entfernen
+            if (!String.IsNullOrEmpty(id) && id.Contains("_")) {
+                id = id.Split('_')[1];
+            }
+
             var mitteilung = DocumentSession
                 .Include<Mitteilung>(m => m.AutorId)
                 .Load<Mitteilung>(DocumentSession.GetRavenName<Mitteilung>(id));
-            var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
+            if (mitteilung != null) {
+                var benutzer = DocumentSession.Load<Benutzer>(mitteilung.AutorId);
 
-            var model = new ViewMitteilungModel {
-                Mitteilung = MitteilungModel.Build(mitteilung, benutzer),
-                Dateien = CreateDateiModels(mitteilung.DateiIds),
-                Termine = CreateTerminModels(mitteilung.TerminIds)
-            };
+                var model = new ViewMitteilungModel {
+                    Mitteilung = MitteilungModel.Build(mitteilung, benutzer),
+                    Dateien = CreateDateiModels(mitteilung.DateiIds),
+                    Termine = CreateTerminModels(mitteilung.TerminIds)
+                };
 
-            return View(model);
+                return View(model);
+            } else {
+                return new StatusCodeResult((int)HttpStatusCode.NotFound);
+            }
         }
 
         [HttpGet]
