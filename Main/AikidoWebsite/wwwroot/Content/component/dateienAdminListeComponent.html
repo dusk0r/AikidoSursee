@@ -1,0 +1,119 @@
+﻿<div>
+    <input type="text" class="input" placeholder="suchen" ng-model="search" ng-model-options="{ 'debounce': 400 }" ng-change="filter()" />
+
+    <table class="filesTable table">
+        <tr>
+            <th>Name</th>
+            <th>Beschreibung</th>
+            <th>Link</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="datei in data.dateien">
+            <td>
+                <a href="/Content/File/{{ datei.id }}" target="_blank" rel="noopener">
+                    {{ datei.name }}
+                </a>
+            </td>
+            <td>
+                {{ datei.beschreibung }}
+            </td>
+            <td>
+                <button type="button" class="btn" data-toggle="modal" data-target="#linkModal" ng-click="setCurrentDatei(datei)">
+                    Link erzeugen
+                </button>
+            </td>
+            <td>
+                <span ng-show="datei.useCount === 0">
+                    0 Verwendungen
+                </span>
+                <button type="button" class="btn" data-toggle="modal" data-target="#usageModal" ng-click="showUsage(datei)" ng-show="datei.useCount > 0">
+                    {{ datei.useCount }} Verwendungen
+                </button>
+            </td>
+            <td>
+                <button type="button" class="btn" data-toggle="modal" data-target="#deleteModal" ng-click="deleteDatei(datei)">
+                    <i class="icon icon-mini icon-trash"></i>
+                    Löschen
+                </button>
+            </td>
+            <td>
+                Ersetzen
+                <i class="icon icon-mini icon-sync"></i>
+
+            </td>
+        </tr>
+        <tr ng-if="numberAdditional > 0">
+            <td colspan="4">
+                ... und {{ numberAdditional }} weitere
+            </td>
+        </tr>
+    </table>
+
+    Datei hochladen:
+    <input type="file" select-ng-files ng-model="uploadFiles" />
+    <input type="text" ng-model="uploadFileBezeichnung" placeholder="Beschreibung" />
+    <input type="button" value="hinzufügen" ng-click="uploadFile()" />
+
+    <div class="modal fade" id="linkModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Link zu Dokument {{ currentDatei.name }}</h5>
+                </div>
+                <div class="modal-body">
+                    {{ createLink(currentDatei) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="usageModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Verwendung vom Dokument {{ currentDatei.name }}</h5>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li ng-repeat="usage in currentUsage">
+                            {{ getSiteDescription(usage) }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Löschen vom Dokument {{ currentDatei.name }}</h5>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        Die Datei '{{ currentDatei.name }}' unwiederruflich löschen?
+                    </div>
+
+                    <br />
+
+                    <div class="alert alert-danger" ng-show="currentDatei.useCount > 0">
+                        <strong>Achtung!</strong> Die Datei wird verwendet!
+                    </div>
+
+                    <button data-dismiss="modal" class="btn btn-danger" ng-click="deleteDateiConfirmed(currentDatei)">Löschen</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

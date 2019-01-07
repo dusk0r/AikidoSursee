@@ -23,7 +23,7 @@ namespace AikidoWebsite.Data.Index
                                                from datei in mitteilung.DateiIds
                                                select new {
                                                    AttachmentId = datei,
-                                                   DocumentType = "mitteilung",
+                                                   DocumentType = "mitteilungAttachment",
                                                    DocumentReference = mitteilung.Id,
                                                    DocumentName = mitteilung.Titel
                                                });
@@ -32,24 +32,21 @@ namespace AikidoWebsite.Data.Index
                                                from datei in (IEnumerable<string>)MetadataFor(mitteilung)["MarkupFiles"]
                                                select new {
                                                    AttachmentId = datei,
-                                                   DocumentType = "mitteilung",
+                                                   DocumentType = "mitteilungReference",
                                                    DocumentReference = mitteilung.Id,
                                                    DocumentName = mitteilung.Titel
                                                });
 
             AddMap<Seite>(seiten => from seite in seiten
-                                    where !seite.Id.Contains("/revision/")
                                     from datei in (IEnumerable<string>)MetadataFor(seite)["MarkupFiles"]
                                     select new {
                                         AttachmentId = datei,
-                                        DocumentType = "seite",
+                                        DocumentType = "seiteReference",
                                         DocumentReference = seite.Name,
                                         DocumentName = seite.Name
                                     });
 
-            Store(x => x.DocumentName, FieldStorage.Yes);
-            Store(x => x.DocumentReference, FieldStorage.Yes);
-            Store(x => x.DocumentType, FieldStorage.Yes);
+            StoreAllFields(FieldStorage.Yes);
         }
 
     }

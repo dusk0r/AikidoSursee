@@ -46,7 +46,6 @@ namespace AikidoWebsite.Web.Controllers
             else
             {
                 Response.StatusCode = 404;
-                //Response.TrySkipIisCustomErrors = true;
                 return View("ArtikelNichtGefunden", (object)id);
             }
         }
@@ -173,43 +172,26 @@ namespace AikidoWebsite.Web.Controllers
             return Json(model);
         }
 
-        //[Authorize(Roles = "admin")]
-        //[HttpGet]
-        //public ActionResult Delete(string id) {
-        //    var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
-        //    if (datei == null) {
-        //        return StatusCode((int)HttpStatusCode.NotFound, "Datei nicht gefunden");
-        //    }
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public JsonResult GetFileUsage(string id) {
+            var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
+                .Where(x => x.AttachmentId == id)
+                .ProjectInto<FileUsageBySource.Result>()
+                .ToList();
 
-        //    var usage = DocumentSession.Query<FileUsageBySource.Result, FileUsageBySource>()
-        //        .Where(x => x.AttachmentId == datei.AttachmentId)
-        //        .ToList();
+            return Json(usage);
+        }
 
-        //    var model = new FileDeleteModel {
-        //        Id = id,
-        //        Name = datei.Name,
-        //        Usages = usage.Select(u => new FileUsageModel { 
-        //            DocumentId = u.AttachmentId,
-        //            DocumentName = u.DocumentName,
-        //            DocumentUrl = CreateUrl(u)
-        //        }).ToList()
-        //    };
+        [Authorize(Roles = "admin")]
+        [HttpDelete]
+        public JsonResult DeleteConfirmed(string id) {
+            var datei = DocumentSession.Load<Datei>(DocumentSession.GetRavenName<Datei>(id));
+            DocumentSession.Delete(datei);
+            DocumentSession.SaveChanges();
 
-        //    return View(model);
-        //}
-
-        //[Authorize(Roles = "admin")]
-        //[HttpPost]
-        //public ActionResult DeleteConfirmed(string id) {
-        //    //var dbCommands = DocumentSession.Advanced.DocumentStore.DatabaseCommands;
-
-        //    var datei = DocumentSession.Load<Datei>(id.Replace("_","/"));
-        //    //dbCommands.DeleteAttachment(datei.AttachmentId, null); // TODO: Implementieren
-        //    DocumentSession.Delete(datei);
-        //    DocumentSession.SaveChanges();
-
-        //    return RedirectToAction("Files");
-        //}
+            return Json(true);
+        }
 
         [Authorize(Roles = "admin")]
         [HttpPost]

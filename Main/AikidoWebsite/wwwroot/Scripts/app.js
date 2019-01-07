@@ -744,4 +744,109 @@
         templateUrl: '/Content/component/dateienComponent.html',
         replace: true
     };
+})
+.directive('dateienAdminListe', function ()
+{
+    return {
+        restrict: 'E',
+        scope: {},
+        controller: ["$scope", "$http", function ($scope, $http)
+        {
+            $scope.uploadFiles = [];
+            $scope.uploadFileBezeichnung = undefined;
+            $scope.currentDatei = undefined;
+
+            $scope.setCurrentDatei = function (datei)
+            {
+                $scope.currentDatei = datei;
+            };
+
+            $scope.getDateien = function (start, filter)
+            {
+                $scope.data = null;
+                $http.get('/Content/ListFiles', { params: { start: start || 0, search: filter } }).then(function (resp) 
+                {
+                    $scope.data = resp.data;
+                    $scope.numberAdditional = resp.data.totalCount - resp.data.count;
+                });
+            };
+
+            $scope.createLink = function (datei)
+            {
+                if (!datei)
+                {
+                    return null;
+                }
+
+                return datei.mimeType.startsWith("image") ?
+                    "{{/Content/File/" + datei.id + "|" + (datei.beschreibung || datei.name) + "}}" :
+                    "[[/Content/File/" + datei.id + "|" + (datei.beschreibung || datei.name) + "]]";
+            };
+
+            $scope.filter = function ()
+            {
+                $scope.getDateien(0, $scope.search);
+            };
+
+            $scope.showUsage = function (datei)
+            {
+                $scope.currentUsage = null;
+                $scope.setCurrentDatei(datei);
+                $http.get('/Content/GetFileUsage', { params: { id: datei.id } }).then(function (resp) 
+                {
+                    $scope.currentUsage = resp.data;
+                });
+            };
+
+            $scope.getSiteDescription = function (usage)
+            {
+                switch (usage.documentType)
+                {
+                    case "seiteReference":
+                        return "Seite '" + usage.documentName.charAt(0).toUpperCase() + usage.documentName.slice(1) + "'";
+                    case "mitteilungAttachment":
+                    case "mitteilungReference":
+                        return "Mitteilung '" + usage.documentName + "'";
+                }
+            };
+
+            $scope.deleteDatei = function (datei)
+            {
+                $scope.setCurrentDatei(datei);
+            };
+
+            $scope.deleteDateiConfirmed = function (datei)
+            {
+                $http.delete('/Content/DeleteConfirmed', { params: { id: datei.id } }).then(function (resp)
+                {
+                    $scope.getDateien();
+                });
+            };
+
+            $scope.uploadFile = function ()
+            {
+                if ($scope.uploadFiles.length === 0)
+                {
+                    return;
+                }
+
+                var fd = new FormData();
+                fd.append("file", $scope.uploadFiles[0]);
+                fd.append("bezeichnung", $scope.uploadFileBezeichnung);
+                $http.post('/Content/UploadFile', fd, {
+                    transformRequest: angular.identity,
+                    headers: { 'Content-Type': undefined }
+                }).then(function (resp)
+                {
+                    $scope.getDateien(0);
+                    $scope.uploadFiles = [];
+                    $scope.uploadFileBezeichnung = undefined;
+                });
+            };
+
+            $scope.getDateien();
+        }],
+        templateUrl: '/Content/component/dateienAdminListeComponent.html',
+        replace: true
+    };
 });
