@@ -46,7 +46,7 @@ namespace AikidoWebsite.Web.Controllers
         public ActionResult Mitteilung(string id) {
             // TODO: für den Übergang, wieder entfernen
             if (!String.IsNullOrEmpty(id) && id.Contains("_")) {
-                id = id.Split('_')[1];
+                return RedirectPermanent($"/Aktuelles/Mitteilung/{id.Split('_')[1]}");
             }
 
             var mitteilung = DocumentSession
