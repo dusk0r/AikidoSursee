@@ -37,15 +37,13 @@
                     Löschen
                 </button>
             </td>
-            <td>
-                Ersetzen
-                <i class="icon icon-mini icon-sync"></i>
-
-            </td>
         </tr>
-        <tr ng-if="numberAdditional > 0">
-            <td colspan="4">
-                ... und {{ numberAdditional }} weitere
+        <tr>
+            <td colspan="5">
+                <button class="btn" ng-click="goTo('BEGIN')">Anfang</button>
+                <button class="btn" ng-click="goTo('BACK')" ng-disabled="data.start <= 0">Zurück</button>
+                <button class="btn" ng-click="goTo('FORWARD')" ng-disabled="data.start + data.count >= data.totalCount">Weiter</button>
+                <button class="btn" ng-click="goTo('END')">Ende</button>
             </td>
         </tr>
     </table>
@@ -62,7 +60,9 @@
                     <h5 class="modal-title">Link zu Dokument {{ currentDatei.name }}</h5>
                 </div>
                 <div class="modal-body">
-                    {{ createLink(currentDatei) }}
+                    <div class="alert alert-info">
+                        {{ createLink(currentDatei) }}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Schliessen</button>

@@ -752,6 +752,7 @@
         scope: {},
         controller: ["$scope", "$http", function ($scope, $http)
         {
+            var perPage = 10;
             $scope.uploadFiles = [];
             $scope.uploadFileBezeichnung = undefined;
             $scope.currentDatei = undefined;
@@ -764,10 +765,9 @@
             $scope.getDateien = function (start, filter)
             {
                 $scope.data = null;
-                $http.get('/Content/ListFiles', { params: { start: start || 0, search: filter } }).then(function (resp) 
+                $http.get('/Content/ListFiles', { params: { start: start || 0, search: filter, perPage: perPage } }).then(function (resp) 
                 {
                     $scope.data = resp.data;
-                    $scope.numberAdditional = resp.data.totalCount - resp.data.count;
                 });
             };
 
@@ -842,6 +842,34 @@
                     $scope.uploadFiles = [];
                     $scope.uploadFileBezeichnung = undefined;
                 });
+            };
+
+            $scope.goTo = function (to)
+            {
+                var start;
+
+                if (to === 'BEGIN')
+                {
+                    $scope.getDateien(0);
+                } else if (to === 'END')
+                {
+                    start = (($scope.data.totalCount / perPage) | 0) * $scope.data.count;
+                    if ($scope.data.totalCount % perPage === 0)
+                    {
+                        start -= 1;
+                    }
+                    $scope.getDateien(start);
+                } else if (to === 'BACK')
+                {
+                    start = $scope.data.start -= perPage;
+                    start = (start < 0) ? 0 : start;
+                    $scope.getDateien(start);
+                } else if (to === 'FORWARD')
+                {
+                    start = $scope.data.start += perPage;
+                    start = (start > $scope.data.totalCount) ? start - perPage : start;
+                    $scope.getDateien(start);
+                }
             };
 
             $scope.getDateien();
