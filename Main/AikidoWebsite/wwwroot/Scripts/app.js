@@ -38,6 +38,13 @@
             return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
         };
     })
+    .filter('emojione', ['$sce', function ($sce)
+    {
+        return function (html)
+        {
+            return $sce.trustAsHtml(emojione.toImage(html.toString()));
+        };
+    }])
     .factory('creoleService', ['$http', function ($http)
     {
         return {
@@ -284,7 +291,7 @@
                 {
                     creoleService.generatePreview($scope.data.mitteilung.text).then(function (text)
                     {
-                        $scope.preview = $sce.trustAsHtml(text);
+                        $scope.preview = $sce.trustAsHtml(emojione.toImage(text));
                     });
                 };
 
