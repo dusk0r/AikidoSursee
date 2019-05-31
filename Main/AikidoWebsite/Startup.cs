@@ -159,7 +159,21 @@ namespace AikidoWebsite.Web
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
             app.UseStaticFiles();
             app.UseAuthentication();
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(routes => {
+                routes.MapRoute("faq", "/faq", defaults: new { controller = "Content", action = "Show", id = "faq" });
+                routes.MapRoute("glossar", "/glossar", defaults: new { controller = "Content", action = "Show", id = "glossar" });
+                routes.MapRoute("techniken", "/techniken", defaults: new { controller = "Content", action = "Show", id = "techniken" });
+                routes.MapRoute("presse", "/presse", defaults: new { controller = "Content", action = "Show", id = "presse" });
+                routes.MapRoute("links", "/links", defaults: new { controller = "Content", action = "Show", id = "links" });
+                routes.MapRoute("trainingszeiten", "/trainingszeiten", defaults: new { controller = "Content", action = "Show", id = "trainingszeiten" });
+                routes.MapRoute("einfuehrungskurse", "/einfuehrungskurse", defaults: new { controller = "Content", action = "Show", id = "einfuehrungskurse" });
+                routes.MapRoute("bilder", "/bilder", defaults: new { controller = "Dojo", action = "Bilder" });
+                routes.MapRoute("personen", "/personen", defaults: new { controller = "Dojo", action = "Personen" });
+                routes.MapRoute("standort", "/standort", defaults: new { controller = "Dojo", action = "Standort" });
+                routes.MapRoute("velos", "/velos", defaults: new { controller = "Content", action = "Show", id = "velos" });
+                routes.MapRoute("kontakt", "/kontakt", defaults: new { controller = "Dojo", action = "Kontakt" });
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            });
         }
 
     }
