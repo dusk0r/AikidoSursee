@@ -44,7 +44,7 @@ namespace AikidoWebsite.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var documentStore = services.AddRavenDB(Configuration["DB:Url"], Configuration["DB:Name"]);
+            var documentStore = services.AddRavenDB(Configuration["DB:Url"], Configuration["DB:Name"], Configuration["DB:Certificate"]);
 
             //services.AddIdentity<Benutzer, Role>()
             //.AddRoleManager
@@ -183,7 +183,7 @@ namespace AikidoWebsite.Web
         public static IDocumentStore AddRavenDB(this IServiceCollection services, string url, string database, string certificateString = null)
         {
             var urls = new string[] { url };
-            var certificate = certificateString != null ? new System.Security.Cryptography.X509Certificates.X509Certificate2(Convert.FromBase64String(certificateString)) : null;
+            var certificate = !String.IsNullOrEmpty(certificateString) ? new System.Security.Cryptography.X509Certificates.X509Certificate2(Convert.FromBase64String(certificateString)) : null;
 
             var documentStore = new DocumentStore {
                 Urls = urls,
