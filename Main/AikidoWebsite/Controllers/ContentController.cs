@@ -238,7 +238,7 @@ namespace AikidoWebsite.Web.Controllers
             var path = Path.GetTempFileName();
             var operation = await DocumentSession.Advanced.DocumentStore.Smuggler.ExportAsync(new DatabaseSmugglerExportOptions
             {
-                OperateOnTypes = DatabaseItemType.Documents
+                OperateOnTypes = DatabaseItemType.Documents | DatabaseItemType.Attachments
             }, path);
             await operation.WaitForCompletionAsync();
 
