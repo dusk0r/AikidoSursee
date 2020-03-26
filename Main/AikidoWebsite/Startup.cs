@@ -57,76 +57,76 @@ namespace AikidoWebsite.Web
                 .AddCookie(options =>
                 {
 
-                })
-                .AddGoogle(options =>
-                {
-                    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-
-                    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
-                    options.Events.OnCreatingTicket = async ctx =>
-                    {
-                        await baseOnCreatingTicket(ctx);
-                        var id = ctx.User["id"].ToString();
-
-                        using (var documentSession = documentStore.OpenSession())
-                        {
-                            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.GoogleLogin == id && b.IstAktiv);
-
-                            if (benutzer != null)
-                            {
-                                foreach (var claim in ctx.Identity.Claims.ToList())
-                                {
-                                    ctx.Identity.RemoveClaim(claim);
-                                }
-                                var claims = new List<Claim> {
-                                    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
-                                    new Claim(ClaimTypes.Name, benutzer.Name),
-                                    new Claim(ClaimTypes.Email, benutzer.EMail)
-                                };
-                                foreach (var role in benutzer.Gruppen)
-                                {
-                                    claims.Add(new Claim(ClaimTypes.Role, role));
-                                }
-                                ctx.Identity.AddClaims(claims);
-                            }
-                        }
-                    };
-                })
-                .AddTwitter(options =>
-                {
-                    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-
-                    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
-                    options.Events.OnCreatingTicket = async ctx =>
-                    {
-                        await baseOnCreatingTicket(ctx);
-                        var id = ctx.UserId;
-
-                        using (var documentSession = documentStore.OpenSession()) {
-                            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.TwitterLogin == id && b.IstAktiv);
-
-                            if (benutzer != null) {
-                                if (ctx.Principal != null) {
-                                    //foreach (var claim in ctx.Principal.Claims.ToList()) {
-                                    //    ctx.Principal. .Claims.RemoveClaim(claim);
-                                    //}
-                                }
-
-                                //var claims = new List<Claim> {
-                                //    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
-                                //    new Claim(ClaimTypes.Name, benutzer.Name),
-                                //    new Claim(ClaimTypes.Email, benutzer.EMail)
-                                //};
-                                //foreach (var role in benutzer.Gruppen) {
-                                //    claims.Add(new Claim(ClaimTypes.Role, role));
-                                //}
-                                //ctx.Identity.AddClaims(claims);
-                            }
-                        }
-                    };
                 });
+                //.AddGoogle(options =>
+                //{
+                //    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+
+                //    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
+                //    options.Events.OnCreatingTicket = async ctx =>
+                //    {
+                //        await baseOnCreatingTicket(ctx);
+                //        var id = ctx.User["id"].ToString();
+
+                //        using (var documentSession = documentStore.OpenSession())
+                //        {
+                //            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.GoogleLogin == id && b.IstAktiv);
+
+                //            if (benutzer != null)
+                //            {
+                //                foreach (var claim in ctx.Identity.Claims.ToList())
+                //                {
+                //                    ctx.Identity.RemoveClaim(claim);
+                //                }
+                //                var claims = new List<Claim> {
+                //                    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
+                //                    new Claim(ClaimTypes.Name, benutzer.Name),
+                //                    new Claim(ClaimTypes.Email, benutzer.EMail)
+                //                };
+                //                foreach (var role in benutzer.Gruppen)
+                //                {
+                //                    claims.Add(new Claim(ClaimTypes.Role, role));
+                //                }
+                //                ctx.Identity.AddClaims(claims);
+                //            }
+                //        }
+                //    };
+                //})
+                //.AddTwitter(options =>
+                //{
+                //    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                //    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+
+                //    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
+                //    options.Events.OnCreatingTicket = async ctx =>
+                //    {
+                //        await baseOnCreatingTicket(ctx);
+                //        var id = ctx.UserId;
+
+                //        using (var documentSession = documentStore.OpenSession()) {
+                //            var benutzer = documentSession.Query<Benutzer>().FirstOrDefault(b => b.TwitterLogin == id && b.IstAktiv);
+
+                //            if (benutzer != null) {
+                //                if (ctx.Principal != null) {
+                //                    //foreach (var claim in ctx.Principal.Claims.ToList()) {
+                //                    //    ctx.Principal. .Claims.RemoveClaim(claim);
+                //                    //}
+                //                }
+
+                //                //var claims = new List<Claim> {
+                //                //    new Claim(ClaimTypes.NameIdentifier, benutzer.EMail),
+                //                //    new Claim(ClaimTypes.Name, benutzer.Name),
+                //                //    new Claim(ClaimTypes.Email, benutzer.EMail)
+                //                //};
+                //                //foreach (var role in benutzer.Gruppen) {
+                //                //    claims.Add(new Claim(ClaimTypes.Role, role));
+                //                //}
+                //                //ctx.Identity.AddClaims(claims);
+                //            }
+                //        }
+                //    };
+                //});
 
             services.AddRecaptcha(new RecaptchaOptions
             {
