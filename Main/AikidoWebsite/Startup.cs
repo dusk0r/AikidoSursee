@@ -44,7 +44,7 @@ namespace AikidoWebsite.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var documentStore = services.AddRavenDB(Configuration["DB:Url"], Configuration["DB:Name"], Configuration["DB:Certificate"]);
+            var documentStore = services.AddRavenDB(Configuration["DB:Url"], Configuration["DB:Name"], Configuration["DB_Certificate"]);
 
             //services.AddIdentity<Benutzer, Role>()
             //.AddRoleManager
@@ -60,7 +60,7 @@ namespace AikidoWebsite.Web
                 });
                 //.AddGoogle(options =>
                 //{
-                //    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                //    options.ClientId = Configuration["Authentication_Google_ClientId"];
                 //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
 
                 //    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
@@ -95,8 +95,8 @@ namespace AikidoWebsite.Web
                 //})
                 //.AddTwitter(options =>
                 //{
-                //    options.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                //    options.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+                //    options.ConsumerKey = Configuration["Authentication_Twitter_ConsumerKey"];
+                //    options.ConsumerSecret = Configuration["Authentication_Twitter_ConsumerSecret"];
 
                 //    var baseOnCreatingTicket = options.Events.OnCreatingTicket;
                 //    options.Events.OnCreatingTicket = async ctx =>
@@ -130,15 +130,15 @@ namespace AikidoWebsite.Web
 
             services.AddRecaptcha(new RecaptchaOptions
             {
-                SiteKey = Configuration["Recaptcha:SiteKey"],
-                SecretKey = Configuration["Recaptcha:SecretKey"],
+                SiteKey = Configuration["Recaptcha_SiteKey"],
+                SecretKey = Configuration["Recaptcha_SecretKey"],
                 LanguageCode = "de"
             });
 
             services.AddClock();
-            services.AddFlickr(Configuration["Flickr:ApiKey"]);
-            services.AddTwitter(Configuration["Twitter:ConsumerKey"], Configuration["Twitter:ConsumerSecret"], Configuration["Twitter:AccessToken"], Configuration["Twitter:AccessSecret"]);
-            services.AddBackupToken(Configuration["Backup:Secret"]);
+            services.AddFlickr(Configuration["Flickr_ApiKey"]);
+            services.AddTwitter(Configuration["Twitter_ConsumerKey"], Configuration["Twitter_ConsumerSecret"], Configuration["Twitter_AccessToken"], Configuration["Twitter_AccessSecret"]);
+            services.AddBackupToken(Configuration["Backup_Secret"]);
 
             services.AddAntiforgery();
             services.AddMvc();
