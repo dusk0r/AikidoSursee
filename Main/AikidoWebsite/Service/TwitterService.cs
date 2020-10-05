@@ -1,18 +1,21 @@
-﻿using Tweetinvi;
+﻿using System.Threading.Tasks;
+using Tweetinvi;
 
 namespace AikidoWebsite.Web.Service
 {
     public class TwitterService
     {
+        private readonly TwitterClient Client;
+        
         public TwitterService(string consumerKey, string consumerSecret, string userAccessToken, string userAccessSecret)
         {
-            Auth.SetUserCredentials(consumerKey, consumerSecret, userAccessToken, userAccessSecret);
+            Client = new TwitterClient(consumerKey, consumerSecret, userAccessToken, userAccessSecret);
         }
 
-        public string Publish(string text)
+        public async Task<string> Publish(string text)
         {
-            var result = Tweet.PublishTweet(text);
-            return result.IdStr;
+            var tweet = await Client.Tweets.PublishTweetAsync(text);
+            return tweet.IdStr;
         }
     }
 }
