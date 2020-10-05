@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish AikidoWebsite to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish runtime="linux-x64" self_contained="true" target_folder="$PROJECT_DIR$/../../publish" target_framework="netcoreapp2.0" uuid_high="-2863088922881539394" uuid_low="-5481523571783654767" />
+    <method v="2" />
+  </configuration>
+</component>
