@@ -22,9 +22,9 @@ namespace AikidoWebsite.Web.Controllers
 
         private IDocumentSession DocumentSession { get; }
         private FlickrService FlickrService { get; }
-        private IHostingEnvironment HostingEnvironment { get; }
+        private IWebHostEnvironment HostingEnvironment { get; }
 
-        public DojoController(IDocumentSession documentSession, FlickrService flickrService, IHostingEnvironment env)
+        public DojoController(IDocumentSession documentSession, FlickrService flickrService, IWebHostEnvironment env)
         {
             DocumentSession = documentSession;
             FlickrService = flickrService;

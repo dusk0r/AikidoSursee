@@ -20,6 +20,7 @@ using Raven.Client.Documents.Session;
 using AikidoWebsite.Data.Listener;
 using Microsoft.Extensions.Logging;
 using AikidoWebsite.Data.Migration;
+using Microsoft.Extensions.Hosting;
 
 namespace AikidoWebsite.Web
 {
@@ -27,7 +28,7 @@ namespace AikidoWebsite.Web
     {
         public IConfiguration Configuration { get; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -141,10 +142,13 @@ namespace AikidoWebsite.Web
             services.AddBackupToken(Configuration["Backup_Secret"]);
 
             services.AddAntiforgery();
-            services.AddMvc();
+            services.AddMvc(o =>
+            {
+                o.EnableEndpointRouting = false;
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
