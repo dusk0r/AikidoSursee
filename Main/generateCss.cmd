@@ -1,1 +1,0 @@
-Tools\dotLess\dotless.Compiler.exe "AikidoWebsite\wwwroot\Content\less\bootstrap.less" "AikidoWebsite\wwwroot\Content\bootstrap.css" 
