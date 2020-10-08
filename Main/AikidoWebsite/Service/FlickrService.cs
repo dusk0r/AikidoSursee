@@ -16,26 +16,23 @@ namespace AikidoWebsite.Web.Service
         }
 
         public Task<PhotosetCollection> ListPhotosetsAsync() {
-            return TryGetFromCacheAsync<PhotosetCollection>("photosets", t => Flickr.PhotosetsGetListAsync("128101479@N04", r => t.TrySetResult(r.Result)));
+            return TryGetFromCacheAsync<PhotosetCollection>("photosets", () => Flickr.PhotosetsGetListAsync("128101479@N04", perPage: 500));
         }
 
         public Task<PhotosetPhotoCollection> ListPhotosAsync(string galleryId) {
-            return TryGetFromCacheAsync<PhotosetPhotoCollection>(galleryId, t => Flickr.PhotosetsGetPhotosAsync(galleryId, r => t.TrySetResult(r.Result)));
+            return TryGetFromCacheAsync<PhotosetPhotoCollection>(galleryId, () => Flickr.PhotosetsGetPhotosAsync(galleryId, perPage: 500));
         }
 
-        private async Task<T> TryGetFromCacheAsync<T>(string key, Action<TaskCompletionSource<T>> getFunc)
+        private async Task<T> TryGetFromCacheAsync<T>(string key, Func<Task<T>> getFunc)
         {
             if (Cache.TryGetValue(key, value: out (DateTime creationDate, object entry) value) && DateTime.Now - value.creationDate < CacheTime)
             {
                 return (T)value.entry;
-            } else
-            {
-                var t = new TaskCompletionSource<T>();
-                getFunc(t);
-                var result = await t.Task;
-                Cache[key] = (DateTime.Now, result);
-                return result;
             }
+            
+            var result = await getFunc();
+            Cache[key] = (DateTime.Now, result);
+            return result;
         }
     }
 }

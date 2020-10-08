@@ -10,7 +10,7 @@
     <UserSecretsId>aspnet-AikidoSursee-631A729E-A32A-4BF2-9FE3-A359913070F0</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FlickrNet" Version="3.26.0" />
+    <PackageReference Include="FlickrNetCore" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
