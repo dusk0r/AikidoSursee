@@ -145,7 +145,7 @@ namespace AikidoWebsite.Web
             services.AddMvc(o =>
             {
                 o.EnableEndpointRouting = false;
-            });
+            }).AddNewtonsoftJson();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
