@@ -14,5 +14,5 @@ namespace AikidoWebsite.Data.Entities
         public DateTime ErstelltAm { get; set; }
         public string Name { get; set; }
         public string Nachricht { get; set; }
-       
+    }
 }
