@@ -123,6 +123,15 @@ namespace AikidoWebsite.Web.Controllers
                 return View(model);
             }
 
+            var kontaktanfrage = new Kontaktanfrage { 
+                EMailAdresse = model.EMail,
+                ErstelltAm = DateTime.Now,
+                Name = model.Name,
+                Nachricht = model.Bemerkung
+            };
+            DocumentSession.Store(kontaktanfrage);
+            DocumentSession.SaveChanges();
+
             MailMessage mail = new MailMessage();
             mail.BodyEncoding = Encoding.UTF8;
             mail.From = new MailAddress("info@aikido-sursee.ch");
